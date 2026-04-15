@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prelude — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<p style="color: var(--text-faint); font-size: 0.88em; margin-bottom: 0;"><a href="../index.html" style="border-bottom: none;">&larr; contents</a> &nbsp;·&nbsp; section 01 of 14</p>
+
+<h1>Prelude<span class="subtitle">What it means for a lattice to be alive</span></h1>
+
+<p class="lead">Here are two little oscillators, connected by a spring. The spring's stiffness is called its <em>coupling</em>, written <span class="mono">K</span>. In ordinary physics, <span class="mono">K</span> is a number you choose and then leave alone.</p>
+
+<figure id="fig-two-osc">
+  <canvas id="canvas-two-osc" width="680" height="280"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>K (coupling) <span class="val" id="k-val">1.00</span></label>
+      <input type="range" id="k-slider" min="0" max="2" step="0.01" value="1.0">
+    </div>
+    <button id="start-oscillators">Start</button>
+    <button id="reset-oscillators">Reset</button>
+  </div>
+  <figcaption>Two phase oscillators on a circle. The bond glows brighter when the phases align, darker when they fight. Drag the slider to change the coupling. <span id="coherence-readout" class="readout">I = 0.00</span></figcaption>
+</figure>
+
+<p>This is the setup physics has used for a century. Fix <span class="mono">K</span>, pick initial phases, watch them evolve. If <span class="mono">K</span> is large enough, they synchronize. If not, they drift.</p>
+
+<p>Now try something different. Instead of holding <span class="mono">K</span> fixed, let <em>it</em> evolve too. Give it its own equation of motion. Tell it:</p>
+
+<p style="text-align: center; font-style: italic; color: var(--text-soft); margin: 1.5em 0;">grow when the phases you connect tend to align &nbsp;·&nbsp; shrink when they fight</p>
+
+<p>That is, roughly, the <strong>Coherence Learning Rule</strong>. The coupling itself becomes a participant in the dynamics. A living variable, not a dial.</p>
+
+<figure id="fig-two-osc-live">
+  <canvas id="canvas-two-osc-live" width="680" height="280"></canvas>
+  <div class="controls">
+    <button id="start-live" class="primary">Start with random initial K</button>
+    <button id="reset-live">Reset</button>
+  </div>
+  <figcaption>Same two oscillators, but now K is dynamic. It finds its own equilibrium. <span id="live-readout" class="readout">K = 0.00, I = 0.00</span></figcaption>
+</figure>
+
+<p>Nothing dramatic yet. Two oscillators are too small a world. But watch what happens when you scale this up to a network — thousands of oscillators, each pair with its own living <span class="mono">K</span>, all governed by the same local rule. Bonds find their equilibria. Some couplings converge to a large value (alive bonds), others decay to zero (dead bonds). The network self-organizes into a binary field of connectivity, from any starting point.</p>
+
+<p>Pick the network carefully — we will see later why the <em>diamond</em> lattice is mathematically forced upon us — and something remarkable happens. Topological defects appear out of nothing. They carry quantized charge. They have spin 1/2. They are confined by a logarithmic potential. Their magnetic moment is <span class="mono">g = 2</span> at tree level. And the coupling constant that governs how they interact with themselves is</p>
+
+<div style="text-align: center; font-size: 1.2em; margin: 1.2em 0; font-family: 'SF Mono', 'Menlo', monospace;">1/α = 137.035999</div>
+
+<p>— to 1.5 parts per billion of the measured value, with zero free parameters.</p>
+
+<p>This is the story. It takes fourteen short chapters to tell. We start with one bond.</p>
+
+<div class="nav-links">
+  <a href="../index.html" class="up">contents</a>
+  <a href="02-oscillators.html" class="next">Oscillators on a graph</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, R0 } from '../js/common.js';
+
+// ============================================================
+// FIGURE 1: Two oscillators, fixed K (user drags)
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-two-osc');
+  const ctx = setupHiDPICanvas(canvas, 680, 280);
+  const kSlider = document.getElementById('k-slider');
+  const kVal = document.getElementById('k-val');
+  const startBtn = document.getElementById('start-oscillators');
+  const resetBtn = document.getElementById('reset-oscillators');
+  const coh = document.getElementById('coherence-readout');
+
+  let theta1 = 0.3, theta2 = 2.1;
+  let omega1 = 0.4, omega2 = -0.3;
+  let K = 1.0;
+  let running = false;
+  let rafId = null;
+
+  kSlider.addEventListener('input', () => {
+    K = parseFloat(kSlider.value);
+    kVal.textContent = K.toFixed(2);
+    if (!running) draw();
+  });
+
+  startBtn.addEventListener('click', () => {
+    running = !running;
+    startBtn.textContent = running ? 'Pause' : 'Start';
+    if (running) loop();
+  });
+
+  resetBtn.addEventListener('click', () => {
+    theta1 = Math.random() * Math.PI * 2;
+    theta2 = Math.random() * Math.PI * 2;
+    running = false;
+    startBtn.textContent = 'Start';
+    if (rafId) cancelAnimationFrame(rafId);
+    draw();
+  });
+
+  function step() {
+    const dt = 0.04;
+    const d1 = omega1 + K * Math.sin(theta2 - theta1);
+    const d2 = omega2 + K * Math.sin(theta1 - theta2);
+    theta1 += d1 * dt;
+    theta2 += d2 * dt;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 280);
+    const cx1 = 220, cx2 = 460, cy = 140, r = 50;
+
+    // Coherence (alignment scalar)
+    const I = (Math.cos(theta1 - theta2) + 1) / 2;
+    coh.textContent = `I = ${I.toFixed(2)}`;
+
+    // Bond (glows with coherence)
+    const glowAlpha = 0.15 + I * 0.85;
+    ctx.strokeStyle = `rgba(217, 114, 54, ${glowAlpha})`;
+    ctx.lineWidth = 2 + I * 6;
+    ctx.beginPath();
+    ctx.moveTo(cx1 + r, cy);
+    ctx.lineTo(cx2 - r, cy);
+    ctx.stroke();
+
+    drawOsc(cx1, cy, r, theta1, 'A');
+    drawOsc(cx2, cy, r, theta2, 'B');
+  }
+
+  function drawOsc(cx, cy, r, theta, label) {
+    // Circle
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Phase dot
+    const px = cx + Math.cos(theta) * r;
+    const py = cy + Math.sin(theta) * r;
+    ctx.fillStyle = '#2a5f8f';
+    ctx.beginPath();
+    ctx.arc(px, py, 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Radial line
+    ctx.strokeStyle = '#6ba4d4';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(px, py);
+    ctx.stroke();
+
+    // Label
+    ctx.fillStyle = '#888';
+    ctx.font = '14px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, cx, cy + r + 22);
+  }
+
+  function loop() {
+    if (!running) return;
+    step();
+    draw();
+    rafId = requestAnimationFrame(loop);
+  }
+
+  draw();
+})();
+
+// ============================================================
+// FIGURE 2: Two oscillators, living K (CLR)
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-two-osc-live');
+  const ctx = setupHiDPICanvas(canvas, 680, 280);
+  const startBtn = document.getElementById('start-live');
+  const resetBtn = document.getElementById('reset-live');
+  const readout = document.getElementById('live-readout');
+
+  let theta1, theta2, omega1, omega2, K;
+  let running = false;
+  let rafId = null;
+
+  function reset() {
+    theta1 = Math.random() * Math.PI * 2;
+    theta2 = Math.random() * Math.PI * 2;
+    omega1 = 0.4; omega2 = -0.3;
+    K = Math.random() * 0.1; // small random initial K
+    running = false;
+    startBtn.textContent = 'Start with random initial K';
+    if (rafId) cancelAnimationFrame(rafId);
+    draw();
+  }
+
+  startBtn.addEventListener('click', () => {
+    running = !running;
+    startBtn.textContent = running ? 'Pause' : 'Resume';
+    if (running) loop();
+  });
+
+  resetBtn.addEventListener('click', reset);
+
+  function step() {
+    const dt = 0.05;
+    const eta = 0.3;   // learning rate for K
+    const r = 5.9;     // CLR regularization
+
+    const dphi = theta2 - theta1;
+    const cosdphi = Math.cos(dphi);
+
+    // Kuramoto phases
+    const d1 = omega1 + K * Math.sin(dphi);
+    const d2 = omega2 + K * Math.sin(-dphi);
+    theta1 += d1 * dt;
+    theta2 += d2 * dt;
+
+    // Shannon CLR on K
+    const dK = eta * (R0(K) * cosdphi - 2 * K / r);
+    K = Math.max(0, K + dK * dt);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 280);
+    const cx1 = 220, cx2 = 460, cy = 140, r = 50;
+
+    const I = (Math.cos(theta1 - theta2) + 1) / 2;
+    readout.textContent = `K = ${K.toFixed(3)},  I = ${I.toFixed(2)}`;
+
+    // Bond glow depends on K AND alignment
+    const Knorm = Math.min(1, K / 2);
+    const glowAlpha = 0.1 + Knorm * 0.9;
+    ctx.strokeStyle = `rgba(217, 114, 54, ${glowAlpha})`;
+    ctx.lineWidth = 1 + Knorm * 8;
+    ctx.beginPath();
+    ctx.moveTo(cx1 + r, cy);
+    ctx.lineTo(cx2 - r, cy);
+    ctx.stroke();
+
+    // "K =" label on bond
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 13px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`K = ${K.toFixed(3)}`, (cx1 + cx2) / 2, cy - 14);
+
+    drawOsc(cx1, cy, r, theta1, 'A');
+    drawOsc(cx2, cy, r, theta2, 'B');
+  }
+
+  function drawOsc(cx, cy, r, theta, label) {
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    const px = cx + Math.cos(theta) * r;
+    const py = cy + Math.sin(theta) * r;
+    ctx.fillStyle = '#2a5f8f';
+    ctx.beginPath();
+    ctx.arc(px, py, 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = '#6ba4d4';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(px, py);
+    ctx.stroke();
+
+    ctx.fillStyle = '#888';
+    ctx.font = '14px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, cx, cy + r + 22);
+  }
+
+  function loop() {
+    if (!running) return;
+    step();
+    draw();
+    rafId = requestAnimationFrame(loop);
+  }
+
+  reset();
+})();
+</script>
+
+</body>
+</html>

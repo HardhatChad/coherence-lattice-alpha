@@ -217,6 +217,17 @@ h = (√3/2)λ_C          = 334 fm
 8. **Running coupling.** Full α(Q) curve from lattice UV to Q = 0 across all SM fermions. Preliminary: 1/α(M_Z) = 127.74 (vs ~128.9 experimental).
 9. **UV completion.** Above Q_match, α = α_BKT = 1/137.032 (flat, no Landau pole). Implications for BSM physics.
 
+### Flagship open problem: the R₀² embedding weight
+
+The two-vertex LCE correction uses a shared-bond coherence factor R₀² in the embedding weight `w = R₀²/(z(z−1))`. This form is physically motivated (probability of coherent two-bond transfer) and the resulting δc = 0.0111 is within 1% of the value CODATA requires (0.0112). The supplementary script `two_vertex_lce.py` enumerates roughly a dozen alternative weight forms numerically and rules them all out — none give δc consistent with experiment. **But the specific choice of R₀² (as opposed to R₀, R₀³, or other powers) is not rigorously derived from the diamond-lattice linked-cluster formalism.**
+
+An agent picking up this problem should:
+- Formalize the diamond-lattice LCE embedding rules from first principles
+- Derive the shared-bond coherence factor for a dumbbell subgraph at BKT coupling
+- Either confirm R₀² is uniquely forced, or identify which factor is admissible and why
+
+Closing this derivation promotes the 1.5 ppb claim from plausibility argument to theorem. Until then, the paper's main result is the 29 ppm BKT value (rigorous, parameter-free); the LCE correction to 1.5 ppb is presented as a convergent plausibility argument flagged explicitly in both the abstract and §5-9 of the paper.
+
 ## Verification Checklist
 
 When modifying or extending the derivation, verify:

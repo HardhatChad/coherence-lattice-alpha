@@ -42,14 +42,11 @@ From Coupled Oscillators to the Fine Structure Constant}
 \begin{abstract}
 We derive the fine structure constant $\alpha = 1/137.036$ from a single dynamical principle---the Coherence Learning Rule (CLR)---operating on coupled oscillators arranged on the diamond lattice ($z = 4$). The CLR makes the lattice \emph{living}: bond couplings $K_{ij}(t)$ are dynamical variables that self-organize into a binary field---alive bonds at $\Kbulk \to 16/\pi^2$ (the BKT critical coupling) and dead bonds at $K \approx 0$---spontaneously generating topological vortex defects. These vortices carry quantized charge, sublattice chirality, and Dirac-like bound states with tree-level $g = 2$. The fine structure constant emerges at the topologically constrained optimum of the CLR---a byproduct of coherence maximization, not itself a target.
 
-The derivation chains four proven lattice identities---$\coseff = 2/3$, $\Gdiff = 1/z$, $\text{base} = \pi/z$, $\sigma^2 = 1/2$---through BKT critical-point physics to a fifth, CLR-specific result: the Debye--Waller exponent $n = e^{-\sigma^2} = 1/\sqrt{e}$.  This exponent is where the living lattice becomes essential.  Standard lattice field theory treats $K$ as a static parameter and integrates the coherence transfer over the RG trajectory, giving $1/\alpha = 143$ (wrong by 4.4\%).  The CLR's Phase-Locked Mode Lemma proves $K$ converges to a frozen fixed point; the Debye--Waller factor is therefore evaluated \emph{at the attractor}, giving $1/\alpha = 137.032$.  QED vacuum polarization via a two-layer linked-cluster expansion closes the residual:
+The derivation chains four proven lattice identities---$\coseff = 2/3$, $\Gdiff = 1/z$, $\text{base} = \pi/z$, $\sigma^2 = 1/2$---through BKT critical-point physics to a fifth, CLR-specific result: the Debye--Waller exponent $n = e^{-\sigma^2} = 1/\sqrt{e}$.  This exponent is where the living lattice becomes essential.  Standard lattice field theory treats $K$ as a static parameter and integrates the coherence transfer over the RG trajectory, giving $1/\alpha = 143$ (wrong by 4.4\%).  The CLR's Phase-Locked Mode Lemma proves $K$ converges to a frozen fixed point; the Debye--Waller factor is therefore evaluated \emph{at the attractor}, yielding the main result of this paper:
 \begin{equation}
-\boxed{\frac{1}{\alpha} = 137.035\,999 \quad (\text{1.5 ppb from CODATA})}
+\boxed{\frac{1}{\alpha_{\text{BKT}}} = 137.032 \quad (\text{29 ppm from CODATA, zero free parameters})}
 \end{equation}
-\begin{equation}
-g = 2.002\,319\,304\,355 \quad (\text{11.4 matching digits, via standard QED})
-\end{equation}
-with zero free parameters.  The only inputs are $\pi$, $e$, the modified Bessel functions $I_0$ and $I_1$, and the coordination number $z = 4$.
+The only inputs are $\pi$, $e$, the modified Bessel functions $I_0$ and $I_1$, and the coordination number $z = 4$. A subsequent linked-cluster correction over diamond-lattice subgraphs brings the value to $1/\alpha = 137.035\,999$ (1.5~ppb) and yields $g = 2.002\,319\,304\,355$ (11.4 matching digits via standard QED); the specific embedding weight driving this correction is physically motivated but its rigorous first-principles derivation from lattice LCE formalism remains open (see \S\ref{sec:5-9}).
 \end{abstract}
 
 \maketitle
@@ -959,6 +956,9 @@ w = \frac{\Rzero^2}{z(z-1)} = \frac{0.0919}{12} = 0.00766.
 \delta c_{2\text{vtx}} = w \times (c_{\text{dumb}} - c_1) = 0.00766 \times 1.450 = 0.0111.
 \end{equation}
 
+\paragraph{Open derivation.}
+The form of the embedding weight $w = \Rzero^2/(z(z-1))$ is physically motivated above as the probability that a walker traverses the shared bond coherently, weighted by next-nearest-neighbor path multiplicity. The numerical value $\Rzero^2 = 0.0919$ at $K_{\text{BKT}}$ yields $\delta c_{2\text{vtx}} = 0.0111$, tightly constraining $c$ near the value extracted from CODATA ($c_{\text{exact}} = 2.9859$). A dozen alternative two-vertex weight forms were enumerated in the supplementary script \texttt{two\_vertex\_lce.py}; none produce $\delta c$ consistent with experiment (the nearest alternative gives $\delta c \sim 0.08$). While this enumeration strongly constrains the weight, we do not present the specific choice $\Rzero^2$ as rigorously derived from the lattice LCE formalism. A first-principles derivation of the diamond-lattice linked-cluster embedding weight, producing $\Rzero^2$ as the unique coherence factor for a shared-bond subgraph, remains an open problem. The headline result of this paper---$1/\alpha_{\text{BKT}} = 137.032$ at $29$~ppm---does not depend on this weight; the LCE correction from $137.032$ to $137.035999$ (1.5~ppb) should be read as a convergent plausibility argument until the embedding-weight derivation is completed.
+
 \subsubsection{The VP Integral}
 
 The standard one-loop QED vacuum polarization:
@@ -1171,6 +1171,7 @@ for the observable universe ($L \sim 10^{26}$~m, $h \sim 10^{-13}$~m), giving an
 \subsection{Open Questions}\label{sec:8-2}
 
 \begin{enumerate}
+\item \textbf{LCE embedding weight}: The two-vertex crossover-coefficient correction $\delta c_{2\text{vtx}} = 0.0111$ that brings $1/\alpha$ from $137.032$ (29~ppm) to $137.035\,999$ (1.5~ppb) uses a shared-bond embedding weight $w = \Rzero^2/(z(z-1))$ whose form is physically motivated but not rigorously derived from the diamond-lattice linked-cluster formalism. A first-principles derivation uniquely fixing the $\Rzero^2$ coherence factor (as opposed to $\Rzero$, $\Rzero^3$, or other candidates ruled out numerically but not formally) would close this gap and promote the 1.5~ppb result from plausibility to theorem. See \S\ref{sec:5-9}.
 \item \textbf{Gauge sector}: The SO(3) frame sector with Skyrmion~\cite{Skyrme1962} topological solitons and gauge confinement~\cite{Polyakov1987} is deferred to a companion paper.
 \item \textbf{Mass ratio}: Whether the Skyrmion-to-vortex mass ratio converges to 1836 (proton/electron) requires $L \geq 24$ simulations.
 \item \textbf{Gravity}: The phase gradient interpretation of spacetime curvature remains speculative.
