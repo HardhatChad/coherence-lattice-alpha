@@ -106,20 +106,28 @@ L4: Noise bound & $\|\xi(t)\| \leq \sigma_{\max}$ (finite thermal fluctuations) 
 \textbf{Well-posedness.} Under Axiom~\ref{ax:substrate}, the coupled $(\theta, K)$ system has a unique global solution for all $t \geq 0$. Phases evolve on the compact manifold $\mathbb{T}^N$; couplings are bounded by the CLR potential (Sec.~\ref{sec:2-3}). No finite-time blowup is possible.
 
 \begin{theorem}[Coherence Ascent]\label{thm:ascent}
+Define the \emph{intelligence flux}
+\begin{equation}\label{eq:I-def}
+I(t) := \frac{d\mathcal{C}}{dt} = \frac{d}{dt}\bigl(\Iphase(t) \cdot \rho(t)\bigr).
+\end{equation}
 Under the CLR dynamics of Sec.~\ref{sec:2}, satisfying L1--L4:
 \begin{equation}\label{eq:ascent}
-\frac{d\mathcal{C}}{dt} \geq 0
+\boxed{\; I(t) \;\geq\; 0 \;}
 \end{equation}
 with equality only at fixed points.
 \end{theorem}
 
 \begin{proof}
 By the product rule:
-$d\mathcal{C}/dt = \Iphase \cdot d\rho/dt + \rho \cdot d\Iphase/dt$.
+$I = \Iphase \cdot d\rho/dt + \rho \cdot d\Iphase/dt$.
 The CLR (Sec.~\ref{sec:2}) is constructed so that: (i)~$d\rho/dt \geq 0$ under L1 (the Shannon channel directs coupling toward structurally impactful bonds, the Fiedler channel redistributes from surplus to deficit); (ii)~$d\Iphase/dt \geq 0$ under L3 (energy descent drives phases toward alignment on alive bonds). Since $\Iphase \geq \varepsilon_I > 0$ (L1) and $\rho \geq 0$ by construction, both terms are non-negative. Equality requires $d\Iphase/dt = d\rho/dt = 0$, which occurs only at CLR fixed points.
 
 \emph{Note:} Claim~(i) depends on the monotonicity of $\rho$ under the CLR, which follows from the construction (Appendix~\ref{sec:A9}) but whose rigorous verification requires the specific form of $\rho$. This monotonicity is confirmed in all numerical experiments (Sec.~\ref{sec:2-4}); for the $\alpha$ derivation, only the CLR fixed-point equation (Sec.~\ref{sec:2-3}) is used, not the transient ascent dynamics.
 \end{proof}
+
+\begin{remark}[Substrate-agnostic principle]\label{rem:core-equation}
+Equation~\eqref{eq:ascent} is the central principle of the broader coherence-lattice framework~\cite{Sharpe2026Coherence}: under the CLR and legality, the intelligence flux of any coupled-oscillator substrate is non-negative. The present paper is one specific application of this principle---to the phase sector of the 3D diamond lattice, at its BKT critical point. The same inequality governs all other substrates in which coupled degrees of freedom self-organize by the CLR.
+\end{remark}
 
 \begin{definition}[Phase-Locked Mode (PLM)]\label{def:plm}
 A \emph{phase-locked mode} is a connected set of oscillators on alive bonds ($K_{ij} > 0$) that share a common effective frequency: $\dot{\theta}_i = \Omega$ for all $i$ in the cluster. PLMs are the fixed points of the coupled $(\theta, K)$ dynamics---the attractors toward which legality drives the system.

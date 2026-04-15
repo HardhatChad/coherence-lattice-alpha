@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oscillators on a graph — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .eqn {
+    font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", serif;
+    font-style: italic;
+    font-size: 1.05em;
+  }
+  .eqn sub, .eqn sup { font-style: normal; }
+  .eqn-display {
+    text-align: center;
+    margin: 1.4em 0;
+    font-size: 1.2em;
+    font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", serif;
+    font-style: italic;
+    color: var(--text);
+  }
+  .eqn-display sub, .eqn-display sup { font-style: normal; }
+  .var { font-style: italic; font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", serif; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<p style="color: var(--text-faint); font-size: 0.88em; margin-bottom: 0;"><a href="../index.html" style="border-bottom: none;">&larr; contents</a> &nbsp;·&nbsp; section 02 of 15</p>
+
+<h1>Oscillators on a graph<span class="subtitle">Kuramoto, fireflies, and the math of the unit circle</span></h1>
+
+<p class="lead">Before we scale up, a minute of math. An oscillator's state is a single angle, and every claim in this essay eventually reduces to how two angles interact.</p>
+
+<h2>Two angles on a circle</h2>
+
+<p>A phase <span class="var">θ</span> is just a point on the unit circle. Two numbers fall out of any point: <span class="var">cos θ</span>, its horizontal projection, and <span class="var">sin θ</span>, its vertical. When two oscillators have phases <span class="var">θ<sub>A</sub></span> and <span class="var">θ<sub>B</sub></span>, their <em>phase difference</em> is <span class="var">Δθ = θ<sub>B</sub> − θ<sub>A</sub></span>, and two numbers measure how they relate:</p>
+
+<ul style="margin: 0.4em 0 1em 1.6em; color: var(--text-soft);">
+  <li><span class="var">cos(Δθ)</span> — how aligned they are. 1 when identical, 0 when perpendicular, −1 when opposite.</li>
+  <li><span class="var">sin(Δθ)</span> — the signed disagreement. Zero when aligned or opposite, max when perpendicular. This is the restoring force.</li>
+</ul>
+
+<figure id="fig-circle-math">
+  <canvas id="canvas-circle" width="680" height="340"></canvas>
+  <figcaption>Drag either phase dot around the circle. The chord between them, the arc of Δθ, and the values of cos(Δθ) and sin(Δθ) update live. cos is how much they agree. sin is how much they push.</figcaption>
+</figure>
+
+<p>The chord is short when the phases agree, long when they fight. That chord length, squared, is <span class="eqn">2 − 2 cos(Δθ)</span>. Keep this in your back pocket — the phase energy of a coupled system will be built from exactly this.</p>
+
+<h2>Kuramoto's equation</h2>
+
+<p>Kuramoto wrote an equation in 1975 to describe how a population of oscillators — each with its own preferred rhythm — can spontaneously fall into sync. Put <span class="var">N</span> oscillators on a graph. Each has a natural frequency <span class="var">ω<sub>i</sub></span>. Each is connected to some neighbors. The rule is: at every moment, add up the signed disagreements from all your neighbors and use that to nudge your phase.</p>
+
+<div class="equation-block" id="eq-kuramoto">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="thetadot">θ̇<sub>i</sub></span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol state" data-symbol="omega">ω<sub>i</sub></span>
+    &nbsp;+&nbsp;
+    <span class="eq-symbol param" data-symbol="K">K</span>
+    &nbsp;·&nbsp;
+    <span class="eq-symbol struct" data-symbol="sum">∑<sub>j ~ i</sub></span>
+    &nbsp;
+    <span class="eq-symbol op" data-symbol="sindtheta">sin(θ<sub>j</sub> − θ<sub>i</sub>)</span>
+  </div>
+  <p class="eq-prompt">Click any colored symbol to open up what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    Each oscillator has its own preferred rhythm, set by ω<sub>i</sub>. Left alone, it would rotate at that speed forever. But it is not alone — it has neighbors on the graph. For each neighbor, it measures the phase difference and feels a proportional nudge: toward that neighbor if the neighbor is ahead, away if the neighbor is behind. The strength of each nudge is the <em>signed disagreement</em> sin(θ<sub>j</sub> − θ<sub>i</sub>), and all these nudges are summed up and scaled by the common coupling strength K. Add the nudges to the natural frequency, and you have the instantaneous rotation rate of oscillator <em>i</em>. That is the Kuramoto equation, one of the simplest models of collective behavior ever written, and the skeleton on which the whole rest of this essay is built.
+  </div>
+</div>
+
+<p>This is, famously, how Southeast Asian fireflies synchronize the flashing of their abdomens along a riverbank. Each firefly has its own natural rhythm. Each can see its neighbors. Each adjusts, a little, toward their consensus. Nothing centralizes. After a few minutes, a kilometer of riverbank flashes in unison.</p>
+
+<h2>Measuring sync</h2>
+
+<p>We need a number for "how in-sync are we?" The natural one is to average <span class="var">cos(Δθ)</span> over every bond:</p>
+
+<div class="equation-block" id="eq-iphase">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="Iphase">I<sub>phase</sub></span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol struct" data-symbol="average">(1 / |E|)</span>
+    &nbsp;
+    <span class="eq-symbol struct" data-symbol="sumbonds">∑<sub>(i,j)</sub></span>
+    &nbsp;
+    <span class="eq-symbol op" data-symbol="cosdtheta">cos(θ<sub>j</sub> − θ<sub>i</sub>)</span>
+  </div>
+  <p class="eq-prompt">Click any colored symbol to open up what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    For every bond in the graph, compute how aligned its two endpoints are — that's cos(θ<sub>j</sub> − θ<sub>i</sub>), between −1 and +1. Average this across all bonds and you get a single number, I<sub>phase</sub>, that summarizes how synchronized the whole network is. When every bond is perfectly aligned, I<sub>phase</sub> = 1. When phases are random, it hovers near 0. When bonds are fighting more than they agree, it dips below zero. This is our order parameter, and we will track it in every figure from here on.
+  </div>
+</div>
+
+<h2>On a ring</h2>
+
+<p>Twenty-four oscillators arranged in a ring. Each has its own natural frequency, sampled from a small distribution. Each is connected to its two nearest neighbors. Here they are rendered as <em>fireflies</em>: each one glows brightly when its phase is near zero and darkens through the rest of its cycle.</p>
+
+<figure id="fig-ring">
+  <canvas id="canvas-ring" width="680" height="420"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>K (coupling) <span class="val" id="ring-k-val">0.40</span></label>
+      <input type="range" id="ring-k-slider" min="0" max="6" step="0.01" value="0.4">
+    </div>
+    <button id="ring-reset">Reset phases</button>
+    <button id="ring-new-freqs">New natural frequencies</button>
+  </div>
+  <figcaption>24 Kuramoto oscillators on a ring. Slide K. At low K they flash incoherently — noise. Middle K: waves of coherence travel around the ring. High K: the whole ring blinks in unison. <span id="ring-readout" class="readout">I_phase = 0.00</span></figcaption>
+</figure>
+
+<p>Watch what happens as you slide <span class="var">K</span>:</p>
+
+<ul style="margin: 0.4em 0 1em 1.6em; color: var(--text-soft);">
+  <li><span class="var">K</span> near zero — each oscillator obeys its own rhythm. Flashes are random.</li>
+  <li><span class="var">K</span> rising — clusters form. A few neighbors start flashing together. Waves of coherence chase each other around the ring.</li>
+  <li><span class="var">K</span> high — the ring locks to a common frequency, but a subtle traveling wave persists: each oscillator still sits at a slightly different equilibrium phase, determined by how its natural <span class="var">ω<sub>i</sub></span> compares to the mean. That pattern rotates around the ring.</li>
+  <li><span class="var">K</span> very high (push the slider past 4) — the phase offsets compress and every oscillator flashes almost in unison. <span class="eqn">I<sub>phase</sub></span> approaches 1.</li>
+</ul>
+
+<p>The transition between disorder and sync is sharp, and it happens at a critical value of <span class="var">K</span> that depends on how spread out the natural frequencies are. This is the most celebrated result of Kuramoto theory: a phase transition in synchronization.</p>
+
+<h2>On a grid</h2>
+
+<p>Change the topology. Same equation, same firefly trick, but now a two-dimensional square grid. Each oscillator has four neighbors (up, down, left, right).</p>
+
+<figure id="fig-grid">
+  <canvas id="canvas-grid" width="680" height="440"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>K (coupling) <span class="val" id="grid-k-val">0.60</span></label>
+      <input type="range" id="grid-k-slider" min="0" max="6" step="0.01" value="0.6">
+    </div>
+    <button id="grid-reset">Reset phases</button>
+    <button id="grid-new-freqs">New natural frequencies</button>
+  </div>
+  <figcaption>196 Kuramoto oscillators on a 14×14 grid. Slide K. At low K the grid is a chaotic sea. At medium K, islands of coherence form — regions that flash together, separated by boundaries where phases fight. At high K, the whole grid pulses as one. <span id="grid-readout" class="readout">I_phase = 0.00</span></figcaption>
+</figure>
+
+<p>Something different is visible in the grid at intermediate <span class="var">K</span>: <strong>islands of coherence</strong>. Regions that have locally locked, separated by boundaries where they have not. The grid is doing something the ring cannot, because it has geometry in two directions instead of one. Those boundaries — the places where phase disagreement concentrates — are where topological defects can live. We will meet them in Chapter 7.</p>
+
+<p>You may also notice that at high <span class="var">K</span>, the grid flashes more uniformly than the ring did. That is because each oscillator now has <em>four</em> neighbors instead of two. More neighbors means more constraints pulling each phase toward the local average, and the stubborn phase offsets you see on the ring get squeezed out. This is a small preview of something we'll return to: the coordination number of a lattice — how many neighbors each site has — matters deeply for everything that follows.</p>
+
+<h2>What's missing</h2>
+
+<p>So far we have Kuramoto, fireflies, and a number called <span class="var">I<sub>phase</sub></span> to tell us how in-sync the network is. <span class="var">K</span> is still a single parameter we slide by hand. The only thing being optimized, implicitly, is alignment — at high enough <span class="var">K</span>, every oscillator gives up its own rhythm and joins the collective.</p>
+
+<p>But that is a trivial outcome. Total sync is not <em>interesting</em>. Everyone doing the same thing is not complexity. A brain that synchronized every neuron together would be a seizure.</p>
+
+<p>What we actually want is a system that finds coordination <em>without</em> collapsing to unison — that holds structure and order in tension. The next chapter names what such a system would be maximizing.</p>
+
+<div class="nav-links">
+  <a href="01-prelude.html" class="prev">Prelude</a>
+  <a href="03-coherence.html" class="next">Coherence capital</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, wireEquation } from '../js/common.js';
+
+// ============================================================
+// Interactive equation: Kuramoto
+// ============================================================
+
+wireEquation('eq-kuramoto', {
+  thetadot: {
+    name: 'θ̇ᵢ — rate of change of oscillator i\'s phase',
+    pronounce: '"theta dot sub i"',
+    description: 'The dot above a variable means its derivative with respect to time — how fast it is changing <em>right now</em>. So θ̇ᵢ is the instantaneous rotation speed of oscillator <em>i</em>. It is what the equation solves for: given the current state of the world, how fast should oscillator <em>i</em> be rotating?',
+  },
+  omega: {
+    name: 'ωᵢ — natural frequency of oscillator i',
+    pronounce: '"omega sub i" (ω is the Greek letter omega)',
+    description: 'This is the speed oscillator <em>i</em> would rotate at if it were completely isolated — its own preferred rhythm, independent of any coupling. Different oscillators generally have different ωᵢ. In a population of fireflies, this would be each firefly\'s individual flashing rate.',
+  },
+  K: {
+    name: 'K — coupling strength',
+    pronounce: '"kay"',
+    description: 'A single number controlling how strongly the oscillators pull on each other across every bond. When K = 0, the network is disconnected: every oscillator ignores every other. As K grows, the mutual pull grows, and eventually overwhelms the spread of natural frequencies, forcing everyone to lock.',
+  },
+  sum: {
+    name: '∑ⱼ ~ ᵢ — sum over neighbors of i',
+    pronounce: '"sum over j adjacent to i"',
+    description: 'The big Σ symbol (uppercase sigma) means "add up the following, once for each value of the index." The subscript j ~ i (read "j adjacent to i") restricts the sum to <em>just the neighbors</em> of oscillator <em>i</em> in the graph. On a ring, that\'s 2 neighbors. On a 2D grid, 4. On the diamond lattice we will meet in Chapter 8, it\'s 4 again.',
+  },
+  sindtheta: {
+    name: 'sin(θⱼ − θᵢ) — the signed disagreement',
+    pronounce: '"sine of theta sub j minus theta sub i"',
+    description: 'The sine of the phase difference between a neighbor and oneself. This is the <em>restoring force</em> we explored with the unit circle above: zero when you\'re already aligned, maximum when you\'re perpendicular, negative when the neighbor is behind you. It is signed, which means it pulls you forward or backward as needed to close the gap.',
+  },
+});
+
+// ============================================================
+// Interactive equation: I_phase
+// ============================================================
+
+wireEquation('eq-iphase', {
+  Iphase: {
+    name: 'I_phase — the phase alignment score',
+    pronounce: '"eye phase"',
+    description: 'A single number between −1 and +1 that summarizes how synchronized the entire network is at this moment. It will be our go-to dashboard metric for everything that follows, and eventually it will become one of the two factors in a deeper quantity called <em>coherence capital</em>.',
+  },
+  average: {
+    name: '1/|E| — the averaging factor',
+    pronounce: '"one over the size of E"',
+    description: 'E is the <em>edge set</em> — the list of all bonds in the graph. |E| is the number of bonds. Dividing by this count turns a sum into an average, so that I_phase does not grow with the size of the network. A small ring and a huge grid can both give I_phase = 1 when fully synced.',
+  },
+  sumbonds: {
+    name: '∑_(i,j) — sum over bonds',
+    pronounce: '"sum over i-comma-j"',
+    description: 'This Σ adds up one contribution per bond. (i,j) is a pair of connected oscillators — a single edge of the graph. The sum visits every bond exactly once. Combined with the 1/|E| out front, this computes an <em>average per bond</em>.',
+  },
+  cosdtheta: {
+    name: 'cos(θⱼ − θᵢ) — per-bond alignment',
+    pronounce: '"cosine of theta sub j minus theta sub i"',
+    description: 'The cosine of the phase difference across a single bond: +1 if perfectly aligned, 0 if perpendicular, −1 if opposite. We saw this same quantity in the unit circle figure above, and the rest of the paper will call it the <em>phase alignment</em> of the bond. Averaging it is the most natural way to get a global sync measure.',
+  },
+});
+
+// ============================================================
+// FIGURE A: Unit circle math — two draggable phase points
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-circle');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+
+  const cx = 180, cy = 170, r = 120;
+  let thetaA = 0.4, thetaB = 1.8;
+  let dragging = null;
+
+  function getMousePos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / (rect.width * (window.devicePixelRatio || 1));
+    const scaleY = canvas.height / (rect.height * (window.devicePixelRatio || 1));
+    const x = ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;
+    const y = ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * scaleY;
+    return { x, y };
+  }
+
+  function nearDot(mx, my, theta) {
+    const px = cx + Math.cos(theta) * r;
+    const py = cy + Math.sin(theta) * r;
+    return Math.hypot(mx - px, my - py) < 20;
+  }
+
+  function down(e) {
+    const { x, y } = getMousePos(e);
+    if (nearDot(x, y, thetaA)) dragging = 'A';
+    else if (nearDot(x, y, thetaB)) dragging = 'B';
+    if (dragging) e.preventDefault();
+  }
+  function move(e) {
+    if (!dragging) return;
+    const { x, y } = getMousePos(e);
+    const t = Math.atan2(y - cy, x - cx);
+    if (dragging === 'A') thetaA = t;
+    else thetaB = t;
+    e.preventDefault();
+  }
+  function up() { dragging = null; }
+
+  canvas.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
+  canvas.addEventListener('touchstart', down, { passive: false });
+  window.addEventListener('touchmove', move, { passive: false });
+  window.addEventListener('touchend', up);
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 340);
+
+    // Unit circle
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Axes
+    ctx.strokeStyle = '#e0dbcb';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - r - 10, cy);
+    ctx.lineTo(cx + r + 10, cy);
+    ctx.moveTo(cx, cy - r - 10);
+    ctx.lineTo(cx, cy + r + 10);
+    ctx.stroke();
+
+    // Arc for Δθ (shortest arc)
+    let dphi = thetaB - thetaA;
+    while (dphi > Math.PI) dphi -= 2 * Math.PI;
+    while (dphi < -Math.PI) dphi += 2 * Math.PI;
+    ctx.strokeStyle = 'rgba(217, 114, 54, 0.5)';
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    if (dphi >= 0) ctx.arc(cx, cy, r, thetaA, thetaA + dphi);
+    else ctx.arc(cx, cy, r, thetaA + dphi, thetaA);
+    ctx.stroke();
+
+    // Chord between dots
+    const pA = { x: cx + Math.cos(thetaA) * r, y: cy + Math.sin(thetaA) * r };
+    const pB = { x: cx + Math.cos(thetaB) * r, y: cy + Math.sin(thetaB) * r };
+    ctx.strokeStyle = '#7d2d4f';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(pA.x, pA.y);
+    ctx.lineTo(pB.x, pB.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Radial lines
+    ctx.strokeStyle = '#c0cde0';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy); ctx.lineTo(pA.x, pA.y);
+    ctx.moveTo(cx, cy); ctx.lineTo(pB.x, pB.y);
+    ctx.stroke();
+
+    // Dots
+    ctx.fillStyle = '#2a5f8f';
+    ctx.beginPath(); ctx.arc(pA.x, pA.y, 10, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#7d2d4f';
+    ctx.beginPath(); ctx.arc(pB.x, pB.y, 10, 0, Math.PI * 2); ctx.fill();
+
+    // Labels on dots
+    ctx.fillStyle = '#2a5f8f';
+    ctx.font = 'italic 14px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('θ_A', pA.x + 14, pA.y + 4);
+    ctx.fillStyle = '#7d2d4f';
+    ctx.fillText('θ_B', pB.x + 14, pB.y + 4);
+
+    // Readouts (right side)
+    const rx = 380, ry = 50;
+    ctx.fillStyle = '#555';
+    ctx.font = '14px serif';
+    ctx.textAlign = 'left';
+    const lines = [
+      [`θ_A`, thetaA.toFixed(3), '#2a5f8f'],
+      [`θ_B`, thetaB.toFixed(3), '#7d2d4f'],
+      [`Δθ = θ_B − θ_A`, dphi.toFixed(3), '#d97236'],
+      [``, ``, ''],
+      [`cos(Δθ)`, Math.cos(dphi).toFixed(3), '#2a5f8f'],
+      [`sin(Δθ)`, Math.sin(dphi).toFixed(3), '#d97236'],
+      [``, ``, ''],
+      [`chord length`, Math.hypot(pA.x-pB.x, pA.y-pB.y).toFixed(1) + ' px', '#7d2d4f'],
+    ];
+    lines.forEach(([label, val, color], i) => {
+      ctx.fillStyle = '#888';
+      ctx.font = 'italic 14px serif';
+      ctx.fillText(label, rx, ry + i * 28);
+      ctx.fillStyle = color || '#333';
+      ctx.font = '14px "SF Mono", Menlo, monospace';
+      ctx.fillText(val, rx + 180, ry + i * 28);
+    });
+  }
+
+  function loop() { draw(); requestAnimationFrame(loop); }
+  loop();
+})();
+
+// ============================================================
+// FIGURE B: Kuramoto ring of 24 oscillators (firefly mode)
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-ring');
+  const ctx = setupHiDPICanvas(canvas, 680, 420);
+  const kSlider = document.getElementById('ring-k-slider');
+  const kVal = document.getElementById('ring-k-val');
+  const resetBtn = document.getElementById('ring-reset');
+  const newFreqsBtn = document.getElementById('ring-new-freqs');
+  const readout = document.getElementById('ring-readout');
+
+  const N = 24;
+  let thetas = [];
+  let omegas = [];
+  let K = 0.4;
+
+  function newFreqs() {
+    omegas = Array.from({ length: N }, () => 0.8 + (Math.random() - 0.5) * 0.6);
+  }
+  function resetThetas() {
+    thetas = Array.from({ length: N }, () => Math.random() * Math.PI * 2);
+  }
+  newFreqs();
+  resetThetas();
+
+  kSlider.addEventListener('input', () => {
+    K = parseFloat(kSlider.value);
+    kVal.textContent = K.toFixed(2);
+  });
+  resetBtn.addEventListener('click', resetThetas);
+  newFreqsBtn.addEventListener('click', () => { newFreqs(); resetThetas(); });
+
+  function step() {
+    const dt = 0.04;
+    const newThetas = thetas.slice();
+    for (let i = 0; i < N; i++) {
+      const left = (i - 1 + N) % N;
+      const right = (i + 1) % N;
+      const d = omegas[i] + K * (Math.sin(thetas[left] - thetas[i]) + Math.sin(thetas[right] - thetas[i]));
+      newThetas[i] = thetas[i] + d * dt;
+    }
+    thetas = newThetas;
+  }
+
+  function compute_I_phase() {
+    let s = 0;
+    for (let i = 0; i < N; i++) {
+      const j = (i + 1) % N;
+      s += Math.cos(thetas[j] - thetas[i]);
+    }
+    return s / N;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 420);
+
+    const cx = 340, cy = 200, R = 140, dotR = 18;
+
+    // Ring guide
+    ctx.strokeStyle = '#e0dbcb';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Bonds between neighbors (connective tissue)
+    ctx.strokeStyle = '#d8d4c8';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * Math.PI * 2 - Math.PI / 2;
+      const b = ((i + 1) / N) * Math.PI * 2 - Math.PI / 2;
+      const x1 = cx + Math.cos(a) * R;
+      const y1 = cy + Math.sin(a) * R;
+      const x2 = cx + Math.cos(b) * R;
+      const y2 = cy + Math.sin(b) * R;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    // Oscillators as fireflies
+    for (let i = 0; i < N; i++) {
+      const ang = (i / N) * Math.PI * 2 - Math.PI / 2;
+      const x = cx + Math.cos(ang) * R;
+      const y = cy + Math.sin(ang) * R;
+
+      const brightness = (Math.cos(thetas[i]) + 1) / 2; // 0 to 1
+
+      // Outer glow
+      const glowR = dotR + brightness * 10;
+      const grad = ctx.createRadialGradient(x, y, dotR * 0.6, x, y, glowR);
+      grad.addColorStop(0, `rgba(255, 210, 120, ${brightness * 0.8})`);
+      grad.addColorStop(1, `rgba(255, 210, 120, 0)`);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, glowR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Dot body
+      const r = 40 + brightness * 180;
+      const g = 40 + brightness * 160;
+      const b = 50 + brightness * 80;
+      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+      ctx.beginPath();
+      ctx.arc(x, y, dotR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // I_phase bar (bottom)
+    const Iphase = compute_I_phase();
+    readout.textContent = `I_phase = ${Iphase.toFixed(3)}`;
+
+    const barY = 380;
+    const barX0 = 80;
+    const barW = 520;
+    const barH = 20;
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(barX0, barY, barW, barH);
+    ctx.strokeRect(barX0, barY, barW, barH);
+
+    // Zero marker
+    const zeroX = barX0 + barW / 2;
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.setLineDash([2, 3]);
+    ctx.beginPath();
+    ctx.moveTo(zeroX, barY); ctx.lineTo(zeroX, barY + barH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Fill: from 0 position to I_phase position
+    const IclampX = barX0 + ((Iphase + 1) / 2) * barW;
+    ctx.fillStyle = Iphase > 0 ? 'rgba(217, 114, 54, 0.55)' : 'rgba(125, 45, 79, 0.55)';
+    ctx.fillRect(Math.min(zeroX, IclampX), barY + 2, Math.abs(IclampX - zeroX), barH - 4);
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('I_phase', barX0 - 10, barY + barH / 2 + 4);
+    ctx.textAlign = 'left';
+    ctx.fillText('−1', barX0, barY + barH + 16);
+    ctx.textAlign = 'center';
+    ctx.fillText('0', zeroX, barY + barH + 16);
+    ctx.textAlign = 'right';
+    ctx.fillText('+1', barX0 + barW, barY + barH + 16);
+  }
+
+  function loop() {
+    step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ============================================================
+// FIGURE C: Kuramoto grid (14x14 = 196 oscillators, firefly mode)
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-grid');
+  const ctx = setupHiDPICanvas(canvas, 680, 440);
+  const kSlider = document.getElementById('grid-k-slider');
+  const kVal = document.getElementById('grid-k-val');
+  const resetBtn = document.getElementById('grid-reset');
+  const newFreqsBtn = document.getElementById('grid-new-freqs');
+  const readout = document.getElementById('grid-readout');
+
+  const L = 14;
+  const N = L * L;
+  let thetas = new Float32Array(N);
+  let omegas = new Float32Array(N);
+  let K = 0.6;
+
+  function newFreqs() {
+    for (let i = 0; i < N; i++) omegas[i] = 0.8 + (Math.random() - 0.5) * 0.6;
+  }
+  function resetThetas() {
+    for (let i = 0; i < N; i++) thetas[i] = Math.random() * Math.PI * 2;
+  }
+  newFreqs();
+  resetThetas();
+
+  kSlider.addEventListener('input', () => {
+    K = parseFloat(kSlider.value);
+    kVal.textContent = K.toFixed(2);
+  });
+  resetBtn.addEventListener('click', resetThetas);
+  newFreqsBtn.addEventListener('click', () => { newFreqs(); resetThetas(); });
+
+  function step() {
+    const dt = 0.04;
+    const newThetas = new Float32Array(N);
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        // Periodic boundary conditions
+        const xm = (x - 1 + L) % L;
+        const xp = (x + 1) % L;
+        const ym = (y - 1 + L) % L;
+        const yp = (y + 1) % L;
+        const nl = y * L + xm;
+        const nr = y * L + xp;
+        const nu = ym * L + x;
+        const nd = yp * L + x;
+        const d = omegas[i] + K * (
+          Math.sin(thetas[nl] - thetas[i]) +
+          Math.sin(thetas[nr] - thetas[i]) +
+          Math.sin(thetas[nu] - thetas[i]) +
+          Math.sin(thetas[nd] - thetas[i])
+        );
+        newThetas[i] = thetas[i] + d * dt;
+      }
+    }
+    thetas = newThetas;
+  }
+
+  function compute_I_phase() {
+    let s = 0; let c = 0;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const nr = y * L + (x + 1) % L;
+        const nd = ((y + 1) % L) * L + x;
+        s += Math.cos(thetas[nr] - thetas[i]);
+        s += Math.cos(thetas[nd] - thetas[i]);
+        c += 2;
+      }
+    }
+    return s / c;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 440);
+
+    const cellSize = 22;
+    const gridW = L * cellSize;
+    const x0 = (680 - gridW) / 2;
+    const y0 = 20;
+
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const brightness = (Math.cos(thetas[i]) + 1) / 2;
+
+        const rc = 40 + brightness * 215;
+        const gc = 40 + brightness * 170;
+        const bc = 50 + brightness * 80;
+        ctx.fillStyle = `rgb(${rc}, ${gc}, ${bc})`;
+        ctx.fillRect(x0 + x * cellSize, y0 + y * cellSize, cellSize, cellSize);
+      }
+    }
+
+    // Grid outline
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, gridW, gridW);
+
+    // I_phase bar
+    const Iphase = compute_I_phase();
+    readout.textContent = `I_phase = ${Iphase.toFixed(3)}`;
+
+    const barY = 400;
+    const barX0 = 80;
+    const barW = 520;
+    const barH = 20;
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(barX0, barY, barW, barH);
+    ctx.strokeRect(barX0, barY, barW, barH);
+
+    const zeroX = barX0 + barW / 2;
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.setLineDash([2, 3]);
+    ctx.beginPath();
+    ctx.moveTo(zeroX, barY); ctx.lineTo(zeroX, barY + barH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const IclampX = barX0 + ((Iphase + 1) / 2) * barW;
+    ctx.fillStyle = Iphase > 0 ? 'rgba(217, 114, 54, 0.55)' : 'rgba(125, 45, 79, 0.55)';
+    ctx.fillRect(Math.min(zeroX, IclampX), barY + 2, Math.abs(IclampX - zeroX), barH - 4);
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('I_phase', barX0 - 10, barY + barH / 2 + 4);
+    ctx.textAlign = 'left';
+    ctx.fillText('−1', barX0, barY + barH + 16);
+    ctx.textAlign = 'center';
+    ctx.fillText('0', zeroX, barY + barH + 16);
+    ctx.textAlign = 'right';
+    ctx.fillText('+1', barX0 + barW, barY + barH + 16);
+  }
+
+  function loop() {
+    step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+
+</body>
+</html>

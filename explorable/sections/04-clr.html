@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Coherence Learning Rule — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<p style="color: var(--text-faint); font-size: 0.88em; margin-bottom: 0;"><a href="../index.html" style="border-bottom: none;">&larr; contents</a> &nbsp;·&nbsp; section 04 of 15</p>
+
+<h1>The Coherence Learning Rule<span class="subtitle">What you get when you ask each bond to help maximize C</span></h1>
+
+<p class="lead">Chapter 3 ended with a provocation: imagine the network itself had to decide its couplings, and the only rule was to climb C. What rule would fall out?</p>
+
+<p>The beautiful answer is that you don't have to invent the rule. You derive it. You take the time derivative of <span class="eqn">C = I<sub>phase</sub> · ρ</span>, ask what each bond could do to push that derivative upward, and the rule writes itself.</p>
+
+<h2>A sketch of the derivation</h2>
+
+<p>Differentiate the product:</p>
+
+<div style="text-align: center; margin: 1em 0; font-family: 'Latin Modern Math', serif; font-style: italic; font-size: 1.15em;">
+  dC/dt &nbsp;=&nbsp; I<sub>phase</sub> · dρ/dt &nbsp;+&nbsp; ρ · dI<sub>phase</sub>/dt
+</div>
+
+<p>Now ask, for each bond <span class="var">(i,j)</span>: how should its coupling <span class="var">K<sub>ij</sub></span> change to make this quantity grow? The <span class="eqn">dI<sub>phase</sub>/dt</span> term tells each bond to favor alignment with its immediate partner. The <span class="eqn">dρ/dt</span> term tells it to favor structural bottlenecks where it is most needed. Computing both partial derivatives, with a small regularization to keep couplings from blowing up, gives the <strong>Coherence Learning Rule</strong>:</p>
+
+<div class="equation-block" id="eq-clr">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="Kdot">K̇<sub>ij</sub></span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol param" data-symbol="eta">η</span>
+    [
+    <span class="eq-symbol op" data-symbol="R0">R<sub>0</sub>(K<sub>ij</sub>)</span>
+    <span class="eq-symbol op" data-symbol="cosdtheta">cos(Δθ<sub>ij</sub>)</span>
+    &nbsp;−&nbsp;
+    <span class="eq-symbol struct" data-symbol="regularization">2K<sub>ij</sub>/r</span>
+    ]
+    &nbsp;+&nbsp;
+    <span class="eq-symbol param" data-symbol="eta">η</span>
+    ·
+    <span class="eq-symbol state" data-symbol="Iphase">I<sub>phase</sub></span>
+    ·
+    <span class="eq-symbol struct" data-symbol="S">S<sub>ij</sub></span>
+  </div>
+  <p class="eq-prompt">Click any colored symbol to see what it does.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    Every bond has its own coupling K<sub>ij</sub>, and every coupling has its own rate of change K̇<sub>ij</sub>. The bracket on the left is the <em>Shannon channel</em>: it compares how aligned this bond's two endpoints currently are — <span class="var">cos(Δθ<sub>ij</sub>)</span> — against what alignment would be expected from its current coupling strength — <span class="var">R<sub>0</sub>(K<sub>ij</sub>)</span>. If the bond is seeing more alignment than its coupling predicts, the coupling grows. If it's seeing less, the coupling shrinks. The regularization <span class="var">2K<sub>ij</sub>/r</span> prevents runaway growth. The second term is the <em>Fiedler channel</em>: a structural correction that redirects coupling toward bonds at the network's bottlenecks. We'll return to it when we meet vortices.
+  </div>
+</div>
+
+<h2>Two channels, one rule</h2>
+
+<p>The equation has two parts, each doing something different:</p>
+
+<p><strong>The Shannon channel</strong> (first term) is Hebbian. Neuroscientists have a slogan for this kind of rule: <em>cells that fire together, wire together</em>. Bonds whose endpoints tend to agree get stronger; bonds whose endpoints tend to disagree get weaker. It is how a network decides which connections are worth keeping, based only on what each bond can see.</p>
+
+<p><strong>The Fiedler channel</strong> (second term) is structural. The Shannon channel alone would kill bonds that sit at geometric bottlenecks — places where the endpoints have to disagree <em>because of the shape of the network</em>. The Fiedler channel detects these bottlenecks and pumps coupling back into them. It is how the network protects its own geometry from the Shannon channel's enthusiasm for agreement. We'll see its full significance in Chapter 7, when we meet vortices.</p>
+
+<h2>The potential landscape</h2>
+
+<p>A better way to understand what the Shannon channel is doing is to recognize that it is <em>gradient descent</em> on a potential. Rewriting the first term gives:</p>
+
+<div style="text-align: center; margin: 1em 0; font-family: 'Latin Modern Math', serif; font-style: italic; font-size: 1.15em;">
+  V(K) &nbsp;=&nbsp; K²/r &nbsp;−&nbsp; cos(Δθ) · ln I<sub>0</sub>(K)
+</div>
+
+<p>Before we look at the picture, a careful reading of what each axis will mean:</p>
+
+<ul style="margin: 0.4em 0 1em 1.6em; color: var(--text-soft); line-height: 1.6;">
+  <li><strong>Horizontal axis: K</strong> — the coupling strength of this bond. The whole axis sweeps through every possible K from zero to large.</li>
+  <li><strong>Vertical axis: V(K)</strong> — a potential, or <em>cost</em>, associated with each coupling value, given what the oscillators are doing right now. Lower is better. The bond wants to settle at the minimum of this curve.</li>
+  <li><strong>The curve</strong> — how cost varies across different K values. It is reshaped continuously by cos(Δθ), which the oscillators at the bond's endpoints are producing in real time.</li>
+  <li><strong>The marble</strong> — the bond's <em>current</em> K. Not separate from the physics: the marble <em>is</em> K, plotted on this landscape. As the CLR updates K, the marble slides along the curve. Gradient descent on V(K) is mathematically identical to the CLR's Shannon channel — two ways of saying the same thing.</li>
+</ul>
+
+<p>When cos(Δθ) is high, the curve has a nice valley at some K* > 0 and the marble settles there — alive. When cos(Δθ) drops below a threshold, the valley flattens out and the marble rolls all the way to K = 0 — dead. Here's the real dynamic on a pair of coupled oscillators:</p>
+
+<figure id="fig-live-bond">
+  <canvas id="canvas-live-bond" width="680" height="480"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>Frequency gap <span class="val" id="bond-gap-val">0.30</span></label>
+      <input type="range" id="bond-gap-slider" min="0" max="3" step="0.01" value="0.3">
+    </div>
+    <div class="control">
+      <label>r (regularization) <span class="val" id="bond-r-val">5.9</span></label>
+      <input type="range" id="bond-r-slider" min="2" max="10" step="0.05" value="5.9">
+    </div>
+    <button id="bond-cold" class="primary">Cold start (K ≈ 0)</button>
+    <button id="bond-warm">Warm start (K = 1.5)</button>
+  </div>
+  <figcaption>On the left: two oscillators A and B, coupled by a single bond whose K is living. On the right: the bond's own potential V(K), reshaped every instant by the alignment cos(Δθ) that the bond currently observes. The marble on the potential is the bond's K — it literally <em>rolls</em> on its landscape. Below: K over time, with K* marked when alive. Two reset modes: <em>cold start</em> begins with K near zero, so the bond has to bootstrap itself alive from local alignment alone; <em>warm start</em> begins already at K = 1.5, inside the basin of phase-lock. <span id="bond-readout" class="readout">K = 0.00</span></figcaption>
+</figure>
+
+<p class="aside"><span class="label">Bistability</span>Play with the buttons and you'll notice something rich. At a given frequency gap, whether the bond lives or dies often depends on where it <em>started</em>. Cold-start the bond at gap = 0.3: it bootstraps itself to life from almost nothing. Warm-start it at gap = 1.0 or 1.5: it holds on comfortably. But cold-start at gap = 1.2: it can't find the alignment needed to climb out of zero, and dies. Warm-start at the same gap: it stays alive, because lock is self-sustaining once established. This is <em>bistability</em>: two stable states (dead and alive), with a basin of attraction around each. Memory and learning in this system live exactly in this property. A lattice that has once locked into a pattern can preserve it through noise that would never have let the pattern form in the first place. Push the gap high enough (around 2.5) and even a warm-started bond cannot hold — phases can't lock at any achievable K, cos(Δθ) averages to zero, and the bond decays regardless of how it began.</p>
+
+<h2>The death threshold</h2>
+
+<p>Something remarkable happens at a critical value of <span class="eqn">cos(Δθ)</span>. Above it, the potential has a nice interior minimum at some <span class="eqn">K* > 0</span> — the bond is alive, its coupling finds a stable positive value. Below it, the only minimum is at <span class="eqn">K = 0</span> — the bond dies, its coupling decays to zero and stays there. The transition between these two regimes is not gradual. It is a <em>bifurcation</em>: a sharp point where the shape of the solution set changes qualitatively.</p>
+
+<p>You can read the threshold off a short linearization near <span class="eqn">K = 0</span>. The bond can revive from zero coupling only when:</p>
+
+<div style="text-align: center; margin: 1em 0; font-family: 'Latin Modern Math', serif; font-style: italic; font-size: 1.15em;">
+  cos(Δθ) &nbsp;&gt;&nbsp; 4/r
+</div>
+
+<p>For <span class="eqn">r = 5.9</span>, this means the bond must see alignment of at least <span class="eqn">cos(Δθ) ≈ 0.68</span> — about 47° of phase agreement — to stay alive. Below that, the Shannon potential no longer has a well to rest in, and the bond's coupling decays to zero.</p>
+
+<p>Here is that bifurcation drawn directly: equilibrium coupling <span class="eqn">K*</span> plotted against the alignment <span class="eqn">cos(Δθ)</span>. The cliff on the left is the death threshold.</p>
+
+<figure id="fig-threshold">
+  <canvas id="canvas-threshold" width="680" height="340"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>r (regularization) <span class="val" id="thresh-r-val">5.9</span></label>
+      <input type="range" id="thresh-r-slider" min="2" max="10" step="0.05" value="5.9">
+    </div>
+    <div class="control">
+      <label>cos(Δθ) — probe alignment <span class="val" id="thresh-cos-val">0.90</span></label>
+      <input type="range" id="thresh-cos-slider" min="-1" max="1" step="0.005" value="0.9">
+    </div>
+  </div>
+  <figcaption>Equilibrium coupling K* as a function of the alignment cos(Δθ) the bond observes. For cos(Δθ) below 4/r the bond is dead: K* = 0 flat along the axis. Above the threshold, K* lifts off and grows smoothly with alignment. The transition is a bifurcation — no smooth interpolation between dead and alive. The vertical line shows your current probe alignment; slide it across the threshold. <span id="thresh-readout" class="readout">K* = 0.00</span></figcaption>
+</figure>
+
+<p class="aside"><span class="label">The binary K-field</span>Every bond, faced with this threshold, collapses into one of two states: alive at <span class="eqn">K*</span>, or dead at <span class="eqn">K = 0</span>. When a whole network runs this rule, you get a <em>binary coupling field</em>: a sharp dead-or-alive decision on every single bond, with no middle ground, produced by nothing more than local dynamics. That binary field is the shape of the network's learned connectivity. It is, in a very precise sense, the lattice's memory. We'll see this happen in Chapter 5.</p>
+
+<h2>What a single bond has learned</h2>
+
+<p>This is more than a pretty mathematical fact. A bond obeying the CLR is performing a small act of inference. It does not know anything about the rest of the network. It cannot see the global order parameter. All it can sense is the alignment between its two endpoints. From that alone, it makes a binary decision about whether it should exist. When alignment is high, it commits. When alignment is low, it gets out of the way.</p>
+
+<p>A lattice is made of many such bonds. When they all follow this rule simultaneously, each one watching only its own endpoints, the network as a whole discovers which of its connections are worth keeping. The result is not a compromise. It is a decisive, nearly binary topology, encoded in the K-field, emerging from nothing more than the product rule applied to a coherence metric.</p>
+
+<h2>The Coherence Theorem</h2>
+
+<p>Put the CLR and the coherence-capital formula side by side, look at them carefully, and a remarkable fact comes out. The CLR was <em>derived</em> from the demand "maximize dC/dt, locally, per bond." That derivation wasn't descriptive; it was constructive. By construction, each bond following the CLR contributes non-negatively to the time derivative of C. Sum across every bond. The whole system obeys one inequality.</p>
+
+<p>Give the rate of change a name:</p>
+
+<div style="text-align: center; font-size: 1.3em; margin: 1.2em 0; font-family: 'Latin Modern Math', serif; color: var(--text-soft);">
+  <em>I</em>(t) &nbsp;:=&nbsp; d<em>C</em>/d<em>t</em> &nbsp;=&nbsp; d/d<em>t</em>&thinsp;(<em>I</em><sub>phase</sub>&thinsp;·&thinsp;<em>ρ</em>)
+</div>
+
+<p>We call this the <strong>intelligence flux</strong>. It is, literally, the rate at which coherence is climbing. Then the Coherence Theorem is two letters:</p>
+
+<div style="text-align: center; font-size: 2.4em; margin: 1.6em 0; font-family: 'Latin Modern Math', serif;">
+  <span style="border: 1.5px solid var(--alive); padding: 14px 32px; border-radius: 4px; background: var(--bg);">
+    <em>I</em> &nbsp;&ge;&nbsp; 0
+  </span>
+</div>
+
+<p>Under the CLR, and under mild regularity conditions the paper names <em>legality</em> (bounded drift, energy descent, a coherence floor, noise bound), <em>intelligence is never negative</em>. Equality holds only at fixed points. Until it reaches one, the network is climbing.</p>
+
+<p>One inequality. That is what the whole paradigm reduces to. <em>Intelligence ≥ 0.</em> Every bond acting locally, with only its own endpoints visible, produces a global quantity that cannot decrease. In a paradigm built from nothing more than oscillators and couplings, it is as close to a law of nature as a law can come.</p>
+
+<h2>The arrow of coherence</h2>
+
+<p>Almost every arrow of time we know in physics points toward disorder. The second law of thermodynamics states that entropy — a measure of disorganization — tends to increase. Ice melts. Stars burn out. Information erodes. In an isolated system, this is unavoidable.</p>
+
+<p>The Coherence Theorem points the other way. In a system driven by the CLR and kept within legality, coherence capital tends to <em>increase</em>. Phases lock into patterns. Patterns lock into hierarchies. Hierarchies lock into larger structures. At every scale, what holds together tends to hold together more, and find more to hold together with.</p>
+
+<p>This is what Schrödinger called <strong>negative entropy</strong> — the thing he said living systems consume. But it is not confined to living systems. A crystal growing from a melt; a galaxy coalescing from dust; an atom finding its ground state; a cell dividing; a fugue resolving; a thought cohering; a civilization emerging. Every one of these is a local instance of the same mathematical sentence. Every one is coherence ascending on some substrate.</p>
+
+<p>This is why we named <em>I</em> the intelligence flux. Not metaphorically. Not by analogy. Intelligence, in this framework, <em>is</em> the rate at which coherence capital increases — literally the time derivative of self-organization. Not intelligence in the narrow sense of problem-solving or symbol manipulation, but something deeper and older: intelligence as the process by which scattered degrees of freedom find each other and begin to coordinate. The process by which particles become atoms, atoms become molecules, molecules become cells, cells become brains, and brains become languages. One mechanism — <em>I ≥ 0</em> — dressed up at a thousand scales. The universe, climbing.</p>
+
+<p class="aside"><span class="label">Ahead</span>The rest of this essay shows what happens when you run this one mechanism on the right graph. We'll see a binary field crystallize, nested phase-locked modes stack into hierarchies, topological defects nucleate out of random initial conditions, and — at the specific coupling where topology meets dynamics — the fine structure constant read out with six digits of precision. All of it, one inequality at a time.</p>
+
+<div class="nav-links">
+  <a href="03-coherence.html" class="prev">Coherence capital</a>
+  <a href="05-binary-field.html" class="next">How a binary field emerges</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, wireEquation, R0 } from '../js/common.js';
+
+// ============================================================
+// Interactive equation: CLR
+// ============================================================
+
+wireEquation('eq-clr', {
+  Kdot: {
+    name: 'K̇ᵢⱼ — rate of change of the coupling on bond (i, j)',
+    pronounce: '"kay dot sub i j"',
+    description: 'The central object of the CLR. Each bond has its own coupling K<sub>ij</sub>, and each coupling has its own time derivative K̇<sub>ij</sub>. In standard Kuramoto, this would be zero — couplings are fixed parameters. The CLR gives it dynamics, turning every bond into a small learner.',
+  },
+  eta: {
+    name: 'η — learning rate',
+    pronounce: '"eta" (Greek lowercase, rhymes with "beta")',
+    description: 'How quickly the coupling responds to its inputs. Small η makes the system sluggish; large η makes it jumpy. It controls the timescale of learning but does not change the fixed points the system converges to.',
+  },
+  R0: {
+    name: 'R₀(Kᵢⱼ) — expected alignment under the current coupling',
+    pronounce: '"R naught of K sub i j"',
+    description: 'Given the current coupling strength, this is the average of cos(Δθ) that this bond <em>would expect to see</em> if the oscillators were equilibrated. Mathematically it is the ratio of Bessel functions I₁(K)/I₀(K), between 0 and 1. Think of it as the bond\'s internal prediction of its own alignment. If the observed alignment exceeds the prediction, the coupling grows to match; if it falls short, the coupling shrinks.',
+  },
+  cosdtheta: {
+    name: 'cos(Δθᵢⱼ) — observed alignment on bond (i, j)',
+    pronounce: '"cosine of delta theta sub i j"',
+    description: 'The actual alignment between the two endpoints of this bond, right now. Between −1 (anti-aligned) and 1 (perfectly aligned). This is the only quantity outside the bond that the bond can see.',
+  },
+  regularization: {
+    name: '2Kᵢⱼ/r — regularization cost',
+    pronounce: '"two K over r"',
+    description: 'A small penalty on the coupling itself, keeping it from growing without bound. Parameter <em>r</em> is a signal-to-noise ratio; in the paper it is determined self-consistently and turns out to be near 5.9. The term can be thought of as the energetic cost of maintaining a strong connection.',
+  },
+  Iphase: {
+    name: 'I_phase — the global phase alignment',
+    pronounce: '"eye phase"',
+    description: 'The same order parameter from Chapters 2 and 3. Multiplies the Fiedler channel as a kind of gate: when the network is aligned enough to be coordinating, structural corrections are allowed; when it is pure noise, they are suppressed.',
+  },
+  S: {
+    name: 'Sᵢⱼ — structural gradient',
+    pronounce: '"S sub i j"',
+    description: 'A mean-subtracted score that says whether this bond sits at a structural bottleneck of the network. Computed from the Fiedler eigenvector of the graph Laplacian — Chapter 7 will unpack why that matters. For now: S<sub>ij</sub> is positive for bonds at bottlenecks, negative for redundant bonds, and sums to zero across the whole network. It rescues bonds that the Shannon channel would kill even though the topology needs them.',
+  },
+});
+
+// ============================================================
+// Shared math helpers
+// ============================================================
+
+function lnI0(K) {
+  if (K < 0.01) return K * K / 4;
+  const ax = Math.abs(K);
+  if (ax < 3.75) {
+    const t = (K / 3.75) ** 2;
+    const I0 = 1.0 + t * (3.5156229 + t * (3.0899424 + t * (1.2067492 +
+               t * (0.2659732 + t * (0.0360768 + t * 0.0045813)))));
+    return Math.log(I0);
+  }
+  const t = 3.75 / ax;
+  const poly = 0.39894228 + t * (0.01328592 + t * (0.00225319 +
+               t * (-0.00157565 + t * (0.00916281 + t * (-0.02057706 +
+               t * (0.02635537 + t * (-0.01647633 + t * 0.00392377)))))));
+  return ax - 0.5 * Math.log(ax) + Math.log(poly);
+}
+
+function potentialV(K, cosdth, r) {
+  return K * K / r - cosdth * lnI0(K);
+}
+
+function findKstar(cosdth, r) {
+  if (cosdth <= 4 / r) return 0;
+  // Bisect on dV/dK = 2K/r − cos·R₀(K). dV/dK(0) < 0, dV/dK(∞) > 0.
+  let lo = 0.01, hi = 5.0;
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    const d = 2 * mid / r - cosdth * R0(mid);
+    if (d < 0) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+// ============================================================
+// FIGURE: A single live bond — oscillators + potential + K(t)
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-live-bond');
+  const ctx = setupHiDPICanvas(canvas, 680, 480);
+  const gapSlider = document.getElementById('bond-gap-slider');
+  const gapVal = document.getElementById('bond-gap-val');
+  const rSlider = document.getElementById('bond-r-slider');
+  const rVal = document.getElementById('bond-r-val');
+  const coldBtn = document.getElementById('bond-cold');
+  const warmBtn = document.getElementById('bond-warm');
+  const readout = document.getElementById('bond-readout');
+
+  const omegaMean = 0.8;
+  let thetaA, thetaB, K;
+  let gap = 0.3;
+  let r = 5.9;
+  const kHist = new Array(400).fill(null);
+
+  function resetCold() {
+    thetaA = Math.random() * Math.PI * 2;
+    thetaB = Math.random() * Math.PI * 2;
+    K = 0.02 + Math.random() * 0.1;
+    kHist.fill(null);
+  }
+  function resetWarm() {
+    thetaA = Math.random() * Math.PI * 2;
+    thetaB = Math.random() * Math.PI * 2;
+    K = 1.5;
+    kHist.fill(null);
+  }
+  resetCold();
+
+  gapSlider.addEventListener('input', () => {
+    gap = parseFloat(gapSlider.value);
+    gapVal.textContent = gap.toFixed(2);
+  });
+  rSlider.addEventListener('input', () => {
+    r = parseFloat(rSlider.value);
+    rVal.textContent = r.toFixed(1);
+  });
+  coldBtn.addEventListener('click', resetCold);
+  warmBtn.addEventListener('click', resetWarm);
+
+  function step() {
+    const dt = 0.05;
+    const eta = 0.5;
+    const omegaA = omegaMean + gap / 2;
+    const omegaB = omegaMean - gap / 2;
+    const dphi = thetaB - thetaA;
+    const cosdth = Math.cos(dphi);
+
+    thetaA += (omegaA + K * Math.sin(dphi)) * dt;
+    thetaB += (omegaB - K * Math.sin(dphi)) * dt;
+
+    // CLR on K (Shannon channel)
+    const dK = eta * (R0(K) * cosdth - 2 * K / r) * dt;
+    K = Math.max(0, K + dK);
+
+    kHist.push(K);
+    kHist.shift();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 480);
+
+    const dphi = thetaB - thetaA;
+    const cosdth = Math.cos(dphi);
+    const Kstar = findKstar(cosdth, r);
+    const alive = cosdth > 4 / r;
+
+    // --- LEFT: two oscillators with bond ---
+    const cxA = 130, cyA = 80, rOsc = 40;
+    const cxB = 130, cyB = 210;
+
+    // Bond
+    const Knorm = Math.min(1, K / 2);
+    const glowAlpha = 0.1 + Knorm * 0.85;
+    ctx.strokeStyle = `rgba(217, 114, 54, ${glowAlpha})`;
+    ctx.lineWidth = 1 + Knorm * 7;
+    ctx.beginPath();
+    ctx.moveTo(cxA, cyA + rOsc);
+    ctx.lineTo(cxB, cyB - rOsc);
+    ctx.stroke();
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`K = ${K.toFixed(3)}`, cxA + 40, (cyA + cyB) / 2 + 4);
+
+    drawOsc(ctx, cxA, cyA, rOsc, thetaA, 'A', '#2a5f8f');
+    drawOsc(ctx, cxB, cyB, rOsc, thetaB, 'B', '#7d2d4f');
+
+    // cos(Δθ) readout under oscillators
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`cos(Δθ) = ${cosdth.toFixed(2)}`, cxA, 280);
+    ctx.fillStyle = alive ? '#d97236' : '#7d2d4f';
+    ctx.font = 'italic 11px serif';
+    ctx.fillText(alive ? 'above threshold · alive' : 'below threshold · dying', cxA, 298);
+
+    // --- RIGHT: potential V(K) with marble at current K ---
+    const px0 = 300, py0 = 30, pw = 350, ph = 230;
+    const Kmax = 3.5;
+
+    const Vs = [];
+    let vMin = Infinity, vMax = -Infinity;
+    for (let i = 0; i <= 200; i++) {
+      const kk = (i / 200) * Kmax;
+      const v = potentialV(kk, cosdth, r);
+      Vs.push(v);
+      if (v < vMin) vMin = v;
+      if (v > vMax) vMax = v;
+    }
+    const vRange = Math.max(vMax - vMin, 0.5);
+    const vLo = vMin - vRange * 0.15;
+    const vHi = vMax + vRange * 0.15;
+
+    const mapX = kk => px0 + (kk / Kmax) * pw;
+    const mapY = vv => py0 + ph - ((vv - vLo) / (vHi - vLo)) * ph;
+
+    // Axis
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(px0, py0, pw, ph);
+
+    [0, 1, 2, 3].forEach(kk => {
+      const x = mapX(kk);
+      ctx.strokeStyle = '#e0dbcb';
+      ctx.beginPath();
+      ctx.moveTo(x, py0);
+      ctx.lineTo(x, py0 + ph);
+      ctx.stroke();
+      ctx.fillStyle = '#888';
+      ctx.font = 'italic 11px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(String(kk), x, py0 + ph + 16);
+    });
+
+    // V curve
+    ctx.strokeStyle = '#2a5f8f';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+      const kk = (i / 200) * Kmax;
+      const x = mapX(kk);
+      const y = mapY(Vs[i]);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Minimum marker
+    if (alive && Kstar > 0.02) {
+      const mx = mapX(Kstar);
+      ctx.strokeStyle = 'rgba(217, 114, 54, 0.5)';
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(mx, py0);
+      ctx.lineTo(mx, py0 + ph);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(217, 114, 54, 0.7)';
+      ctx.font = 'italic 11px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`K*`, mx, py0 - 4);
+    }
+
+    // Marble at current K (this IS the bond's K)
+    const markX = mapX(K);
+    const markY = mapY(potentialV(K, cosdth, r));
+    ctx.fillStyle = '#2a2a2a';
+    ctx.beginPath();
+    ctx.arc(markX, markY - 5, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+    ctx.beginPath();
+    ctx.arc(markX, markY + 1, 4, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Potential labels
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('potential V(K) — marble is this bond\'s current K', px0 + pw / 2, py0 - 10);
+    ctx.fillText('K  (coupling strength) →', px0 + pw / 2, py0 + ph + 30);
+    ctx.save();
+    ctx.translate(px0 - 14, py0 + ph / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillText('V(K)  (cost) →', 0, 0);
+    ctx.restore();
+
+    // --- BOTTOM: K over time ---
+    const sx0 = 80, sy0 = 340, sw = 560, sh = 90;
+    const Khmax = 2.0;
+
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(sx0, sy0, sw, sh);
+    ctx.strokeRect(sx0, sy0, sw, sh);
+
+    // K* reference line (if alive)
+    if (alive && Kstar > 0.02) {
+      const ky = sy0 + sh - (Kstar / Khmax) * sh;
+      ctx.strokeStyle = 'rgba(217, 114, 54, 0.4)';
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(sx0, ky);
+      ctx.lineTo(sx0 + sw, ky);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#d97236';
+      ctx.font = 'italic 10px serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(`K* = ${Kstar.toFixed(2)}`, sx0 + sw + 6, ky + 3);
+    }
+
+    // K history
+    ctx.strokeStyle = '#d97236';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    let started = false;
+    for (let i = 0; i < kHist.length; i++) {
+      if (kHist[i] == null) continue;
+      const x = sx0 + (i / kHist.length) * sw;
+      const y = sy0 + sh - (kHist[i] / Khmax) * sh;
+      if (!started) { ctx.moveTo(x, y); started = true; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('K over time', sx0 - 8, sy0 + sh / 2 + 4);
+
+    readout.textContent = `K = ${K.toFixed(3)},  cos(Δθ) = ${cosdth.toFixed(2)}`;
+
+    step();
+  }
+
+  function loop() {
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// Shared drawOsc helper
+function drawOsc(ctx, cx, cy, r, theta, label, color) {
+  ctx.strokeStyle = '#c8c0ad';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.stroke();
+
+  const px = cx + Math.cos(theta) * r;
+  const py = cy + Math.sin(theta) * r;
+
+  ctx.strokeStyle = '#c0cde0';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy); ctx.lineTo(px, py);
+  ctx.stroke();
+
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(px, py, 7, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#888';
+  ctx.font = '14px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(label, cx - r - 14, cy + 5);
+}
+
+// ============================================================
+// FIGURE: Death threshold bifurcation — K*(cos Δθ)
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-threshold');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+  const rSlider = document.getElementById('thresh-r-slider');
+  const rVal = document.getElementById('thresh-r-val');
+  const cosSlider = document.getElementById('thresh-cos-slider');
+  const cosVal = document.getElementById('thresh-cos-val');
+  const readout = document.getElementById('thresh-readout');
+
+  let r = 5.9;
+  let cosProbe = 0.9;
+
+  rSlider.addEventListener('input', () => {
+    r = parseFloat(rSlider.value);
+    rVal.textContent = r.toFixed(1);
+  });
+  cosSlider.addEventListener('input', () => {
+    cosProbe = parseFloat(cosSlider.value);
+    cosVal.textContent = cosProbe.toFixed(2);
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 340);
+
+    const px0 = 70, py0 = 30, pw = 560, ph = 240;
+
+    // Axes
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(px0, py0, pw, ph);
+
+    const mapX = c => px0 + ((c + 1) / 2) * pw;
+    const Kmax = 3.0;
+    const mapY = K => py0 + ph - (K / Kmax) * ph;
+
+    // Grid + ticks
+    [-1, -0.5, 0, 0.5, 1].forEach(c => {
+      const x = mapX(c);
+      ctx.strokeStyle = '#e0dbcb';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, py0); ctx.lineTo(x, py0 + ph);
+      ctx.stroke();
+      ctx.fillStyle = '#888';
+      ctx.font = 'italic 11px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(c.toFixed(1), x, py0 + ph + 16);
+    });
+    [0, 1, 2, 3].forEach(K => {
+      const y = mapY(K);
+      ctx.strokeStyle = '#e0dbcb';
+      ctx.beginPath();
+      ctx.moveTo(px0, y); ctx.lineTo(px0 + pw, y);
+      ctx.stroke();
+      ctx.fillStyle = '#888';
+      ctx.font = 'italic 11px serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(String(K), px0 - 6, y + 4);
+    });
+
+    // Death threshold line
+    const threshold = 4 / r;
+    if (threshold <= 1) {
+      const tx = mapX(threshold);
+      ctx.strokeStyle = 'rgba(125, 45, 79, 0.5)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      ctx.moveTo(tx, py0); ctx.lineTo(tx, py0 + ph);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#7d2d4f';
+      ctx.font = 'italic 11px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`threshold = 4/r = ${threshold.toFixed(2)}`, tx, py0 - 8);
+    }
+
+    // Shade dead region
+    ctx.fillStyle = 'rgba(125, 45, 79, 0.08)';
+    const deadRight = threshold <= 1 ? mapX(threshold) : px0 + pw;
+    ctx.fillRect(px0, py0, deadRight - px0, ph);
+    ctx.fillStyle = 'rgba(217, 114, 54, 0.06)';
+    if (threshold <= 1) {
+      ctx.fillRect(deadRight, py0, (px0 + pw) - deadRight, ph);
+    }
+
+    // K*(cos Δθ) curve
+    ctx.strokeStyle = '#2a5f8f';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    let first = true;
+    for (let i = 0; i <= 200; i++) {
+      const c = -1 + 2 * i / 200;
+      const Kstar = findKstar(c, r);
+      const x = mapX(c);
+      const y = mapY(Kstar);
+      if (first) { ctx.moveTo(x, y); first = false; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Probe line at current cosProbe
+    const probeX = mapX(cosProbe);
+    const probeK = findKstar(cosProbe, r);
+    const probeAlive = cosProbe > threshold;
+    ctx.strokeStyle = probeAlive ? '#d97236' : '#7d2d4f';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(probeX, py0);
+    ctx.lineTo(probeX, py0 + ph);
+    ctx.stroke();
+    // Dot on curve
+    ctx.fillStyle = probeAlive ? '#d97236' : '#7d2d4f';
+    ctx.beginPath();
+    ctx.arc(probeX, mapY(probeK), 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#fdfaf3';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Annotations
+    ctx.fillStyle = 'rgba(125, 45, 79, 0.7)';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('dead zone', px0 + (deadRight - px0) / 2, py0 + 20);
+    if (threshold <= 1) {
+      ctx.fillStyle = 'rgba(217, 114, 54, 0.7)';
+      ctx.fillText('alive zone', deadRight + ((px0 + pw) - deadRight) / 2, py0 + 20);
+    }
+
+    // Axis labels
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 13px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('cos(Δθ) — alignment the bond observes →', px0 + pw / 2, py0 + ph + 36);
+    ctx.save();
+    ctx.translate(px0 - 40, py0 + ph / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('equilibrium coupling K* →', 0, 0);
+    ctx.restore();
+
+    readout.textContent = `K* = ${probeK.toFixed(3)},  ${probeAlive ? 'alive' : 'dead'}`;
+    readout.style.color = probeAlive ? '#d97236' : '#7d2d4f';
+  }
+
+  function loop() {
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+
+</body>
+</html>

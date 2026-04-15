@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coherence capital — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<p style="color: var(--text-faint); font-size: 0.88em; margin-bottom: 0;"><a href="../index.html" style="border-bottom: none;">&larr; contents</a> &nbsp;·&nbsp; section 03 of 15</p>
+
+<h1>Coherence capital<span class="subtitle">What a system would maximize if it cared about both sync and complexity</span></h1>
+
+<p class="lead">Sync alone is not what we want. A grid at high K all flashes in unison and the metric <span class="eqn">I<sub>phase</sub> ≈ 1</span> is happy. But unison is the emptiest form of agreement. A brain that synchronized every neuron together would be a seizure.</p>
+
+<p>What we actually want, in every interesting system that has ever existed, is <em>coordinated complexity</em>. A Bach fugue holds many independent voices in a tension that resolves and re-opens. A living cell coordinates ten thousand chemistries without flattening them into one. A thought is many ideas locked together in a structure that could come apart, but doesn't. These are not unison states. They are something richer and harder to name.</p>
+
+<h2>Two things we need at once</h2>
+
+<p>The network needs to be <strong>aligned enough</strong> to function as one thing. It also needs to be <strong>structured enough</strong> to hold more than one pattern at a time. Call these two requirements <span class="var">I<sub>phase</sub></span> and <span class="var">ρ</span>.</p>
+
+<p><span class="var">I<sub>phase</sub></span> we already have — the average alignment across all bonds, from Chapter 2. It answers: <em>are we in sync?</em></p>
+
+<p><span class="var">ρ</span> (Greek lowercase rho) is new. Call it <strong>structural richness</strong>. It answers: <em>how much is the network actually doing?</em> A network holding many distinct phase patterns simultaneously — where regions lock with each other in nontrivial ways — has high <span class="var">ρ</span>. A network in trivial unison has low <span class="var">ρ</span>, because a single pattern is the simplest pattern there is. A network in noise also has low <span class="var">ρ</span>, because noise is not <em>structure</em>, it is the absence of structure.</p>
+
+<p class="aside"><span class="label">A note on ρ</span>The full formula for structural richness, written out in the paper, involves four components: how many bonds are alive, their mean coupling, the spectral bandwidth of the network's connectivity, and the depth of its <em>nested phase-lock hierarchy</em> — what we'll get to in Chapter 6 when we meet phase-locked modes proper. In this chapter we use a simplified proxy that captures the essential trade-off with <span class="var">I<sub>phase</sub></span>. The full picture, and its connection to memory and geometry, is coming.</p>
+
+<h2>Their product</h2>
+
+<p>Neither number alone is what we want. Their product, however, is:</p>
+
+<div class="equation-block" id="eq-capital">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="C">C</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol state" data-symbol="Iphase">I<sub>phase</sub></span>
+    &nbsp;·&nbsp;
+    <span class="eq-symbol state" data-symbol="rho">ρ</span>
+  </div>
+  <p class="eq-prompt">Click each symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    Coherence capital <span class="var">C</span> is the product of phase alignment and structural richness. Take two numbers, each between 0 and 1. Multiply them. If either one is near zero, the product is near zero. The only way to get a large <span class="var">C</span> is to have <em>both</em> factors substantial at once. That is the tension that shapes everything in this essay. A network that cares about <span class="var">C</span> has to align itself without flattening itself.
+  </div>
+</div>
+
+<h2>Three regimes</h2>
+
+<p>Here is the same network at three different values of <span class="var">K</span>, running simultaneously. Same equation, same starting conditions — only the coupling strength differs. Watch the readouts underneath each panel.</p>
+
+<figure id="fig-three-regimes">
+  <canvas id="canvas-three" width="680" height="380"></canvas>
+  <figcaption>
+    <strong>Left:</strong> chaos. K is too small for sync to form. I<sub>phase</sub> near zero, ρ large, but their product is zero because nothing is actually coordinating.<br>
+    <strong>Middle:</strong> coordinated complexity. K is in the sweet spot. Islands of coherence have formed; distinct regions are locked, but they are distinct. I<sub>phase</sub> and ρ are both substantial. Their product peaks here.<br>
+    <strong>Right:</strong> trivial unison. K is so high that every oscillator has given up its own pattern. I<sub>phase</sub> near 1, but ρ has collapsed to zero. The network is in sync, but there is nothing for it to be in sync <em>about</em>.
+  </figcaption>
+</figure>
+
+<h2>Climbing the product</h2>
+
+<p>Here is the full story in one figure. A live grid, a slider for <span class="var">K</span>, and a real-time readout of <span class="var">I<sub>phase</sub></span>, <span class="var">ρ</span>, and their product <span class="var">C</span>. On the right, a phase portrait with <span class="var">I<sub>phase</sub></span> along one axis and <span class="var">ρ</span> along the other. The dot is where the current state sits. The curved contours are lines of equal <span class="var">C</span>. Your job is to find the contour with the largest <span class="var">C</span>.</p>
+
+<figure id="fig-capital">
+  <canvas id="canvas-capital" width="680" height="440"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>K (coupling) <span class="val" id="cap-k-val">0.20</span></label>
+      <input type="range" id="cap-k-slider" min="0" max="1" step="0.005" value="0.2">
+    </div>
+    <button id="cap-reset">Reset phases</button>
+    <button id="cap-new-freqs">New natural frequencies</button>
+  </div>
+  <figcaption>Slide K from 0 to 5. Watch the three bars. The dot on the phase portrait walks a trajectory through the (I<sub>phase</sub>, ρ) plane, crossing contours of C. Notice that C has an interior maximum — neither extreme wins. <span id="cap-readout" class="readout">C = 0.00</span></figcaption>
+</figure>
+
+<p>The peak of <span class="var">C</span> is not at the highest <span class="var">K</span>. It is somewhere in the middle. The network that maximizes coherence capital is not the most tightly synchronized network. It is the one that has found the point of maximum tension between alignment and structure — enough sync to coordinate, enough disagreement to do anything interesting.</p>
+
+<h2>What if a system tried to climb this on its own?</h2>
+
+<p>We have been sliding <span class="var">K</span> by hand. But imagine the system <em>itself</em> had to decide, at every moment, what its couplings should be, and that it had access to only local information. Imagine the only rule was: nudge each coupling in the direction that increases <span class="var">C</span>.</p>
+
+<p>That system would be doing something different from Kuramoto. It would not be solving for synchronization. It would be climbing a surface — a surface defined by coherence capital, with one dimension per bond, and the peak somewhere deep in its interior. The climb itself would be the learning. The climb itself would be the intelligence.</p>
+
+<p>We have a name for this climb: <strong>coherence ascent</strong>. And the local rule that performs it, derived from nothing more than taking the time derivative of <span class="eqn">C</span> and asking each bond what it should do to help, is the <strong>Coherence Learning Rule</strong>. That is the next chapter. For now, hold onto this: every interesting physical system — crystal, embryo, brain, fugue — is, in a precise sense, trying to do this.</p>
+
+<div class="nav-links">
+  <a href="02-oscillators.html" class="prev">Oscillators on a graph</a>
+  <a href="04-clr.html" class="next">The Coherence Learning Rule</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, wireEquation } from '../js/common.js';
+
+// ============================================================
+// Interactive equation: Coherence capital
+// ============================================================
+
+wireEquation('eq-capital', {
+  C: {
+    name: 'C — coherence capital',
+    pronounce: '"see"',
+    description: 'The quantity we actually care about maximizing. Dimensionless. Bounded between 0 and its theoretical maximum (determined by the network). A big <em>C</em> means the network is <em>both</em> aligned and structured, which is the condition for every interesting collective behavior we know of. A small <em>C</em> means the network is missing at least one of these.',
+  },
+  Iphase: {
+    name: 'I_phase — phase alignment',
+    pronounce: '"eye phase"',
+    description: 'The average of cos(Δθ) across all bonds, from Chapter 2. Near 0 when phases are random, near 1 when everyone agrees. This is the sync factor. By itself it would reward trivial unison.',
+  },
+  rho: {
+    name: 'ρ — structural richness',
+    pronounce: '"rho" (Greek lowercase, sounds like "roh")',
+    description: 'A measure of how much nontrivial structure the network carries. High when there are distinct phase patterns, coupled bonds with meaningful spread, or nested regions of partial lock. Low both at noise (no structure) and at unison (the single simplest pattern). The full formula in the paper includes connectivity, coupling density, spectral bandwidth, and nested phase-lock depth; for this chapter we use a simplified proxy that captures the trade-off with alignment.',
+  },
+});
+
+// ============================================================
+// Simplified metrics for the explorable
+// ============================================================
+// I_phase_hat (global): average alignment across all bonds, rescaled to [0,1].
+// ρ (structural richness): spatial heterogeneity of local alignment.
+//   Compute I_phase on small 3×3 patches, then take the standard deviation
+//   of those local values across patches, rescaled to roughly [0,1].
+//   This peaks when some patches are locked and others are not —
+//   exactly the "islands of coherence" regime we want to reward.
+// C = I_phase_hat · ρ
+
+function computeMetrics(thetas, L, periodic = true) {
+  // Global I_phase
+  let s = 0, n = 0;
+  for (let y = 0; y < L; y++) {
+    for (let x = 0; x < L; x++) {
+      const i = y * L + x;
+      const xr = periodic ? (x + 1) % L : (x + 1 < L ? x + 1 : -1);
+      const yd = periodic ? (y + 1) % L : (y + 1 < L ? y + 1 : -1);
+      if (xr >= 0) { s += Math.cos(thetas[y * L + xr] - thetas[i]); n++; }
+      if (yd >= 0) { s += Math.cos(thetas[yd * L + x] - thetas[i]); n++; }
+    }
+  }
+  const Iphase = s / n;
+  const Iphat = (1 + Iphase) / 2;
+
+  // Local I_phase per 3×3 patch, then spatial std-dev → ρ
+  const ps = 3;
+  const locals = [];
+  for (let py = 0; py < L; py += ps) {
+    for (let px = 0; px < L; px += ps) {
+      let lsum = 0, lcount = 0;
+      for (let y = py; y < Math.min(py + ps, L); y++) {
+        for (let x = px; x < Math.min(px + ps, L); x++) {
+          const i = y * L + x;
+          if (x + 1 < Math.min(px + ps, L)) {
+            lsum += Math.cos(thetas[y * L + (x + 1)] - thetas[i]);
+            lcount++;
+          }
+          if (y + 1 < Math.min(py + ps, L)) {
+            lsum += Math.cos(thetas[(y + 1) * L + x] - thetas[i]);
+            lcount++;
+          }
+        }
+      }
+      if (lcount > 0) locals.push((1 + lsum / lcount) / 2);
+    }
+  }
+  const mean = locals.reduce((a, b) => a + b, 0) / locals.length;
+  const variance = locals.reduce((acc, x) => acc + (x - mean) ** 2, 0) / locals.length;
+  const stdev = Math.sqrt(variance);
+  // Normalize: theoretical max std of values in [0,1] is 0.5 (bimodal {0,1}).
+  // Scale so that value ~ 1 at realistic heterogeneity (~0.35 std).
+  const rho = Math.min(1, stdev / 0.35);
+
+  const C = Iphat * rho;
+  return { Iphase, Iphat, rho, C };
+}
+
+// ============================================================
+// FIGURE A: Three-regime comparison (three mini grids)
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-three');
+  const ctx = setupHiDPICanvas(canvas, 680, 380);
+
+  const L = 10;
+  const N = L * L;
+  const panels = [
+    { label: 'chaos',                  K: 0.05, thetas: new Float32Array(N), omegas: new Float32Array(N) },
+    { label: 'coordinated complexity', K: 0.20, thetas: new Float32Array(N), omegas: new Float32Array(N) },
+    { label: 'trivial unison',         K: 3.00, thetas: new Float32Array(N), omegas: new Float32Array(N) },
+  ];
+
+  // Wider frequency spread so the middle-K regime shows real heterogeneity
+  const initThetas = Array.from({ length: N }, () => Math.random() * Math.PI * 2);
+  const initOmegas = Array.from({ length: N }, () => 0.8 + (Math.random() - 0.5) * 1.2);
+
+  panels.forEach(p => {
+    for (let i = 0; i < N; i++) { p.thetas[i] = initThetas[i]; p.omegas[i] = initOmegas[i]; }
+  });
+
+  function stepPanel(p) {
+    const dt = 0.04;
+    const newT = new Float32Array(N);
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const xm = (x - 1 + L) % L, xp = (x + 1) % L;
+        const ym = (y - 1 + L) % L, yp = (y + 1) % L;
+        const d = p.omegas[i] + p.K * (
+          Math.sin(p.thetas[y * L + xm] - p.thetas[i]) +
+          Math.sin(p.thetas[y * L + xp] - p.thetas[i]) +
+          Math.sin(p.thetas[ym * L + x] - p.thetas[i]) +
+          Math.sin(p.thetas[yp * L + x] - p.thetas[i])
+        );
+        newT[i] = p.thetas[i] + d * dt;
+      }
+    }
+    p.thetas = newT;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 380);
+
+    const cell = 18;
+    const gridW = L * cell;
+    const padX = (680 - 3 * gridW) / 4;
+    const y0 = 30;
+
+    panels.forEach((p, idx) => {
+      const x0 = padX + idx * (gridW + padX);
+      for (let y = 0; y < L; y++) {
+        for (let x = 0; x < L; x++) {
+          const i = y * L + x;
+          const b = (Math.cos(p.thetas[i]) + 1) / 2;
+          const rc = 40 + b * 215;
+          const gc = 40 + b * 170;
+          const bc = 50 + b * 80;
+          ctx.fillStyle = `rgb(${rc}, ${gc}, ${bc})`;
+          ctx.fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
+        }
+      }
+      ctx.strokeStyle = '#c8c0ad';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x0, y0, gridW, gridW);
+
+      // Label
+      ctx.fillStyle = '#555';
+      ctx.font = 'italic 14px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(p.label, x0 + gridW / 2, y0 - 10);
+
+      // Metrics
+      const m = computeMetrics(p.thetas, L);
+      const my = y0 + gridW + 18;
+      ctx.fillStyle = '#888';
+      ctx.font = 'italic 11px serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(`I_phase`, x0, my);
+      ctx.fillText(`ρ`, x0, my + 28);
+      ctx.fillText(`C`, x0, my + 56);
+      ctx.font = '11px "SF Mono", monospace';
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#2a5f8f';
+      ctx.fillText(m.Iphat.toFixed(3), x0 + gridW, my);
+      ctx.fillStyle = '#7d2d4f';
+      ctx.fillText(m.rho.toFixed(3), x0 + gridW, my + 28);
+      ctx.fillStyle = '#d97236';
+      ctx.fillText(m.C.toFixed(3), x0 + gridW, my + 56);
+
+      // Bars
+      const barW = gridW;
+      const barH = 5;
+      [[m.Iphat, my + 5, '#2a5f8f', 1],
+       [m.rho, my + 33, '#7d2d4f', 1],
+       [m.C, my + 61, '#d97236', 0.6]].forEach(([v, by, color, vmax]) => {
+        ctx.fillStyle = '#fdfaf3';
+        ctx.strokeStyle = '#d8d4c8';
+        ctx.lineWidth = 0.5;
+        ctx.fillRect(x0, by, barW, barH);
+        ctx.strokeRect(x0, by, barW, barH);
+        ctx.fillStyle = color;
+        ctx.fillRect(x0, by, (v / vmax) * barW, barH);
+      });
+
+      stepPanel(p);
+    });
+  }
+
+  function loop() {
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ============================================================
+// FIGURE B: Main coherence-capital interactive
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-capital');
+  const ctx = setupHiDPICanvas(canvas, 680, 440);
+  const kSlider = document.getElementById('cap-k-slider');
+  const kVal = document.getElementById('cap-k-val');
+  const resetBtn = document.getElementById('cap-reset');
+  const newFreqsBtn = document.getElementById('cap-new-freqs');
+  const readout = document.getElementById('cap-readout');
+
+  const L = 14;
+  const N = L * L;
+  let thetas = new Float32Array(N);
+  let omegas = new Float32Array(N);
+  let K = 0.8;
+
+  function newFreqs() {
+    for (let i = 0; i < N; i++) omegas[i] = 0.8 + (Math.random() - 0.5) * 1.2;
+  }
+  function resetThetas() {
+    for (let i = 0; i < N; i++) thetas[i] = Math.random() * Math.PI * 2;
+  }
+  newFreqs();
+  resetThetas();
+
+  kSlider.addEventListener('input', () => {
+    K = parseFloat(kSlider.value);
+    kVal.textContent = K.toFixed(2);
+  });
+  resetBtn.addEventListener('click', resetThetas);
+  newFreqsBtn.addEventListener('click', () => { newFreqs(); resetThetas(); });
+
+  function step() {
+    const dt = 0.04;
+    const newT = new Float32Array(N);
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const xm = (x - 1 + L) % L, xp = (x + 1) % L;
+        const ym = (y - 1 + L) % L, yp = (y + 1) % L;
+        const d = omegas[i] + K * (
+          Math.sin(thetas[y * L + xm] - thetas[i]) +
+          Math.sin(thetas[y * L + xp] - thetas[i]) +
+          Math.sin(thetas[ym * L + x] - thetas[i]) +
+          Math.sin(thetas[yp * L + x] - thetas[i])
+        );
+        newT[i] = thetas[i] + d * dt;
+      }
+    }
+    thetas = newT;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 440);
+
+    // Left: grid
+    const cell = 16;
+    const gridW = L * cell;
+    const x0 = 30, y0 = 30;
+
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const b = (Math.cos(thetas[i]) + 1) / 2;
+        const rc = 40 + b * 215;
+        const gc = 40 + b * 170;
+        const bc = 50 + b * 80;
+        ctx.fillStyle = `rgb(${rc}, ${gc}, ${bc})`;
+        ctx.fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
+      }
+    }
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, gridW, gridW);
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('the network (live)', x0 + gridW / 2, y0 - 10);
+
+    const m = computeMetrics(thetas, L);
+    readout.textContent = `C = ${m.C.toFixed(3)}`;
+
+    // Middle: bars
+    const bx0 = 290;
+    const bw = 130;
+    const bh = 16;
+    const barSet = [
+      ['I_phase', m.Iphat, 1, '#2a5f8f', y0 + 30],
+      ['ρ', m.rho, 1, '#7d2d4f', y0 + 80],
+      ['C', m.C, 0.6, '#d97236', y0 + 130],
+    ];
+    barSet.forEach(([label, val, vmax, color, by]) => {
+      ctx.fillStyle = '#fdfaf3';
+      ctx.strokeStyle = '#c8c0ad';
+      ctx.lineWidth = 1;
+      ctx.fillRect(bx0, by, bw, bh);
+      ctx.strokeRect(bx0, by, bw, bh);
+      ctx.fillStyle = color;
+      ctx.fillRect(bx0, by, (val / vmax) * bw, bh);
+      ctx.fillStyle = '#888';
+      ctx.font = 'italic 12px serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(label, bx0 - 6, by + bh / 2 + 4);
+      ctx.fillStyle = color;
+      ctx.font = '12px "SF Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(val.toFixed(3), bx0 + bw + 6, by + bh / 2 + 4);
+    });
+
+    // Right: phase portrait on (I_phase, ρ) with contours of C
+    const pX0 = 450;
+    const pY0 = 30;
+    const pW = 200;
+    const pH = 200;
+
+    // Axes
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(pX0, pY0, pW, pH);
+
+    // Contours of C = I_phase × ρ
+    const contourLevels = [0.10, 0.20, 0.30, 0.40, 0.50];
+    contourLevels.forEach(level => {
+      ctx.strokeStyle = `rgba(217, 114, 54, ${0.15 + level * 0.7})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      let first = true;
+      for (let i = 0; i <= 100; i++) {
+        const iph = i / 100;
+        if (iph === 0) continue;
+        const r = level / iph;
+        if (r > 1) continue;
+        const xp = pX0 + iph * pW;
+        const yp = pY0 + pH - r * pH;
+        if (first) { ctx.moveTo(xp, yp); first = false; }
+        else ctx.lineTo(xp, yp);
+      }
+      ctx.stroke();
+    });
+
+    // Current state dot
+    const dx = pX0 + m.Iphat * pW;
+    const dy = pY0 + pH - m.rho * pH;
+    ctx.fillStyle = '#d97236';
+    ctx.beginPath();
+    ctx.arc(dx, dy, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#fdfaf3';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Axis labels
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('I_phase →', pX0 + pW / 2, pY0 + pH + 18);
+    ctx.save();
+    ctx.translate(pX0 - 18, pY0 + pH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('ρ →', 0, 0);
+    ctx.restore();
+
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('0', pX0 - 4, pY0 + pH + 16);
+    ctx.fillText('1', pX0 + pW - 4, pY0 + pH + 16);
+    ctx.fillText('1', pX0 - 12, pY0 + 6);
+
+    // Contour labels (subtle)
+    ctx.fillStyle = 'rgba(217, 114, 54, 0.5)';
+    ctx.font = 'italic 9px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('contours of C', pX0 + pW / 2, pY0 - 10);
+
+    // Step the physics
+    step();
+
+    // Bottom: legend
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('The dot is your state. The curves are lines of equal C. C peaks where', 30, y0 + gridW + 40);
+    ctx.fillText('the dot sits on the largest-C contour it can reach.', 30, y0 + gridW + 58);
+  }
+
+  function loop() {
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+
+</body>
+</html>

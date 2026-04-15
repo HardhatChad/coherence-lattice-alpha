@@ -9,51 +9,112 @@
 <body>
 <div class="page">
 
-<p style="color: var(--text-faint); font-size: 0.88em; margin-bottom: 0;"><a href="../index.html" style="border-bottom: none;">&larr; contents</a> &nbsp;·&nbsp; section 01 of 14</p>
+<p style="color: var(--text-faint); font-size: 0.88em; margin-bottom: 0;"><a href="../index.html" style="border-bottom: none;">&larr; contents</a> &nbsp;·&nbsp; section 01 of 15</p>
 
 <h1>Prelude<span class="subtitle">What it means for a lattice to be alive</span></h1>
 
-<p class="lead">Here are two little oscillators, connected by a spring. The spring's stiffness is called its <em>coupling</em>, written <span class="mono">K</span>. In ordinary physics, <span class="mono">K</span> is a number you choose and then leave alone.</p>
+<p class="lead">Meet an oscillator. It is the simplest thing that can be said to have a rhythm. A point that goes around a circle, forever.</p>
 
-<figure id="fig-two-osc">
-  <canvas id="canvas-two-osc" width="680" height="280"></canvas>
+<figure id="fig-one">
+  <canvas id="canvas-one" width="680" height="300"></canvas>
   <div class="controls">
     <div class="control">
-      <label>K (coupling) <span class="val" id="k-val">1.00</span></label>
-      <input type="range" id="k-slider" min="0" max="2" step="0.01" value="1.0">
+      <label>Frequency ω <span class="val" id="omega-val">0.60</span></label>
+      <input type="range" id="omega-slider" min="-1.5" max="1.5" step="0.01" value="0.6">
     </div>
-    <button id="start-oscillators">Start</button>
-    <button id="reset-oscillators">Reset</button>
   </div>
-  <figcaption>Two phase oscillators on a circle. The bond glows brighter when the phases align, darker when they fight. Drag the slider to change the coupling. <span id="coherence-readout" class="readout">I = 0.00</span></figcaption>
+  <figcaption>The oscillator has two properties. Its <strong>phase</strong> is where it is on the circle — an angle. Its <strong>frequency</strong> is how fast it goes around. When you plot its vertical position over time, you get the sine wave you already know.</figcaption>
 </figure>
 
-<p>This is the setup physics has used for a century. Fix <span class="mono">K</span>, pick initial phases, watch them evolve. If <span class="mono">K</span> is large enough, they synchronize. If not, they drift.</p>
+<p>Try dragging the frequency. Positive values spin counter-clockwise, negative clockwise, zero stops the rhythm. The sine wave below reads out the heartbeat.</p>
 
-<p>Now try something different. Instead of holding <span class="mono">K</span> fixed, let <em>it</em> evolve too. Give it its own equation of motion. Tell it:</p>
+<p>One oscillator is a clock. A universe of one clock is not very interesting. Add a second.</p>
 
-<p style="text-align: center; font-style: italic; color: var(--text-soft); margin: 1.5em 0;">grow when the phases you connect tend to align &nbsp;·&nbsp; shrink when they fight</p>
-
-<p>That is, roughly, the <strong>Coherence Learning Rule</strong>. The coupling itself becomes a participant in the dynamics. A living variable, not a dial.</p>
-
-<figure id="fig-two-osc-live">
-  <canvas id="canvas-two-osc-live" width="680" height="280"></canvas>
+<figure id="fig-two-uncoupled">
+  <canvas id="canvas-two-uncoupled" width="680" height="340"></canvas>
   <div class="controls">
-    <button id="start-live" class="primary">Start with random initial K</button>
-    <button id="reset-live">Reset</button>
+    <div class="control">
+      <label>ω<sub>A</sub> <span class="val" id="omega-a-val">0.80</span></label>
+      <input type="range" id="omega-a-slider" min="-1" max="2" step="0.01" value="0.8">
+    </div>
+    <div class="control">
+      <label>ω<sub>B</sub> <span class="val" id="omega-b-val">0.50</span></label>
+      <input type="range" id="omega-b-slider" min="-1" max="2" step="0.01" value="0.5">
+    </div>
   </div>
-  <figcaption>Same two oscillators, but now K is dynamic. It finds its own equilibrium. <span id="live-readout" class="readout">K = 0.00, I = 0.00</span></figcaption>
+  <figcaption>Two oscillators, each with its own natural frequency. No connection between them. Each goes its own way. The waveforms below drift past one another forever.</figcaption>
 </figure>
 
-<p>Nothing dramatic yet. Two oscillators are too small a world. But watch what happens when you scale this up to a network — thousands of oscillators, each pair with its own living <span class="mono">K</span>, all governed by the same local rule. Bonds find their equilibria. Some couplings converge to a large value (alive bonds), others decay to zero (dead bonds). The network self-organizes into a binary field of connectivity, from any starting point.</p>
+<p>Two uncoupled oscillators know nothing of each other. Their phase difference grows without bound. Look at their sine waves — they never quite align.</p>
 
-<p>Pick the network carefully — we will see later why the <em>diamond</em> lattice is mathematically forced upon us — and something remarkable happens. Topological defects appear out of nothing. They carry quantized charge. They have spin 1/2. They are confined by a logarithmic potential. Their magnetic moment is <span class="mono">g = 2</span> at tree level. And the coupling constant that governs how they interact with themselves is</p>
+<h2>Coupling</h2>
 
-<div style="text-align: center; font-size: 1.2em; margin: 1.2em 0; font-family: 'SF Mono', 'Menlo', monospace;">1/α = 137.035999</div>
+<p>Now connect them. Add a bond between A and B with stiffness <span class="mono">K</span>. At every instant, each oscillator feels a little pull toward the other's phase — gentle when they're close, strong when they're far apart. This is the classical <strong>Kuramoto rule</strong>, a restoring force written in one simple sentence. The exact equation will come next chapter.</p>
 
-<p>— to 1.5 parts per billion of the measured value, with zero free parameters.</p>
+<figure id="fig-two-coupled">
+  <canvas id="canvas-two-coupled" width="680" height="340"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>K (coupling) <span class="val" id="k-val">0.40</span></label>
+      <input type="range" id="k-slider" min="0" max="2" step="0.01" value="0.4">
+    </div>
+    <div class="control">
+      <label>Frequency gap |ω<sub>A</sub> − ω<sub>B</sub>| <span class="val" id="gap-val">0.60</span></label>
+      <input type="range" id="gap-slider" min="0" max="1.5" step="0.01" value="0.6">
+    </div>
+    <button id="reset-coupled">Reset phases</button>
+  </div>
+  <figcaption>Both oscillators rotate around a mean frequency. Their gap sets how much they want to disagree. K is the strength of their agreement. <span id="state-readout" class="readout">drifting</span></figcaption>
+</figure>
 
-<p>This is the story. It takes fourteen short chapters to tell. We start with one bond.</p>
+<p>Hold the gap at <span class="mono">0.60</span>. Slide K low. The waves below slide past each other, never quite matching. The two circles rotate at different rates. The bond, drawn between them, flickers weakly.</p>
+
+<p>Push K above <span class="mono">0.30</span>. Something clicks. The bond glows. The two sine waves visibly align — they now share a single rhythm, offset by a constant phase. The phase difference below becomes a flat line. This is a <strong>phase-locked mode</strong>. The two oscillators have negotiated a shared frequency, even though their natural frequencies differ.</p>
+
+<p>For a century, this has been the central object of nonlinear dynamics. You fix <span class="mono">K</span>, you study whether lock occurs, you move on. What happens next is the idea this whole essay is about.</p>
+
+<h2>The coupling is alive</h2>
+
+<p>Do not fix <span class="mono">K</span>. Give it an equation of motion. Have it listen to the phases it connects and decide for itself:</p>
+
+<p style="text-align: center; font-style: italic; color: var(--text-soft); margin: 1.5em 0 1em;">grow when the phases you connect align <br> shrink when they fight</p>
+
+<p>This is, informally, the <strong>Coherence Learning Rule</strong>. The coupling is no longer a dial. It is a participant in the dynamics, with its own target: maximize coherence.</p>
+
+<figure id="fig-clr">
+  <canvas id="canvas-clr" width="680" height="340"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>Frequency gap <span class="val" id="gap-val-live">0.30</span></label>
+      <input type="range" id="gap-slider-live" min="0" max="1.5" step="0.01" value="0.3">
+    </div>
+    <button id="reset-live" class="primary">Reset (random K, random phases)</button>
+  </div>
+  <figcaption>The K of this single bond now evolves on its own. Every reset starts from a random value and random phases. Watch K find its equilibrium. The dashed line marks K<sub>eq</sub> ≈ 2.1 — the Shannon-channel attractor for an unconstrained bond. (The famous K<sub>bulk</sub> = 16/π² only emerges later, when topology pushes back.) <span id="live-readout" class="readout">K = 0.00</span></figcaption>
+</figure>
+
+<p>Reset a handful of times with a small frequency gap. <span class="mono">K</span> climbs toward its attractor around <span class="mono">2.1</span>, lock happens, and stays locked. Now push the gap to <span class="mono">0.80</span> and reset. <span class="mono">K</span> decays toward zero. The bond has <em>decided</em>, using only local information, that there is no coherence to be had here. It has died.</p>
+
+<p class="aside"><span class="label">Remember this number</span>A single bond settles at <span class="mono">K ≈ 2.1</span>. This is what the CLR wants when left alone with nothing in the way. Later, when we put the CLR on a full lattice with topological defects, something surprising will happen: the defects push back, and the equilibrium value drops. That lower number is what sets the fine structure constant. Chapter 9.</p>
+
+<p>This is the paradigm. The coupling field is not a parameter. It is a dynamical variable that is constantly searching — locally, nonlinearly — for configurations of maximum order. When you scale this up, the same simple rule applied to thousands of bonds produces something that looks less like a passive medium and more like neuroplasticity: a network that grows its own connectivity in response to what it is trying to coordinate.</p>
+
+<p>Pick the right network — the <em>diamond</em> lattice, which the next few chapters will show is mathematically forced upon us — and this dynamics, left alone with a random initial condition, produces:</p>
+
+<ul style="margin: 0.8em 0 1.5em 2em; color: var(--text-soft);">
+  <li>a binary K-field of alive bonds and dead bonds</li>
+  <li>a hierarchy of nested phase-locked modes</li>
+  <li>topological defects carrying quantized charge and spin 1/2</li>
+  <li>Dirac dispersion and a tree-level g-factor of 2</li>
+  <li>a self-selected operating point at the BKT critical coupling</li>
+  <li>and the fine structure constant</li>
+</ul>
+
+<div style="text-align: center; font-size: 1.25em; margin: 1.2em 0; font-family: 'SF Mono', 'Menlo', monospace;">1/α = 137.035999</div>
+
+<p>— to 1.5 parts per billion, with zero free parameters.</p>
+
+<p>This is the story. It takes fifteen short chapters to tell.</p>
 
 <div class="nav-links">
   <a href="../index.html" class="up">contents</a>
@@ -66,196 +127,392 @@
 import { setupHiDPICanvas, R0 } from '../js/common.js';
 
 // ============================================================
-// FIGURE 1: Two oscillators, fixed K (user drags)
+// FIGURE 1: One oscillator + sine wave
 // ============================================================
 
 (() => {
-  const canvas = document.getElementById('canvas-two-osc');
-  const ctx = setupHiDPICanvas(canvas, 680, 280);
-  const kSlider = document.getElementById('k-slider');
-  const kVal = document.getElementById('k-val');
-  const startBtn = document.getElementById('start-oscillators');
-  const resetBtn = document.getElementById('reset-oscillators');
-  const coh = document.getElementById('coherence-readout');
+  const canvas = document.getElementById('canvas-one');
+  const ctx = setupHiDPICanvas(canvas, 680, 300);
+  const omegaSlider = document.getElementById('omega-slider');
+  const omegaVal = document.getElementById('omega-val');
 
-  let theta1 = 0.3, theta2 = 2.1;
-  let omega1 = 0.4, omega2 = -0.3;
-  let K = 1.0;
-  let running = false;
-  let rafId = null;
+  let theta = 0;
+  let omega = 0.6;
+  const history = new Array(300).fill(0);
+
+  omegaSlider.addEventListener('input', () => {
+    omega = parseFloat(omegaSlider.value);
+    omegaVal.textContent = omega.toFixed(2);
+  });
+
+  function step() {
+    const dt = 0.05;
+    theta += omega * dt;
+    history.push(Math.sin(theta));
+    history.shift();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 300);
+
+    // Circle (left)
+    const cx = 130, cy = 140, r = 70;
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Phase labels
+    ctx.fillStyle = '#b0a998';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('0', cx + r + 12, cy + 4);
+    ctx.fillText('π/2', cx, cy + r + 16);
+    ctx.fillText('π', cx - r - 12, cy + 4);
+    ctx.fillText('3π/2', cx, cy - r - 8);
+
+    // Phase dot + radial line
+    const px = cx + Math.cos(theta) * r;
+    const py = cy + Math.sin(theta) * r;
+    ctx.strokeStyle = '#6ba4d4';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(px, py);
+    ctx.stroke();
+    ctx.fillStyle = '#2a5f8f';
+    ctx.beginPath();
+    ctx.arc(px, py, 9, 0, Math.PI * 2);
+    ctx.fill();
+
+    // θ label
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 14px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`θ = ${wrapAngle(theta).toFixed(2)}`, cx, cy + r + 38);
+
+    // Horizontal dashed line from dot to waveform axis
+    const waveX0 = 260;
+    const waveW = 380;
+    const waveY = cy;
+    ctx.strokeStyle = '#e0dbcb';
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(px + 9, py);
+    ctx.lineTo(waveX0 + waveW, py);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Waveform (right)
+    // Axis
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(waveX0, waveY - r);
+    ctx.lineTo(waveX0, waveY + r);
+    ctx.moveTo(waveX0, waveY);
+    ctx.lineTo(waveX0 + waveW, waveY);
+    ctx.stroke();
+
+    // Waveform trace
+    ctx.strokeStyle = '#2a5f8f';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < history.length; i++) {
+      const x = waveX0 + (i / history.length) * waveW;
+      const y = waveY - history[i] * r;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Current value dot on waveform
+    ctx.fillStyle = '#d97236';
+    ctx.beginPath();
+    ctx.arc(waveX0 + waveW, waveY - Math.sin(theta) * r, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Axis labels
+    ctx.fillStyle = '#b0a998';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('+1', waveX0 - 22, waveY - r + 4);
+    ctx.fillText('−1', waveX0 - 22, waveY + r + 4);
+    ctx.textAlign = 'center';
+    ctx.fillText('sin(θ) over time →', waveX0 + waveW / 2, waveY + r + 22);
+  }
+
+  function wrapAngle(a) {
+    a = a % (Math.PI * 2);
+    if (a > Math.PI) a -= Math.PI * 2;
+    if (a < -Math.PI) a += Math.PI * 2;
+    return a;
+  }
+
+  function loop() {
+    step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ============================================================
+// FIGURE 2: Two uncoupled oscillators + two waveforms
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-two-uncoupled');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+  const omegaASlider = document.getElementById('omega-a-slider');
+  const omegaBSlider = document.getElementById('omega-b-slider');
+  const omegaAVal = document.getElementById('omega-a-val');
+  const omegaBVal = document.getElementById('omega-b-val');
+
+  let thetaA = 0, thetaB = Math.PI / 2;
+  let omegaA = 0.8, omegaB = 0.5;
+  const histA = new Array(300).fill(0);
+  const histB = new Array(300).fill(0);
+
+  omegaASlider.addEventListener('input', () => {
+    omegaA = parseFloat(omegaASlider.value);
+    omegaAVal.textContent = omegaA.toFixed(2);
+  });
+  omegaBSlider.addEventListener('input', () => {
+    omegaB = parseFloat(omegaBSlider.value);
+    omegaBVal.textContent = omegaB.toFixed(2);
+  });
+
+  function step() {
+    const dt = 0.05;
+    thetaA += omegaA * dt;
+    thetaB += omegaB * dt;
+    histA.push(Math.sin(thetaA));
+    histA.shift();
+    histB.push(Math.sin(thetaB));
+    histB.shift();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 340);
+    const cx1 = 90, cx2 = 90, cy1 = 80, cy2 = 230, r = 50;
+
+    drawOsc(cx1, cy1, r, thetaA, 'A', '#2a5f8f');
+    drawOsc(cx2, cy2, r, thetaB, 'B', '#7d2d4f');
+
+    // Waveforms
+    const waveX0 = 200;
+    const waveW = 440;
+    drawWave(waveX0, cy1, waveW, r, histA, '#2a5f8f', thetaA, 'sin(θ_A)');
+    drawWave(waveX0, cy2, waveW, r, histB, '#7d2d4f', thetaB, 'sin(θ_B)');
+  }
+
+  function drawOsc(cx, cy, r, theta, label, color) {
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    const px = cx + Math.cos(theta) * r;
+    const py = cy + Math.sin(theta) * r;
+
+    ctx.strokeStyle = '#c0cde0';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(px, py);
+    ctx.stroke();
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(px, py, 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#888';
+    ctx.font = '14px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, cx - r - 14, cy + 5);
+  }
+
+  function drawWave(x0, y0, w, r, hist, color, theta, label) {
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 - r);
+    ctx.lineTo(x0, y0 + r);
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x0 + w, y0);
+    ctx.stroke();
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < hist.length; i++) {
+      const x = x0 + (i / hist.length) * w;
+      const y = y0 - hist[i] * r;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = '#d97236';
+    ctx.beginPath();
+    ctx.arc(x0 + w, y0 - Math.sin(theta) * r, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(label, x0 + 6, y0 - r - 4);
+  }
+
+  function loop() {
+    step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ============================================================
+// FIGURE 3: Two coupled oscillators + waveforms + phase-diff strip
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-two-coupled');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+  const kSlider = document.getElementById('k-slider');
+  const gapSlider = document.getElementById('gap-slider');
+  const kVal = document.getElementById('k-val');
+  const gapVal = document.getElementById('gap-val');
+  const resetBtn = document.getElementById('reset-coupled');
+  const stateReadout = document.getElementById('state-readout');
+
+  const omegaMean = 0.8;   // positive mean so locked pair still rotates
+  let thetaA, thetaB;
+  let K = 0.4;
+  let gap = 0.6;
+  const histA = new Array(300).fill(0);
+  const histB = new Array(300).fill(0);
+  const histDphi = new Array(200).fill(0);
+  let stableCount = 0;
+
+  function reset() {
+    thetaA = Math.random() * Math.PI * 2;
+    thetaB = Math.random() * Math.PI * 2;
+    histA.fill(0);
+    histB.fill(0);
+    histDphi.fill(0);
+    stableCount = 0;
+  }
+  reset();
 
   kSlider.addEventListener('input', () => {
     K = parseFloat(kSlider.value);
     kVal.textContent = K.toFixed(2);
-    if (!running) draw();
   });
-
-  startBtn.addEventListener('click', () => {
-    running = !running;
-    startBtn.textContent = running ? 'Pause' : 'Start';
-    if (running) loop();
+  gapSlider.addEventListener('input', () => {
+    gap = parseFloat(gapSlider.value);
+    gapVal.textContent = gap.toFixed(2);
   });
-
-  resetBtn.addEventListener('click', () => {
-    theta1 = Math.random() * Math.PI * 2;
-    theta2 = Math.random() * Math.PI * 2;
-    running = false;
-    startBtn.textContent = 'Start';
-    if (rafId) cancelAnimationFrame(rafId);
-    draw();
-  });
-
-  function step() {
-    const dt = 0.04;
-    const d1 = omega1 + K * Math.sin(theta2 - theta1);
-    const d2 = omega2 + K * Math.sin(theta1 - theta2);
-    theta1 += d1 * dt;
-    theta2 += d2 * dt;
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, 680, 280);
-    const cx1 = 220, cx2 = 460, cy = 140, r = 50;
-
-    // Coherence (alignment scalar)
-    const I = (Math.cos(theta1 - theta2) + 1) / 2;
-    coh.textContent = `I = ${I.toFixed(2)}`;
-
-    // Bond (glows with coherence)
-    const glowAlpha = 0.15 + I * 0.85;
-    ctx.strokeStyle = `rgba(217, 114, 54, ${glowAlpha})`;
-    ctx.lineWidth = 2 + I * 6;
-    ctx.beginPath();
-    ctx.moveTo(cx1 + r, cy);
-    ctx.lineTo(cx2 - r, cy);
-    ctx.stroke();
-
-    drawOsc(cx1, cy, r, theta1, 'A');
-    drawOsc(cx2, cy, r, theta2, 'B');
-  }
-
-  function drawOsc(cx, cy, r, theta, label) {
-    // Circle
-    ctx.strokeStyle = '#c8c0ad';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Phase dot
-    const px = cx + Math.cos(theta) * r;
-    const py = cy + Math.sin(theta) * r;
-    ctx.fillStyle = '#2a5f8f';
-    ctx.beginPath();
-    ctx.arc(px, py, 8, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Radial line
-    ctx.strokeStyle = '#6ba4d4';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(px, py);
-    ctx.stroke();
-
-    // Label
-    ctx.fillStyle = '#888';
-    ctx.font = '14px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(label, cx, cy + r + 22);
-  }
-
-  function loop() {
-    if (!running) return;
-    step();
-    draw();
-    rafId = requestAnimationFrame(loop);
-  }
-
-  draw();
-})();
-
-// ============================================================
-// FIGURE 2: Two oscillators, living K (CLR)
-// ============================================================
-
-(() => {
-  const canvas = document.getElementById('canvas-two-osc-live');
-  const ctx = setupHiDPICanvas(canvas, 680, 280);
-  const startBtn = document.getElementById('start-live');
-  const resetBtn = document.getElementById('reset-live');
-  const readout = document.getElementById('live-readout');
-
-  let theta1, theta2, omega1, omega2, K;
-  let running = false;
-  let rafId = null;
-
-  function reset() {
-    theta1 = Math.random() * Math.PI * 2;
-    theta2 = Math.random() * Math.PI * 2;
-    omega1 = 0.4; omega2 = -0.3;
-    K = Math.random() * 0.1; // small random initial K
-    running = false;
-    startBtn.textContent = 'Start with random initial K';
-    if (rafId) cancelAnimationFrame(rafId);
-    draw();
-  }
-
-  startBtn.addEventListener('click', () => {
-    running = !running;
-    startBtn.textContent = running ? 'Pause' : 'Resume';
-    if (running) loop();
-  });
-
   resetBtn.addEventListener('click', reset);
 
   function step() {
     const dt = 0.05;
-    const eta = 0.3;   // learning rate for K
-    const r = 5.9;     // CLR regularization
+    const omegaA = omegaMean + gap / 2;
+    const omegaB = omegaMean - gap / 2;
+    const dA = omegaA + K * Math.sin(thetaB - thetaA);
+    const dB = omegaB + K * Math.sin(thetaA - thetaB);
+    thetaA += dA * dt;
+    thetaB += dB * dt;
+    histA.push(Math.sin(thetaA));
+    histA.shift();
+    histB.push(Math.sin(thetaB));
+    histB.shift();
 
-    const dphi = theta2 - theta1;
-    const cosdphi = Math.cos(dphi);
+    const dphi = wrapAngle(thetaB - thetaA);
+    histDphi.push(dphi);
+    histDphi.shift();
 
-    // Kuramoto phases
-    const d1 = omega1 + K * Math.sin(dphi);
-    const d2 = omega2 + K * Math.sin(-dphi);
-    theta1 += d1 * dt;
-    theta2 += d2 * dt;
+    const recent = histDphi.slice(-50);
+    const mean = recent.reduce((a, b) => a + b, 0) / recent.length;
+    const variance = recent.reduce((s, x) => s + (x - mean) ** 2, 0) / recent.length;
+    if (variance < 0.01) stableCount++; else stableCount = 0;
+    stateReadout.textContent = stableCount > 30 ? 'phase-locked' : 'drifting';
+    stateReadout.style.color = stableCount > 30 ? '#d97236' : '#888';
+  }
 
-    // Shannon CLR on K
-    const dK = eta * (R0(K) * cosdphi - 2 * K / r);
-    K = Math.max(0, K + dK * dt);
+  function wrapAngle(a) {
+    a = a % (Math.PI * 2);
+    if (a > Math.PI) a -= Math.PI * 2;
+    if (a < -Math.PI) a += Math.PI * 2;
+    return a;
   }
 
   function draw() {
-    ctx.clearRect(0, 0, 680, 280);
-    const cx1 = 220, cx2 = 460, cy = 140, r = 50;
+    ctx.clearRect(0, 0, 680, 340);
+    const cx = 90, cy1 = 70, cy2 = 180, r = 45;
 
-    const I = (Math.cos(theta1 - theta2) + 1) / 2;
-    readout.textContent = `K = ${K.toFixed(3)},  I = ${I.toFixed(2)}`;
-
-    // Bond glow depends on K AND alignment
+    // Bond between circles
+    const I = (Math.cos(thetaB - thetaA) + 1) / 2;
     const Knorm = Math.min(1, K / 2);
-    const glowAlpha = 0.1 + Knorm * 0.9;
+    const glowAlpha = 0.12 + Knorm * I * 0.85;
     ctx.strokeStyle = `rgba(217, 114, 54, ${glowAlpha})`;
-    ctx.lineWidth = 1 + Knorm * 8;
+    ctx.lineWidth = 1.5 + Knorm * I * 5;
     ctx.beginPath();
-    ctx.moveTo(cx1 + r, cy);
-    ctx.lineTo(cx2 - r, cy);
+    ctx.moveTo(cx, cy1 + r);
+    ctx.lineTo(cx, cy2 - r);
     ctx.stroke();
 
-    // "K =" label on bond
-    ctx.fillStyle = '#555';
-    ctx.font = 'italic 13px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(`K = ${K.toFixed(3)}`, (cx1 + cx2) / 2, cy - 14);
+    drawOsc(cx, cy1, r, thetaA, 'A', '#2a5f8f');
+    drawOsc(cx, cy2, r, thetaB, 'B', '#7d2d4f');
 
-    drawOsc(cx1, cy, r, theta1, 'A');
-    drawOsc(cx2, cy, r, theta2, 'B');
+    // Waveforms
+    const waveX0 = 200;
+    const waveW = 440;
+    drawWave(waveX0, cy1, waveW, r, histA, '#2a5f8f', thetaA, 'sin(θ_A)');
+    drawWave(waveX0, cy2, waveW, r, histB, '#7d2d4f', thetaB, 'sin(θ_B)');
+
+    // Phase-difference strip
+    const stripY = 260;
+    const stripH = 55;
+    const stripX0 = 80;
+    const stripW = 540;
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(stripX0, stripY, stripW, stripH);
+    ctx.strokeRect(stripX0, stripY, stripW, stripH);
+
+    ctx.strokeStyle = '#e0dbcb';
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(stripX0, stripY + stripH / 2);
+    ctx.lineTo(stripX0 + stripW, stripY + stripH / 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.strokeStyle = '#2a5f8f';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let i = 0; i < histDphi.length; i++) {
+      const x = stripX0 + (i / histDphi.length) * stripW;
+      const y = stripY + stripH / 2 - (histDphi[i] / Math.PI) * (stripH / 2 - 2);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('Δθ = θ_B − θ_A', stripX0 - 8, stripY + stripH / 2 + 4);
+    ctx.textAlign = 'left';
+    ctx.fillText('+π', stripX0 + stripW + 6, stripY + 12);
+    ctx.fillText('0', stripX0 + stripW + 6, stripY + stripH / 2 + 4);
+    ctx.fillText('−π', stripX0 + stripW + 6, stripY + stripH - 2);
   }
 
-  function drawOsc(cx, cy, r, theta, label) {
+  function drawOsc(cx, cy, r, theta, label, color) {
     ctx.strokeStyle = '#c8c0ad';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -264,32 +521,268 @@ import { setupHiDPICanvas, R0 } from '../js/common.js';
 
     const px = cx + Math.cos(theta) * r;
     const py = cy + Math.sin(theta) * r;
-    ctx.fillStyle = '#2a5f8f';
-    ctx.beginPath();
-    ctx.arc(px, py, 8, 0, Math.PI * 2);
-    ctx.fill();
 
-    ctx.strokeStyle = '#6ba4d4';
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = '#c0cde0';
+    ctx.lineWidth = 1.2;
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(px, py);
     ctx.stroke();
 
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(px, py, 7, 0, Math.PI * 2);
+    ctx.fill();
+
     ctx.fillStyle = '#888';
     ctx.font = '14px serif';
     ctx.textAlign = 'center';
-    ctx.fillText(label, cx, cy + r + 22);
+    ctx.fillText(label, cx - r - 14, cy + 5);
+  }
+
+  function drawWave(x0, y0, w, r, hist, color, theta, label) {
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 - r);
+    ctx.lineTo(x0, y0 + r);
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x0 + w, y0);
+    ctx.stroke();
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < hist.length; i++) {
+      const x = x0 + (i / hist.length) * w;
+      const y = y0 - hist[i] * r;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = '#d97236';
+    ctx.beginPath();
+    ctx.arc(x0 + w, y0 - Math.sin(theta) * r, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(label, x0 + 6, y0 - r - 4);
   }
 
   function loop() {
-    if (!running) return;
     step();
     draw();
-    rafId = requestAnimationFrame(loop);
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ============================================================
+// FIGURE 4: CLR — living K on one bond
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-clr');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+  const gapSlider = document.getElementById('gap-slider-live');
+  const gapVal = document.getElementById('gap-val-live');
+  const resetBtn = document.getElementById('reset-live');
+  const readout = document.getElementById('live-readout');
+
+  const omegaMean = 0.8;
+  let thetaA, thetaB, K;
+  let gap = 0.3;
+  const histA = new Array(300).fill(0);
+  const histB = new Array(300).fill(0);
+  const kHist = new Array(400).fill(null);
+
+  function reset() {
+    thetaA = Math.random() * Math.PI * 2;
+    thetaB = Math.random() * Math.PI * 2;
+    K = 0.2 + Math.random() * 0.4;
+    histA.fill(0);
+    histB.fill(0);
+    kHist.fill(null);
+  }
+  reset();
+
+  gapSlider.addEventListener('input', () => {
+    gap = parseFloat(gapSlider.value);
+    gapVal.textContent = gap.toFixed(2);
+  });
+  resetBtn.addEventListener('click', reset);
+
+  function step() {
+    const dt = 0.05;
+    const eta = 0.5;
+    const r = 5.9;
+    const omegaA = omegaMean + gap / 2;
+    const omegaB = omegaMean - gap / 2;
+
+    const dphi = thetaB - thetaA;
+    const cosdphi = Math.cos(dphi);
+
+    const dA = omegaA + K * Math.sin(dphi);
+    const dB = omegaB + K * Math.sin(-dphi);
+    thetaA += dA * dt;
+    thetaB += dB * dt;
+
+    const dK = eta * (R0(K) * cosdphi - 2 * K / r);
+    K = Math.max(0, K + dK * dt);
+
+    histA.push(Math.sin(thetaA));
+    histA.shift();
+    histB.push(Math.sin(thetaB));
+    histB.shift();
+    kHist.push(K);
+    kHist.shift();
   }
 
-  reset();
+  function draw() {
+    ctx.clearRect(0, 0, 680, 340);
+    const cx = 90, cy1 = 70, cy2 = 180, r = 45;
+
+    readout.textContent = `K = ${K.toFixed(3)}`;
+
+    const Knorm = Math.min(1, K / 1.7);
+    const glowAlpha = 0.12 + Knorm * 0.85;
+    ctx.strokeStyle = `rgba(217, 114, 54, ${glowAlpha})`;
+    ctx.lineWidth = 1 + Knorm * 7;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy1 + r);
+    ctx.lineTo(cx, cy2 - r);
+    ctx.stroke();
+
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`K = ${K.toFixed(2)}`, cx + 30, (cy1 + cy2) / 2 + 4);
+
+    drawOsc(cx, cy1, r, thetaA, 'A', '#2a5f8f');
+    drawOsc(cx, cy2, r, thetaB, 'B', '#7d2d4f');
+
+    const waveX0 = 200;
+    const waveW = 440;
+    drawWave(waveX0, cy1, waveW, r, histA, '#2a5f8f', thetaA, 'sin(θ_A)');
+    drawWave(waveX0, cy2, waveW, r, histB, '#7d2d4f', thetaB, 'sin(θ_B)');
+
+    // K history strip
+    const stripY = 260;
+    const stripH = 55;
+    const stripX0 = 80;
+    const stripW = 540;
+    const Kmax = 2.0;
+
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(stripX0, stripY, stripW, stripH);
+    ctx.strokeRect(stripX0, stripY, stripW, stripH);
+
+    // Unconstrained Shannon equilibrium for r = 5.9 (single-bond attractor)
+    const Keq = 2.1;
+    const eqY = stripY + stripH - (Keq / Kmax) * stripH;
+    ctx.strokeStyle = 'rgba(125, 45, 79, 0.4)';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(stripX0, eqY);
+    ctx.lineTo(stripX0 + stripW, eqY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#7d2d4f';
+    ctx.font = 'italic 10px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('K_eq ≈ 2.1', stripX0 + stripW + 6, eqY + 3);
+
+    ctx.strokeStyle = '#d97236';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    let started = false;
+    for (let i = 0; i < kHist.length; i++) {
+      if (kHist[i] == null) continue;
+      const x = stripX0 + (i / kHist.length) * stripW;
+      const y = stripY + stripH - (kHist[i] / Kmax) * stripH;
+      if (!started) { ctx.moveTo(x, y); started = true; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('K over time', stripX0 - 8, stripY + stripH / 2 + 4);
+    ctx.textAlign = 'left';
+    ctx.fillText(Kmax.toFixed(1), stripX0 + stripW + 6, stripY + 10);
+    ctx.fillText('0', stripX0 + stripW + 6, stripY + stripH - 2);
+  }
+
+  function drawOsc(cx, cy, r, theta, label, color) {
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    const px = cx + Math.cos(theta) * r;
+    const py = cy + Math.sin(theta) * r;
+
+    ctx.strokeStyle = '#c0cde0';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(px, py);
+    ctx.stroke();
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(px, py, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#888';
+    ctx.font = '14px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, cx - r - 14, cy + 5);
+  }
+
+  function drawWave(x0, y0, w, r, hist, color, theta, label) {
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 - r);
+    ctx.lineTo(x0, y0 + r);
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x0 + w, y0);
+    ctx.stroke();
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < hist.length; i++) {
+      const x = x0 + (i / hist.length) * w;
+      const y = y0 - hist[i] * r;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = '#d97236';
+    ctx.beginPath();
+    ctx.arc(x0 + w, y0 - Math.sin(theta) * r, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(label, x0 + 6, y0 - r - 4);
+  }
+
+  function loop() {
+    step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
 })();
 </script>
 
