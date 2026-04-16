@@ -168,11 +168,28 @@
 
 <h2>A vortex line on the diamond lattice</h2>
 
-<p>With the lattice picked out, the last thing to see is the object that lives on it. In Chapter 7 we watched a vortex sit at a single point on a 2D grid. In three dimensions, a vortex is no longer a point: it is a <em>line</em> threading through the crystal, with phases winding 2π around any circle transverse to it. On diamond specifically, that line passes alternately through A-sublattice and B-sublattice atoms. As we'll see in Chapter 9, the bound state associated with the line localises on one of those sublattices &mdash; the chiral downfold &mdash; and that is what makes the vortex an electron rather than a generic topological defect.</p>
+<p>With the lattice picked out, the last thing to see is the object that lives on it. In Chapter 7 we watched a vortex sit at a single point on a 2D grid. In three dimensions, a vortex is no longer a point: it is a <em>line</em> threading through the crystal, with phases winding 2&pi; around any circle transverse to it. On diamond specifically, that line passes alternately through A-sublattice and B-sublattice atoms. As we'll see in Chapter 9, the bound state associated with the line localises on one of those sublattices &mdash; the chiral downfold &mdash; and that is what makes the vortex an electron rather than a generic topological defect.</p>
 
-<figure id="fig-vortex-3d" class="plain">
-  <p style="color: var(--text-faint); font-style: italic; text-align: center; margin: 2em 0;">[Figure 3 — 3D vortex line through diamond — coming next]</p>
+<figure id="fig-vortex-3d">
+  <canvas id="canvas-vortex-3d" width="680" height="520"></canvas>
+  <div class="controls">
+    <button id="v3-view-oblique" class="primary">Oblique view</button>
+    <button id="v3-view-top">View down [001]</button>
+    <button id="v3-view-side">View from side</button>
+    <button id="v3-oscillate">▶ Let them oscillate</button>
+  </div>
+  <figcaption>
+    Each atom's colour encodes its phase &theta; = atan2(<em>y</em>, <em>x</em>), which depends only on the two horizontal coordinates &mdash; <em>not</em> on <em>z</em>. That <em>z</em>-independence is what makes this a vortex <strong>line</strong> (along the z-axis through the origin) rather than a point. Burgundy atom outlines mark A-sublattice sites; blue outlines mark B-sublattice. <strong>Drag</strong> to rotate, <strong>shift</strong>+drag to pan, <strong>scroll</strong> to zoom.
+    <br><br>
+    <strong>View down [001]:</strong> camera snaps to look down the z-axis. You see the pinwheel face-on &mdash; a rainbow winding around the vortex core, exactly like Figure 2 of Chapter 7, only now painted on the diamond lattice rather than a 2D grid. Both sublattices carry the winding indifferently.
+    <strong>View from side:</strong> camera snaps to look along the y-axis. The vortex line becomes vertical on screen, with the rainbow pinwheel <em>repeating at every horizontal slice</em> &mdash; a stack of rainbow disks threaded by the line. That repetition is the whole point: a vortex in 3D carries its topology along its entire length.
+    <strong>Let them oscillate:</strong> advances every phase by a common &omega;&middot;dt per frame. The colours cycle through the hue wheel &mdash; every atom's phase is evolving in time &mdash; but the pinwheel pattern stays put. The winding is a <em>topological invariant</em>: it doesn't care that the oscillators are oscillating, only about the <em>spatial</em> winding of phase around the core.
+  </figcaption>
 </figure>
+
+<p>Rotate the lattice and look at the vortex from every angle. Down the z-axis: a rainbow pinwheel, just like &sect;7 Figure 2. From the side: that pinwheel repeats in every horizontal slice of the crystal, stacked into a tube. The vortex is a line, and every plane perpendicular to that line carries the same 2&pi; winding. Annihilation &mdash; which took out our 2D vortex pair at step 40k &mdash; would require this whole line to collapse into its antipartner along <em>every</em> slice simultaneously. The free energy cost is now proportional to the line's length; long lines are effectively immortal on CLR timescales.</p>
+
+<p>Notice also how the rainbow is painted on top of the diamond's bipartite A/B structure. The vortex itself doesn't care about sublattice &mdash; phases wind equally around A and B atoms &mdash; but <strong>the bound state will.</strong> In Chapter 9, we'll see that the quantum state localised <em>at</em> this vortex line has its amplitude concentrated on just one of the two sublattices. That is the <em>chiral downfold</em>; it is what turns a U(1) phase defect on a bipartite lattice into a spin-&frac12; fermion. In other words, it is what makes this line an electron.</p>
 
 <h2>Where this leaves us</h2>
 
@@ -570,7 +587,151 @@ import {
   });
 })();
 
-// Figure 3 (vortex line) comes next.
+// --- FIGURE 3: 3D vortex line on diamond -----------------------------
+(() => {
+  const canvas = document.getElementById('canvas-vortex-3d');
+  if (!canvas) return;
+  const W = 680, H = 520;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  // Build the lattice. nCells=3 → 216 atoms: enough for the rainbow to
+  // repeat visibly along z from the side view while still cheap to render.
+  const lat = diamondLattice({ nCells: 3, a: 1, centered: true });
+
+  // Normalise nearest-neighbour distance to 1 and centre on the origin,
+  // matching the convention buildLatticeScene() uses for Figures 1 and 2.
+  const scale = 1 / lat.bondLength;
+  for (const at of lat.atoms) {
+    at.pos[0] *= scale; at.pos[1] *= scale; at.pos[2] *= scale;
+  }
+  let cmx = 0, cmy = 0, cmz = 0;
+  for (const at of lat.atoms) {
+    cmx += at.pos[0]; cmy += at.pos[1]; cmz += at.pos[2];
+  }
+  cmx /= lat.atoms.length; cmy /= lat.atoms.length; cmz /= lat.atoms.length;
+  for (const at of lat.atoms) {
+    at.pos[0] -= cmx; at.pos[1] -= cmy; at.pos[2] -= cmz;
+  }
+
+  // Seeded vortex phase: θ = atan2(y, x), independent of z.
+  // That z-independence is what makes this a vortex LINE along the
+  // z-axis rather than a point — same seed as da1_spontaneous_vortex.py's
+  // circulation_omega() and the 2D atan2 seed of §7 Figure 2.
+  for (const at of lat.atoms) {
+    at.theta0 = Math.atan2(at.pos[1], at.pos[0]);
+  }
+
+  let extent = 0;
+  for (const at of lat.atoms) {
+    const r = Math.max(Math.abs(at.pos[0]), Math.abs(at.pos[1]), Math.abs(at.pos[2]));
+    if (r > extent) extent = r;
+  }
+
+  // Render atoms: fill encodes phase, stroke encodes sublattice.
+  const atoms = lat.atoms.map(at => ({
+    pos: at.pos,
+    theta0: at.theta0,
+    sublattice: at.sublattice,
+    radius: 0.22,
+    strokeColor: at.sublattice === 'A' ? '#7a4220' : '#1a3c5c',
+  }));
+  const bonds = lat.bonds.map(b => ({
+    a: b.a, b: b.b,
+    color: 'rgba(30, 30, 30, 0.35)',
+    width: 1.1,
+  }));
+
+  // Phase → HSL hue, same mapping as §7: red=0, green=π/2, cyan=π, magenta=−π/2.
+  function phaseToColor(th) {
+    const deg = ((th * 180 / Math.PI) % 360 + 360) % 360;
+    return `hsl(${deg.toFixed(1)}, 75%, 55%)`;
+  }
+
+  const viewLabels = {
+    oblique: 'Oblique view',
+    top:     'View down [001] — pinwheel face-on',
+    side:    'View from side — vortex line visible',
+  };
+
+  // Start in oblique isometric, matching Figure 2's default.
+  const camera = makeCamera({
+    yaw: 0.6, pitch: -0.35,
+    distance: Math.max(6, extent * 2.4),
+    focalLength: 520,
+  });
+  attachCameraControls(canvas, camera);
+
+  let currentView = 'oblique';
+  let oscillating = false;
+  let omegaTime = 0;
+  const omegaPerFrame = 0.012;    // ≈ 0.72 rad/s at 60 fps
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4';
+    ctx.fillRect(0, 0, W, H);
+
+    // Recolour atoms from current phase + common rotation offset.
+    for (const at of atoms) {
+      at.color = phaseToColor(at.theta0 + omegaTime);
+    }
+
+    renderScene(ctx, W, H, { atoms, bonds }, camera);
+
+    ctx.fillStyle = '#555';
+    ctx.font = '12px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(viewLabels[currentView], 24, 22);
+    ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.fillStyle = '#888';
+    ctx.fillText('drag to rotate', 24, 38);
+  }
+
+  function loop() {
+    if (oscillating) omegaTime += omegaPerFrame;
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  const viewButtons = {
+    oblique: document.getElementById('v3-view-oblique'),
+    top:     document.getElementById('v3-view-top'),
+    side:    document.getElementById('v3-view-side'),
+  };
+
+  function setViewActive(key) {
+    currentView = key;
+    for (const k of Object.keys(viewButtons)) {
+      viewButtons[k].classList.toggle('primary', k === key);
+    }
+  }
+
+  viewButtons.oblique.addEventListener('click', () => {
+    camera.yaw = 0.6; camera.pitch = -0.35;
+    setViewActive('oblique');
+  });
+  viewButtons.top.addEventListener('click', () => {
+    orientCameraAlongAxis(camera, [0, 0, 1]);
+    setViewActive('top');
+  });
+  viewButtons.side.addEventListener('click', () => {
+    // [0, 1, 0] puts the vortex line vertical on screen with x running
+    // horizontally; orientCameraAlongAxis sets pitch = π/2 exactly, so we
+    // pull it off the gimbal-lock edge for subsequent drag stability.
+    orientCameraAlongAxis(camera, [0, 1, 0]);
+    camera.pitch = Math.min(Math.PI / 2 - 0.01, camera.pitch);
+    setViewActive('side');
+  });
+
+  const oscBtn = document.getElementById('v3-oscillate');
+  oscBtn.addEventListener('click', () => {
+    oscillating = !oscillating;
+    oscBtn.textContent = oscillating ? '■ Freeze' : '▶ Let them oscillate';
+    oscBtn.classList.toggle('primary', oscillating);
+  });
+})();
 </script>
 </body>
 </html>

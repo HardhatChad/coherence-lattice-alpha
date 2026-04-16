@@ -34,7 +34,7 @@ A three-act structure:
 | 05 | How a binary field emerges | ✅ DONE |
 | 06 | Phase-locked modes: geometry and memory | ✅ DONE |
 | 07 | Spontaneous vortices | ✅ DONE |
-| 08 | Why the diamond lattice | TODO |
+| 08 | Why the diamond lattice | ✅ DONE |
 | 09 | The electron | TODO |
 | 10 | The BKT wall | TODO |
 | 11 | Living versus static | TODO |
@@ -110,16 +110,16 @@ Aside teases Sections 5–15.
 
 ---
 
-### 08 — Why the diamond lattice *(Figures 1+2 shipped, Figure 3 deferred)*
+### 08 — Why the diamond lattice
 
 **Core idea:** Diamond is not chosen — it is *selected*. Five filters uniquely identify the 3D diamond lattice among all possible lattices.
 
-**Figure 1 (shipped): Selection checklist + 3D view of all candidates.**
+**Figure 1: Selection checklist + 3D view of all candidates.**
 Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D square). A five-column filter table (z ≥ 4, bipartite, O_h, 2 sites/cell, d ≥ 3) updates with ✓/✗ marks; diamond is the unique row passing every column. Above the table, a rotatable 3D canvas shows the currently selected lattice with proper bipartite colouring (A = burgundy, B = blue, or monochromatic grey when non-bipartite). Drag rotates, shift+drag pans, wheel zooms.
 
-**Figure 2 (shipped): Deep-dive into diamond.** Same 3D renderer but on diamond only. Mode buttons: Full lattice / A-sublattice only (reveals FCC) / B-sublattice only / One tetrahedron (isolates central atom + 4 NN at 109.47°) / (111) honeycomb layer 1, 2, 3 (each isolates one of the three buckled honeycomb sheets that stack to form the 3D crystal; camera auto-snaps to [111]). View shortcuts: Isometric / Along [111]. Auto-rotate toggle.
+**Figure 2: Deep-dive into diamond.** Same 3D renderer but on diamond only. Mode buttons: Full lattice / A-sublattice only (reveals FCC) / B-sublattice only / One tetrahedron (isolates central atom + 4 NN at 109.47°) / (111) honeycomb layer 1, 2, 3 (each isolates one of the three buckled honeycomb sheets that stack to form the 3D crystal; camera auto-snaps to [111]). View shortcuts: Isometric / Along [111]. Auto-rotate toggle.
 
-**Figure 3 (deferred): 3D vortex line on diamond.** See HANDOFF.md "§ Next session" for full spec. Seeded atan2 phase (independent of z) on the diamond lattice, coloured atoms, reveals the vortex as a *line* threading through the crystal rather than a point. Reuses `lattice3d.js` machinery.
+**Figure 3: 3D vortex line on diamond.** Seeded atan2 phase θ(x,y,z) = atan2(y, x) (independent of z) on a 216-atom diamond lattice (nCells = 3). Atom fill colour = phase via HSL hue; outline colour = sublattice (burgundy A, blue B). Three view presets: oblique (default), View down [001] (pinwheel face-on), View from side (vortex line vertical, stacked rainbow disks). "Let them oscillate" toggle advances all phases by a common ω·dt per frame — hue cycles, pinwheel is preserved; winding invariance made visible. Reuses `lattice3d.js` machinery and the same HSL hue mapping as §7.
 
 **Prose shipped:**
 - Five filters spelled out in numbered list
