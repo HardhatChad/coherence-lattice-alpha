@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why the diamond lattice — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+/* Lattice-selection filter table */
+.filter-table {
+  margin: 1em 0;
+  border-collapse: collapse;
+  width: 100%;
+  font-family: "Charter", serif;
+  font-size: 0.95em;
+}
+.filter-table th,
+.filter-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--rule);
+  text-align: center;
+}
+.filter-table th {
+  font-weight: 600;
+  font-size: 0.88em;
+  color: var(--text-soft);
+  cursor: help;
+  border-bottom: 2px solid var(--panel-border);
+  user-select: none;
+}
+.filter-table th:hover { background: var(--highlight); color: var(--accent); }
+.filter-table th.active { background: var(--highlight); color: var(--accent); }
+.filter-table td.lattice-name {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+}
+.filter-table td.lattice-name.active {
+  color: var(--accent);
+  background: var(--highlight);
+}
+.filter-table .check  { color: #2d7d4f; font-weight: 700; }
+.filter-table .cross  { color: #c62828; font-weight: 700; }
+.filter-table .na     { color: var(--text-faint); }
+.filter-table .num    { font-family: "SF Mono", monospace; color: var(--text); }
+.filter-table .verdict-pass  { color: #2d7d4f; font-weight: 700; }
+.filter-table .verdict-fail  { color: #c62828; font-weight: 700; }
+.filter-table tr.diamond-row td { background: rgba(217, 114, 54, 0.08); }
+
+.filter-explain {
+  margin-top: 0.8em;
+  padding: 14px 18px;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 3px;
+  font-size: 0.96em;
+  color: var(--text);
+  min-height: 3em;
+}
+.filter-explain .name {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">·</span>
+  <span class="section-num">section 08 / 16</span>
+</nav>
+
+<h1>Why the diamond lattice<span class="subtitle">Five filters, finite enumeration, one survivor</span></h1>
+
+<p class="lead">Chapter 7 ended with a hint: on a 2D lattice, vortex pairs always eventually find each other and annihilate. The topological constraint that forces the BKT equilibrium dissolves with them. To derive physics that lives for longer than finite time, we need at least three dimensions. But <em>which</em> 3D lattice? There are infinitely many. The paper's answer is: <strong>diamond, and only diamond</strong>. It is not a choice; it is what you get when you ask five independent questions and insist on a yes to each.</p>
+
+<h2>Five filters</h2>
+
+<p>The paper distills the demand into five structural requirements. Each one is necessary for a piece of the α derivation to fire. All five together are satisfied by <em>exactly one</em> of the common crystal structures.</p>
+
+<ol>
+  <li><strong>Coordination <em>z</em> &ge; <em>d</em>+1 = 4.</strong> The Bravais-rank bound: in <em>d</em> = 3, the nearest-neighbour vectors must span the full 3D space. That requires at least four of them. Everything lower than four fails the span test.</li>
+  <li><strong>Bipartite.</strong> Every bond connects a site on sublattice A to a site on sublattice B, never A-A or B-B. This produces the chiral Bloch Hamiltonian with its two-band structure &mdash; the object whose nodal points yield the Dirac equation (Chapter 9).</li>
+  <li><strong>O<sub>h</sub> symmetry.</strong> The point group must be the full octahedral symmetry. This is what pins the band crossings to symmetry-protected points in the Brillouin zone; without it, the nodes gap out and we lose the Dirac spectrum.</li>
+  <li><strong>Two sites per unit cell.</strong> One site is not enough for a chiral Bloch Hamiltonian; three or more over-constrain the structure factor. Exactly two. The structure factor <em>f(k)</em> becomes a scalar whose zeros protect Dirac crossings at codimension-2 loci.</li>
+  <li><strong><em>d</em> &ge; 3.</strong> Vortex-line persistence. You just saw this fail in 2D. In <em>d</em> &ge; 3 the vortex is a line (or higher-dimensional defect); annihilation requires coherent collapse along the whole length. Topology survives.</li>
+</ol>
+
+<p>Now run the filters against every 3D lattice you can think of. Exactly one survives.</p>
+
+<figure id="fig-selection">
+  <div class="controls">
+    <div class="control" style="flex: 1; min-width: 220px;">
+      <label>Candidate lattice <span class="val" id="lat-name">Diamond</span></label>
+      <select id="lat-select" style="padding: 4px 6px; font: inherit; border: 1px solid var(--panel-border); border-radius: 3px; background: var(--bg);">
+        <option value="sc">Simple cubic (SC)</option>
+        <option value="bcc">Body-centred cubic (BCC)</option>
+        <option value="fcc">Face-centred cubic (FCC)</option>
+        <option value="hcp">Hexagonal close-packed (HCP)</option>
+        <option value="diamond" selected>Diamond</option>
+        <option value="honeycomb">2D honeycomb</option>
+        <option value="square">2D square</option>
+      </select>
+    </div>
+  </div>
+
+  <canvas id="canvas-lattice" width="680" height="380"></canvas>
+
+  <table class="filter-table" id="filter-table">
+    <thead>
+      <tr>
+        <th data-filter="lattice" style="cursor: default;">Lattice</th>
+        <th data-filter="z">z &ge; 4</th>
+        <th data-filter="bipartite">bipartite</th>
+        <th data-filter="Oh">O<sub>h</sub> sym.</th>
+        <th data-filter="sites">2 sites/cell</th>
+        <th data-filter="d3">d &ge; 3</th>
+        <th data-filter="pass" style="cursor: default;">Verdict</th>
+      </tr>
+    </thead>
+    <tbody id="filter-body">
+      <!-- rows injected by JS -->
+    </tbody>
+  </table>
+
+  <div class="filter-explain" id="filter-explain">
+    <em>Click any column header above to see what that filter does and why it is necessary.</em>
+  </div>
+
+  <figcaption>
+    Pick a candidate from the dropdown and the 3D view above updates to show that lattice. <strong>Drag</strong> the canvas to rotate; <strong>shift</strong>+drag to pan; <strong>scroll</strong> to zoom. The filter table below shows which conditions each lattice satisfies. Click any column header for a description of what that filter enforces; click the dropdown (or a row's lattice name) for a per-lattice explanation. <strong>Burgundy/blue</strong> atoms mark A/B sublattices where a true bipartite structure exists; <strong>grey</strong> atoms indicate a non-bipartite lattice, since a two-colouring would be misleading. Seven of the most common lattices &mdash; and only the diamond row passes every column.
+  </figcaption>
+</figure>
+
+<h2>What diamond looks like</h2>
+
+<p>The paper is compact on the description; here is the picture. Diamond is two interpenetrating face-centred cubic (FCC) sublattices, one offset from the other by one-quarter of the body diagonal. Every atom has exactly four nearest neighbours, and those four neighbours sit at the vertices of a regular tetrahedron around it, all on the <em>other</em> sublattice. That is the bipartite structure in its most literal form.</p>
+
+<p>The buttons below peel the structure apart one piece at a time.</p>
+
+<figure id="fig-diamond-explore">
+  <canvas id="canvas-diamond" width="680" height="460"></canvas>
+  <div class="controls">
+    <button id="dm-mode-full" class="primary">Full lattice</button>
+    <button id="dm-mode-a">A-sublattice only</button>
+    <button id="dm-mode-b">B-sublattice only</button>
+    <button id="dm-mode-tet">One tetrahedron</button>
+    <button id="dm-mode-l1">(111) honeycomb 1</button>
+    <button id="dm-mode-l2">(111) honeycomb 2</button>
+    <button id="dm-mode-l3">(111) honeycomb 3</button>
+    <button id="dm-view-iso">View: isometric</button>
+    <button id="dm-view-111">View along [111]</button>
+    <button id="dm-spin">Auto-rotate: OFF</button>
+  </div>
+  <figcaption>
+    <strong>Controls:</strong> drag to rotate, <em>shift</em>+drag to pan, scroll to zoom. The mode buttons below switch between views of the same underlying lattice.
+    <br><br>
+    <strong>Full lattice:</strong> the default oblique view. A atoms burgundy, B atoms blue; every bond connects a burgundy to a blue.
+    <strong>A-sublattice only:</strong> hides all B atoms. What remains is a face-centred cubic (FCC) lattice &mdash; each A atom is at an FCC site, with 12 second-nearest A-neighbours at distance <em>√2/2·a</em> (drawn as faint grey lines). B-sublattice is the same picture, offset by (1/4, 1/4, 1/4) of the cube.
+    <strong>One tetrahedron:</strong> isolates the central atom and its four bonded neighbours. The bond angle between any two of the four is exactly <em>109.47°</em>, the tetrahedral angle. Nothing else in the lattice sits below that cage; it is the elementary building block.
+    <strong>View along [111]:</strong> camera snaps to look down the body diagonal of the cube. The three-fold rotation symmetry becomes visible, and the honeycomb-like projection that diamond shares with graphite (but with tetrahedral sp<sup>3</sup> bonds out of the page, not planar sp<sup>2</sup>) is clear.
+    <strong>(111) honeycomb 1 / 2 / 3:</strong> diamond along the body-diagonal direction is a stack of buckled honeycomb sheets. Each button isolates one of the three consecutive honeycomb layers and snaps the camera to view it face-on &mdash; showing the A/B alternation that makes each sheet bipartite. Stack all three and you have the full diamond crystal.
+  </figcaption>
+</figure>
+
+<h2>A vortex line on the diamond lattice</h2>
+
+<p>With the lattice picked out, the last thing to see is the object that lives on it. In Chapter 7 we watched a vortex sit at a single point on a 2D grid. In three dimensions, a vortex is no longer a point: it is a <em>line</em> threading through the crystal, with phases winding 2π around any circle transverse to it. On diamond specifically, that line passes alternately through A-sublattice and B-sublattice atoms. As we'll see in Chapter 9, the bound state associated with the line localises on one of those sublattices &mdash; the chiral downfold &mdash; and that is what makes the vortex an electron rather than a generic topological defect.</p>
+
+<figure id="fig-vortex-3d" class="plain">
+  <p style="color: var(--text-faint); font-style: italic; text-align: center; margin: 2em 0;">[Figure 3 — 3D vortex line through diamond — coming next]</p>
+</figure>
+
+<h2>Where this leaves us</h2>
+
+<p>Diamond has been <em>selected</em>, not chosen. Every filter is independent; every filter is necessary. A paper that tried to derive α on simple cubic, BCC, FCC, or any 2D lattice would fail at one filter or another. The <em>A<sub>d</sub></em> family (the simplex lattices) generalises the story to arbitrary dimension: <em>d</em>-diamond always has coordination <em>z</em> = <em>d</em>+1 and <em>always</em> satisfies the five filters in that dimension. We'll come back to this in Chapter 13 when we ask what changes if we turn a "<em>d</em>-dial."</p>
+
+<p>For now, we have the lattice. In Chapter 9 we put the vortex on it and see the electron assemble: charge from winding, the Dirac equation from the bipartite Bloch structure, spin-½ set up by the frame sector, Clifford algebra as the geometry of non-commutativity. Then Chapter 10 finds where α lives, at the BKT wall.</p>
+
+<nav class="nav-links">
+  <a href="07-vortices.html" class="prev">Spontaneous vortices</a>
+  <a href="../index.html" class="up">contents</a>
+  <a href="09-electron.html" class="next">The electron</a>
+</nav>
+
+</div>
+<script type="module">
+import { setupHiDPICanvas } from '../js/common.js';
+import {
+  makeCamera, attachCameraControls, renderScene, buildLatticeScene,
+  diamondLattice, bondsByDistance, orientCameraAlongAxis, centralTetrahedron,
+} from '../js/lattice3d.js';
+
+// --- FIGURE 1: Filter checklist + 3D view -----------------------------
+(() => {
+  // Paper's table (§3.1), augmented with the explanatory prose.
+  const lattices = [
+    { key: 'sc',        name: 'Simple cubic (SC)',      z: 6,  bipartite: true,  Oh: true,  sites: 1, d3: true,
+      note: 'SC has coordination 6 and full O_h symmetry, and is bipartite by parity of (x+y+z). It fails because its primitive cell has only one atom — not enough structure for a chiral Bloch Hamiltonian.' },
+    { key: 'bcc',       name: 'Body-centred cubic (BCC)', z: 8, bipartite: false, Oh: true, sites: 1, d3: true,
+      note: 'BCC has 8 nearest neighbours and is O_h-symmetric, but it is not bipartite — the second-nearest-neighbour bonds connect corner sites to corner sites (A → A), breaking the two-colouring.' },
+    { key: 'fcc',       name: 'Face-centred cubic (FCC)', z: 12, bipartite: false, Oh: true, sites: 1, d3: true,
+      note: 'FCC is the densest packing and is O_h-symmetric, but it is not bipartite — triangular plaquettes of nearest neighbours exist, which is incompatible with A-B colouring (any graph with odd cycles cannot be bipartite).' },
+    { key: 'hcp',       name: 'Hexagonal close-packed (HCP)', z: 12, bipartite: false, Oh: false, sites: 2, d3: true,
+      note: 'HCP has the same density as FCC but six-fold hexagonal symmetry — C_6h, not O_h. The wrong point group means the would-be Dirac points are not symmetry-protected and generically gap out.' },
+    { key: 'diamond',   name: 'Diamond', z: 4,  bipartite: true,  Oh: true,  sites: 2, d3: true,
+      note: 'Diamond is the unique 3D lattice that passes all five filters. Coordination 4 (minimum allowed), full O_h symmetry, two-site primitive cell, bipartite A/B sublattices, and 3D so vortices are lines. This is the substrate α is derived on.' },
+    { key: 'honeycomb', name: '2D honeycomb', z: 3,  bipartite: true,  Oh: 'NA', sites: 2, d3: false,
+      note: '2D honeycomb looks promising — bipartite, two-site basis, even has Dirac points (graphene!). But it lives in d = 2 so any vortex it hosts is a point, and point vortices diffuse and annihilate. Filter 5 fails.' },
+    { key: 'square',    name: '2D square', z: 4, bipartite: true, Oh: 'NA', sites: 1, d3: false,
+      note: '2D square is bipartite and has coordination 4, but only one site per primitive cell and — like all 2D lattices — fails filter 5. We used it as a proxy in §7 only for pedagogy.' },
+  ];
+
+  const filterDescriptions = {
+    z: {
+      name: 'Filter 1 — coordination z ≥ d+1 = 4',
+      text: 'In 3D, the nearest-neighbour vectors {δ_μ} from each atom must span the full three-dimensional space. A bipartite lattice with 2-site basis has centroid at zero, so its z difference vectors span at most z−1 independent directions. To span ℝ³ you need z−1 ≥ 3, i.e. z ≥ 4. Diamond sits at the minimum of this bound.',
+    },
+    bipartite: {
+      name: 'Filter 2 — bipartite structure',
+      text: 'Every bond connects sublattice A to sublattice B, never A↔A or B↔B. This produces the chiral Bloch Hamiltonian with its particle-hole symmetry — the thing that makes the nodal spectrum (Chapter 9) look like a Dirac equation instead of a generic band crossing. Equivalent condition: the lattice has no odd-length cycles.',
+    },
+    Oh: {
+      name: 'Filter 3 — full octahedral (O_h) point group',
+      text: 'The 48-element O_h group pins any band crossings to symmetry-protected loci of the Brillouin zone — specifically the X-W edges. Without this symmetry the would-be Dirac points are not protected and generically open into a gapped spectrum. HCP fails here: its hexagonal C_6h is too weak.',
+    },
+    sites: {
+      name: 'Filter 4 — exactly 2 sites per primitive cell',
+      text: 'One site per cell gives a scalar Bloch Hamiltonian, so no band crossings at all. Three or more over-determines things and gaps the spectrum generically. Exactly two gives H(k) = [[0, f(k)], [f*(k), 0]], a 2×2 off-diagonal block whose zeros of f(k) are the Dirac points we need.',
+    },
+    d3: {
+      name: 'Filter 5 — d ≥ 3 for vortex line persistence',
+      text: 'In 2D, vortices are 0-dimensional points; they diffuse under dynamics and find their anti-partners. In d ≥ 3 they are (d−2)-dimensional line defects that cannot annihilate pointwise — the two lines would have to collapse onto each other along their entire length simultaneously, at energy cost proportional to length. The topology survives on CLR timescales.',
+    },
+  };
+
+  function cell(value) {
+    if (value === true)  return '<span class="check">✓</span>';
+    if (value === false) return '<span class="cross">✗</span>';
+    if (value === 'NA')  return '<span class="na">—</span>';
+    return '<span class="num">' + value + '</span>';
+  }
+
+  function computeRow(l) {
+    // Apply filters.
+    const passesZ  = l.z >= 4;
+    const passesBP = l.bipartite === true;
+    const passesOh = l.Oh === true;
+    const passesSt = l.sites === 2;
+    const passesD3 = l.d3 === true;
+    const allPass  = passesZ && passesBP && passesOh && passesSt && passesD3;
+    return {
+      z: cell(l.z) + ' ' + (passesZ ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'),
+      bipartite: cell(l.bipartite),
+      Oh: cell(l.Oh),
+      sites: cell(l.sites) + ' ' + (passesSt ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'),
+      d3: cell(l.d3),
+      pass: allPass
+        ? '<span class="verdict-pass">PASS</span>'
+        : '<span class="verdict-fail">fail</span>',
+      allPass,
+    };
+  }
+
+  const tbody = document.getElementById('filter-body');
+  const sel = document.getElementById('lat-select');
+  const nameTag = document.getElementById('lat-name');
+  const explainBox = document.getElementById('filter-explain');
+  const canvas = document.getElementById('canvas-lattice');
+  const W = 680, H = 380;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  let activeLattice = 'diamond';
+  let activeFilter = null;
+
+  // 3D scene state — swapped in on dropdown change.
+  let currentScene = buildLatticeScene('diamond');
+  // Per-lattice default camera *angle* — distance is auto-fit below.
+  const cameraAngles = {
+    sc:        { yaw: 0.55, pitch: -0.4 },
+    bcc:       { yaw: 0.55, pitch: -0.4 },
+    fcc:       { yaw: 0.55, pitch: -0.4 },
+    hcp:       { yaw: 0.6,  pitch: -0.5 },
+    diamond:   { yaw: 0.6,  pitch: -0.35 },
+    honeycomb: { yaw: 0.0,  pitch: -Math.PI / 2 + 0.25 },  // top-down
+    square:    { yaw: 0.0,  pitch: -Math.PI / 2 + 0.25 },
+  };
+  const camera = makeCamera({ yaw: 0.6, pitch: -0.35, distance: 5, focalLength: 520 });
+  attachCameraControls(canvas, camera);
+
+  function swapLattice(kind) {
+    currentScene = buildLatticeScene(kind);
+    const a = cameraAngles[kind];
+    if (a) { camera.yaw = a.yaw; camera.pitch = a.pitch; }
+    // Auto-fit: distance scales with lattice extent so every lattice
+    // occupies roughly the same area of canvas. Clamp so SC atoms don't
+    // become unreadably huge and honeycomb doesn't become unreadably tiny.
+    camera.distance = Math.max(5, Math.min(9, currentScene.extent * 2.4));
+    camera.focalLength = 520;
+  }
+  swapLattice('diamond');  // initialize extent-based camera
+
+  function draw3D() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4';
+    ctx.fillRect(0, 0, W, H);
+    // Subtle label: lattice name, atom count, coordination
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    const nAtoms = currentScene.atoms.length;
+    const coord = new Map();
+    for (const b of currentScene.bonds) { coord.set(b.a, (coord.get(b.a) || 0) + 1); coord.set(b.b, (coord.get(b.b) || 0) + 1); }
+    const maxZ = coord.size ? Math.max(...coord.values()) : 0;
+    ctx.fillText(`${nAtoms} atoms shown · max coordination z = ${maxZ} · drag to rotate`, 20, 20);
+
+    renderScene(ctx, W, H, currentScene, camera);
+  }
+
+  // Render loop — runs continuously so rotation is smooth
+  let rafId = null;
+  function loop() {
+    draw3D();
+    rafId = requestAnimationFrame(loop);
+  }
+  loop();
+
+  function render() {
+    tbody.innerHTML = '';
+    for (const l of lattices) {
+      const row = computeRow(l);
+      const tr = document.createElement('tr');
+      if (l.key === 'diamond') tr.classList.add('diamond-row');
+      tr.innerHTML = `
+        <td class="lattice-name${l.key === activeLattice ? ' active' : ''}">${l.name}</td>
+        <td>${row.z}</td>
+        <td>${row.bipartite}</td>
+        <td>${row.Oh}</td>
+        <td>${row.sites}</td>
+        <td>${row.d3}</td>
+        <td>${row.pass}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    // Highlight active filter column
+    const headers = document.querySelectorAll('#filter-table thead th');
+    headers.forEach(th => {
+      th.classList.toggle('active', th.dataset.filter === activeFilter);
+    });
+
+    // Explanation box
+    if (activeFilter && filterDescriptions[activeFilter]) {
+      const f = filterDescriptions[activeFilter];
+      explainBox.innerHTML = `<div class="name">${f.name}</div><div>${f.text}</div>`;
+    } else {
+      const l = lattices.find(x => x.key === activeLattice);
+      explainBox.innerHTML = `<div class="name">${l.name}</div><div>${l.note}</div>`;
+    }
+  }
+
+  sel.addEventListener('change', (e) => {
+    activeLattice = e.target.value;
+    const l = lattices.find(x => x.key === activeLattice);
+    nameTag.textContent = l.name.replace(/ \(.*\)$/, '');
+    activeFilter = null;
+    swapLattice(activeLattice);
+    render();
+  });
+
+  // Click a filter header to explain it
+  const headers = document.querySelectorAll('#filter-table thead th');
+  headers.forEach(th => {
+    th.addEventListener('click', () => {
+      const f = th.dataset.filter;
+      if (!filterDescriptions[f]) return;   // skip "Lattice" and "Verdict"
+      activeFilter = (activeFilter === f) ? null : f;
+      render();
+    });
+  });
+
+  render();
+})();
+
+// --- FIGURE 2: Diamond deep-dive --------------------------------------
+(() => {
+  const canvas = document.getElementById('canvas-diamond');
+  if (!canvas) return;
+  const W = 680, H = 460;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  // Build the full diamond scene once; subsets are applied per mode.
+  const base = buildLatticeScene('diamond');
+  // Also compute FCC-style A-A bonds (second-nearest-neighbour, same sublattice)
+  // to show when the user isolates one sublattice.
+  const secondNN = Math.sqrt(2);  // bond-length-normalized NNN distance on diamond
+  const aOnlyBonds = bondsByDistance(
+    base.atoms.filter(x => x.sublattice === 'A').map(a => ({ pos: a.pos })),
+    secondNN, 0.08
+  );
+  const bOnlyBonds = bondsByDistance(
+    base.atoms.filter(x => x.sublattice === 'B').map(a => ({ pos: a.pos })),
+    secondNN, 0.08
+  );
+  // Re-index those into the original atom array
+  const aIdxMap = [], bIdxMap = [];
+  base.atoms.forEach((a, i) => {
+    if (a.sublattice === 'A') aIdxMap.push(i);
+    else if (a.sublattice === 'B') bIdxMap.push(i);
+  });
+  const aaBonds = aOnlyBonds.map(b => ({
+    a: aIdxMap[b.a], b: aIdxMap[b.b],
+    color: 'rgba(125, 66, 32, 0.22)', width: 0.8,
+  }));
+  const bbBonds = bOnlyBonds.map(b => ({
+    a: bIdxMap[b.a], b: bIdxMap[b.b],
+    color: 'rgba(26, 60, 92, 0.22)', width: 0.8,
+  }));
+
+  const tet = centralTetrahedron(base);
+
+  // Group atoms into three (111) honeycomb layers. Along the body
+  // diagonal (x+y+z direction), diamond repeats with period 3 in units
+  // of the conventional-cell edge; each period contains three pairs of
+  // A-B sheets at roughly (x+y+z) mod 3 ∈ [0,1), [1,2), [2,3).
+  const layerOf = new Array(base.atoms.length);
+  for (let i = 0; i < base.atoms.length; i++) {
+    const p = base.atoms[i].pos;
+    const s = p[0] + p[1] + p[2];
+    // bondLength normalisation turns diamond's a=1 into a = 4/√3,
+    // so the [111] period shifts accordingly. Use a tolerant bin.
+    const period = 3 * Math.sqrt(3) / (Math.sqrt(3) / 4);  // = 12; but atoms were rescaled by 1/bondLength
+    // Simplest stable bin: normalise by the bond length so spacing = 1/√3.
+    // The [111] period in normalized units is 3/√3·... Easier empirically:
+    // after our rescaling, atom projections (x+y+z) take values {0, 0.75*scale,
+    // 1*scale, 1.75*scale, 2*scale, ...} — we just bin on modulo 3·scale.
+    // scale = 1/bondLength was applied; bondLength for diamond was √3/4, so scale=4/√3.
+    const scale = 4 / Math.sqrt(3);
+    const mod = ((s / scale) % 3 + 3) % 3;
+    layerOf[i] = Math.floor(mod) % 3;   // 0, 1, 2
+  }
+
+  const camera = makeCamera({ yaw: 0.6, pitch: -0.35, distance: Math.max(5, base.extent * 2.4), focalLength: 520 });
+  attachCameraControls(canvas, camera);
+
+  let mode = 'full';       // 'full' | 'a' | 'b' | 'tet' | 'l1' | 'l2' | 'l3'
+  let autoRotate = false;
+
+  function modeLabel() {
+    return {
+      full: 'Full lattice',
+      a:    'A sublattice (burgundy) — FCC',
+      b:    'B sublattice (blue) — FCC offset by ¼ body diagonal',
+      tet:  'One tetrahedron — 109.47° bond angle',
+      l1:   '(111) honeycomb layer 1',
+      l2:   '(111) honeycomb layer 2',
+      l3:   '(111) honeycomb layer 3',
+    }[mode];
+  }
+
+  function scene() {
+    // Build atom visibility mask and bond list based on current mode.
+    let atoms = base.atoms.map(a => ({ ...a }));
+    let bonds = [];
+    if (mode === 'full') {
+      bonds = base.bonds;
+    } else if (mode === 'a') {
+      atoms = atoms.map(a => a.sublattice === 'A' ? a : { ...a, color: 'rgba(0,0,0,0)', strokeColor: null });
+      bonds = aaBonds;
+    } else if (mode === 'b') {
+      atoms = atoms.map(a => a.sublattice === 'B' ? a : { ...a, color: 'rgba(0,0,0,0)', strokeColor: null });
+      bonds = bbBonds;
+    } else if (mode === 'tet') {
+      atoms = atoms.map((a, i) => {
+        if (tet.neighbours.has(i)) return a;
+        return { ...a,
+          color: 'rgba(168, 163, 154, 0.12)',
+          strokeColor: null,
+          radius: 0.12,
+        };
+      });
+      // Only bonds that touch the central atom
+      bonds = base.bonds.filter(b => b.a === tet.centerIdx || b.b === tet.centerIdx).map(b => ({
+        ...b, color: 'rgba(30, 30, 30, 0.75)', width: 1.6,
+      }));
+    } else if (mode === 'l1' || mode === 'l2' || mode === 'l3') {
+      const layer = { l1: 0, l2: 1, l3: 2 }[mode];
+      atoms = atoms.map((a, i) => {
+        if (layerOf[i] === layer) return a;
+        return { ...a,
+          color: 'rgba(168, 163, 154, 0.08)',
+          strokeColor: null,
+          radius: 0.1,
+        };
+      });
+      // Only bonds where both endpoints are in this layer
+      bonds = base.bonds.filter(b => layerOf[b.a] === layer && layerOf[b.b] === layer).map(b => ({
+        ...b, color: 'rgba(30, 30, 30, 0.75)', width: 1.4,
+      }));
+    }
+    return { atoms, bonds };
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 12px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(modeLabel(), 24, 22);
+    ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.fillStyle = '#888';
+    ctx.fillText('drag to rotate', 24, 38);
+
+    renderScene(ctx, W, H, scene(), camera);
+  }
+
+  function loop() {
+    if (autoRotate) camera.yaw += 0.003;
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  // ----- Controls -------------------------------------------------------
+  const modeButtons = {
+    full: document.getElementById('dm-mode-full'),
+    a:    document.getElementById('dm-mode-a'),
+    b:    document.getElementById('dm-mode-b'),
+    tet:  document.getElementById('dm-mode-tet'),
+    l1:   document.getElementById('dm-mode-l1'),
+    l2:   document.getElementById('dm-mode-l2'),
+    l3:   document.getElementById('dm-mode-l3'),
+  };
+  function setMode(m) {
+    mode = m;
+    for (const k of Object.keys(modeButtons)) modeButtons[k].classList.toggle('primary', k === m);
+    // Layer modes auto-orient the camera along [111] so you see the
+    // honeycomb pattern face-on.
+    if (m === 'l1' || m === 'l2' || m === 'l3') {
+      orientCameraAlongAxis(camera, [1, 1, 1]);
+    }
+  }
+  modeButtons.full.addEventListener('click', () => setMode('full'));
+  modeButtons.a.addEventListener('click',    () => setMode('a'));
+  modeButtons.b.addEventListener('click',    () => setMode('b'));
+  modeButtons.tet.addEventListener('click',  () => setMode('tet'));
+  modeButtons.l1.addEventListener('click',   () => setMode('l1'));
+  modeButtons.l2.addEventListener('click',   () => setMode('l2'));
+  modeButtons.l3.addEventListener('click',   () => setMode('l3'));
+
+  document.getElementById('dm-view-iso').addEventListener('click', () => {
+    camera.yaw = 0.6; camera.pitch = -0.35;
+  });
+  document.getElementById('dm-view-111').addEventListener('click', () => {
+    orientCameraAlongAxis(camera, [1, 1, 1]);
+  });
+  const spinBtn = document.getElementById('dm-spin');
+  spinBtn.addEventListener('click', () => {
+    autoRotate = !autoRotate;
+    spinBtn.textContent = 'Auto-rotate: ' + (autoRotate ? 'ON' : 'OFF');
+    spinBtn.classList.toggle('primary', autoRotate);
+  });
+})();
+
+// Figure 3 (vortex line) comes next.
+</script>
+</body>
+</html>

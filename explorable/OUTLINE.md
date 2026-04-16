@@ -35,13 +35,14 @@ A three-act structure:
 | 06 | Phase-locked modes: geometry and memory | ✅ DONE |
 | 07 | Spontaneous vortices | ✅ DONE |
 | 08 | Why the diamond lattice | TODO |
-| 09 | The BKT wall | TODO |
-| 10 | Living versus static | TODO |
-| 11 | The α formula, piece by piece | TODO |
-| 12 | Why three dimensions | TODO |
-| 13 | Closing the gap with linked clusters | TODO |
-| 14 | From α to g | TODO |
-| 15 | Coda: what just happened | TODO |
+| 09 | The electron | TODO |
+| 10 | The BKT wall | TODO |
+| 11 | Living versus static | TODO |
+| 12 | The α formula, piece by piece | TODO |
+| 13 | Why three dimensions | TODO |
+| 14 | Closing the gap with linked clusters | TODO |
+| 15 | From α to g | TODO |
+| 16 | Coda: what just happened | TODO |
 
 ---
 
@@ -109,29 +110,44 @@ Aside teases Sections 5–15.
 
 ---
 
-### 08 — Why the diamond lattice
+### 08 — Why the diamond lattice *(Figures 1+2 shipped, Figure 3 deferred)*
 
 **Core idea:** Diamond is not chosen — it is *selected*. Five filters uniquely identify the 3D diamond lattice among all possible lattices.
 
-**Interactives:**
-- **Lattice chooser:** dropdown/buttons for simple cubic, BCC, FCC, HCP, diamond, honeycomb, square. For each, show which filters pass/fail. Live result: "Diamond is the unique pass."
-- **3D diamond viewer:** rotatable canvas view of the diamond lattice. z = 4 visible. Bipartite structure colored. Tetrahedral bond geometry.
-- **Dirac emergence:** at nodal points in the structure factor, show how the Dirac cone appears. Interactive: move k around the Brillouin zone, see the cone form.
+**Figure 1 (shipped): Selection checklist + 3D view of all candidates.**
+Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D square). A five-column filter table (z ≥ 4, bipartite, O_h, 2 sites/cell, d ≥ 3) updates with ✓/✗ marks; diamond is the unique row passing every column. Above the table, a rotatable 3D canvas shows the currently selected lattice with proper bipartite colouring (A = burgundy, B = blue, or monochromatic grey when non-bipartite). Drag rotates, shift+drag pans, wheel zooms.
 
-**Prose:**
-- Five filters:
-  1. `z ≥ d+1 = 4` (Bravais rank bound)
-  2. Bipartite structure → chiral Bloch Hamiltonian
-  3. O_h octahedral symmetry → nodal line protection
-  4. 2 sites per unit cell → structure factor zeros
-  5. `d ≥ 3` → vortex line persistence
-- Enumeration table: SC fails (1 site), BCC fails (not bipartite), FCC fails (not bipartite), HCP fails (no O_h), diamond passes
-- d dimensional generalization: A_d root lattices
-- Diamond is forced
+**Figure 2 (shipped): Deep-dive into diamond.** Same 3D renderer but on diamond only. Mode buttons: Full lattice / A-sublattice only (reveals FCC) / B-sublattice only / One tetrahedron (isolates central atom + 4 NN at 109.47°) / (111) honeycomb layer 1, 2, 3 (each isolates one of the three buckled honeycomb sheets that stack to form the 3D crystal; camera auto-snaps to [111]). View shortcuts: Isometric / Along [111]. Auto-rotate toggle.
+
+**Figure 3 (deferred): 3D vortex line on diamond.** See HANDOFF.md "§ Next session" for full spec. Seeded atan2 phase (independent of z) on the diamond lattice, coloured atoms, reveals the vortex as a *line* threading through the crystal rather than a point. Reuses `lattice3d.js` machinery.
+
+**Prose shipped:**
+- Five filters spelled out in numbered list
+- Per-lattice explanations clickable from either dropdown or column headers
+- Mentions the A_d family generalisation
+- Segue prose into §9 (electron) already in place
+- 2D→3D motivation carried over from §7's annihilation
 
 ---
 
-### 09 — The BKT wall
+### 09 — The electron
+
+**Core idea:** We have a vortex (§7) and a diamond lattice (§8). Put them together and we have an electron. This section pulls together charge, the Dirac equation, spin-1/2 setup, and names what we've built.
+
+**Interactives:**
+- **Dirac cone emergence:** Bloch Hamiltonian at nodal k-points on the diamond Brillouin zone. Hover a k-point cursor, see the two bands cross linearly (not parabolically). That linear crossing is the Dirac spectrum.
+- **Electron assembly diagram (SVG):** nodes for Vortex, Diamond, Bipartite, Frame (greyed/deferred). Arrows to Charge, Dirac equation, Spin-½, Mass. Clickable with per-node explanations.
+- **Dirac equation interactive:** clickable-symbol `iℏ γ^μ ∂_μ ψ = m ψ`. Clicking γ^μ reveals the Clifford anticommutator `{γ^μ, γ^ν} = 2g^μν` and says: this algebra forces spin-½.
+
+**Prose:**
+- Topology made a charge; the bipartite lattice made a spectrum; the combination is a fermion.
+- The chiral downfold (paper §4.2): vortex bound state localises on one sublattice.
+- Clifford algebra as the geometry of non-commutativity that encodes spin.
+- What's still deferred (frame sector, companion paper) and what's still to come (α, §10; g-factor, §15).
+
+---
+
+### 10 — The BKT wall
 
 **Core idea:** The CLR wants K high. The topology of a vortex requires K ≤ K_BKT = 2/π. The equilibrium sits exactly at the wall. That's where α lives.
 
@@ -149,7 +165,7 @@ Aside teases Sections 5–15.
 
 ---
 
-### 10 — Living versus static
+### 11 — Living versus static
 
 **Core idea:** The entire difference between 143 and 137 comes from *how* the exponent is evaluated. Static lattice integrates over the RG trajectory. Living lattice (with PLM Lemma) evaluates at the fixed point. This chapter is a pure side-by-side comparison.
 
@@ -167,7 +183,7 @@ Aside teases Sections 5–15.
 
 ---
 
-### 11 — The α formula, piece by piece
+### 12 — The α formula, piece by piece
 
 **Core idea:** Build up the complete α formula factor by factor, with each piece grounded in earlier chapters.
 
@@ -191,7 +207,7 @@ Aside teases Sections 5–15.
 
 ---
 
-### 12 — Why three dimensions
+### 13 — Why three dimensions
 
 **Core idea:** The α formula has a "d dial." Only d = 3 produces a physical α. This is the most surprising demonstration in the essay.
 
@@ -212,7 +228,7 @@ Aside teases Sections 5–15.
 
 ---
 
-### 13 — Closing the gap with linked clusters
+### 14 — Closing the gap with linked clusters
 
 **Core idea:** BKT gives 29 ppm accuracy. A linked-cluster expansion over diamond subgraphs adds vacuum polarization running and closes to 1.5 ppb. Includes the honest open-problem flag.
 
@@ -231,7 +247,7 @@ Aside teases Sections 5–15.
 
 ---
 
-### 14 — From α to g
+### 15 — From α to g
 
 **Core idea:** α → standard QED series → g-factor to 11.4 digits. Not an independent prediction; a consistency check showing the lattice α, fed through textbook QED, reproduces g.
 
@@ -250,7 +266,7 @@ Aside teases Sections 5–15.
 
 ---
 
-### 15 — Coda: what just happened
+### 16 — Coda: what just happened
 
 **Core idea:** Step back. Summarize the whole climb. Reframe the paradigm. Hint at what's next (companion papers, open questions).
 
@@ -275,6 +291,8 @@ explorable/
 ├── OUTLINE.md                 # this file
 ├── css/style.css              # shared styling
 ├── js/common.js               # setupHiDPICanvas, R0, wireEquation, etc.
+├── js/fiedler.js              # Lanczos Fiedler eigensolver (§7 Fig 4)
+├── js/lattice3d.js            # canvas 3D renderer (§8 Fig 2+3)
 └── sections/
     ├── 01-prelude.html        ✅
     ├── 02-oscillators.html    ✅
@@ -282,15 +300,16 @@ explorable/
     ├── 04-clr.html            ✅
     ├── 05-binary-field.html   ✅
     ├── 06-plm-npd.html        ✅
-    ├── 07-vortices.html       TODO
+    ├── 07-vortices.html       ✅
     ├── 08-diamond.html        TODO
-    ├── 09-bkt-wall.html       TODO
-    ├── 10-living-vs-static.html TODO
-    ├── 11-alpha-formula.html  TODO
-    ├── 12-dimension.html      TODO
-    ├── 13-lce.html            TODO
-    ├── 14-g-factor.html       TODO
-    └── 15-coda.html           TODO
+    ├── 09-electron.html       TODO
+    ├── 10-bkt-wall.html       TODO
+    ├── 11-living-vs-static.html TODO
+    ├── 12-alpha-formula.html  TODO
+    ├── 13-dimension.html      TODO
+    ├── 14-lce.html            TODO
+    ├── 15-g-factor.html       TODO
+    └── 16-coda.html           TODO
 ```
 
 ## Development notes
