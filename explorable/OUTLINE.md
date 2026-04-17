@@ -39,7 +39,7 @@ A three-act structure:
 | 10 | How the lattice makes it a fermion | ✅ DONE |
 | 11 | The BKT wall | ✅ DONE |
 | 12 | Living versus static | ✅ DONE |
-| 13 | The α formula, piece by piece | TODO |
+| 13 | The α formula, piece by piece | ✅ DONE |
 | 14 | Why three dimensions | TODO |
 | 15 | Closing the gap with linked clusters | TODO |
 | 16 | From α to g | TODO |
@@ -162,25 +162,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ### 13 — The α formula, piece by piece
 
-**Core idea:** Build up the complete α formula factor by factor, with each piece grounded in earlier chapters.
-
-**Formula:** `α = R₀(2/π)⁴ × (π/4)^(1/√e + α/2π)`
-
-**Interactives:**
-- **Clickable-symbol equation** with full explanation of each piece. Symbols:
-  - R₀(2/π) — von Mises (Ch 2)
-  - ^4 — star graph vertex, z = 4 (Ch 8)
-  - (π/4) — variance ratio base (derived)
-  - 1/√e — DW intensity (Ch 10)
-  - α/2π — Schwinger self-consistency
-- **Self-consistent iteration:** watch α converge over 3 steps from the initial V = R₀⁴ guess.
-- **Sensitivity slider:** wiggle each factor ±5%, see how 1/α responds. Shows which pieces matter most.
-
-**Prose:**
-- Walk through the formula factor by factor
-- Each factor has a chapter's worth of meaning behind it
-- Self-consistency — why α depends on itself (Schwinger QED)
-- Result: 1/α = 137.032 (29 ppm from CODATA)
+**Completed.** Hero clickable equation at 28px display scale — every coloured symbol opens a detail panel beneath the equation with chapter source, pronunciation, current numeric value at the BKT point, and 2–4 sentence physics description. Seven clickable chips (α, R₀, 2/π, the exponent 4, π/4 base, 1/√e, α/2π Schwinger correction) cross-linking all twelve earlier chapters. Iteration animation: orange dot on a 1/α number line between 100 and 175, CODATA 137.036 marked in green. Starts at 1/α₀ = 118.32 (bare UV), snaps step-by-step to 137.038 → 137.032 → converged. ppm distance to CODATA printed live. Iteration history list on the left shows the n_eff and 1/α at each step. Sensitivity figure: three ±5% sliders (R₀, π/4 base, 1/√e), each with a coloured bar beneath showing the full ±5% swing in 1/α space — R₀ = 55-unit range, π/4 = 8-unit, 1/√e = 2-unit. CODATA dashed marker on ruler. "Zero free parameters, twelve chapters deep" aside inventories every factor's provenance. Closing teases §14's dimensional dial.
 
 ---
 
@@ -283,7 +265,7 @@ explorable/
     ├── 10-fermion.html        ✅
     ├── 11-bkt-wall.html       ✅
     ├── 12-living-vs-static.html ✅
-    ├── 13-alpha-formula.html  TODO
+    ├── 13-alpha-formula.html  ✅
     ├── 14-dimension.html      TODO
     ├── 15-lce.html            TODO
     ├── 16-g-factor.html       TODO

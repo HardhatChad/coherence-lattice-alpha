@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The α formula, piece by piece — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+/* Hero equation scale + spacing */
+.hero-eq {
+  text-align: center;
+  font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", serif;
+  font-style: italic;
+  font-size: 28px;
+  line-height: 1.9;
+  padding: 0.6em 0 0.4em;
+  color: var(--text);
+}
+.hero-eq sub, .hero-eq sup { font-style: normal; font-size: 0.7em; }
+.hero-eq .eq-symbol {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 5px;
+  transition: background 0.12s, box-shadow 0.12s, transform 0.08s;
+}
+.hero-eq .eq-symbol:hover { transform: translateY(-1px); }
+.hero-eq .eq-symbol.active { box-shadow: 0 0 0 2px var(--accent-light); }
+.hero-eq .equals, .hero-eq .times, .hero-eq .approx {
+  color: var(--text-soft); font-style: normal; padding: 0 6px;
+}
+
+/* Detail panel beneath the hero equation */
+.hero-panel {
+  margin: 0 0 1.2em;
+  padding: 18px 22px;
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  min-height: 150px;
+  transition: border-color 0.15s;
+}
+.hero-panel .panel-head {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  margin-bottom: 0.7em;
+}
+.hero-panel .panel-name {
+  font: 600 18px "Charter", serif; color: var(--text);
+}
+.hero-panel .panel-chapter {
+  font: italic 13px "Charter", serif; color: var(--text-soft);
+  padding: 2px 10px; border-radius: 10px;
+  background: rgba(125, 179, 221, 0.16);
+}
+.hero-panel .panel-value {
+  margin-left: auto;
+  font: 600 14px "SF Mono", monospace;
+  color: var(--accent);
+  padding: 2px 10px; background: var(--panel); border-radius: 3px;
+}
+.hero-panel .panel-body { color: var(--text); line-height: 1.55; }
+.hero-panel .panel-body em { font-style: italic; }
+.hero-panel .panel-pronounce { font-style: italic; color: var(--text-faint); font-size: 13px; margin-top: 4px; }
+.hero-panel.default-state .panel-body { color: var(--text-faint); font-style: italic; text-align: center; padding: 1.4em 0; }
+
+/* Iteration animation */
+.iter-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 14px;
+  align-items: baseline;
+  margin: 6px 0;
+}
+.iter-step { font: 600 12px "SF Mono", monospace; color: var(--text-faint); }
+.iter-val  { font: 13px "SF Mono", monospace; color: var(--text); }
+.iter-val.current { color: var(--accent); font-weight: 600; }
+.iter-val.converged { color: #6dc48f; }
+
+/* Sensitivity panel */
+.sens-knob-row {
+  display: grid; grid-template-columns: 90px 1fr 80px; gap: 10px;
+  align-items: center; margin: 10px 0;
+}
+.sens-knob-row label { font: italic 14px "Charter", serif; color: var(--text-soft); }
+.sens-knob-row .val { font: 600 13px "SF Mono", monospace; color: var(--accent); text-align: right; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 13 / 17</span>
+</nav>
+
+<h1>The &alpha; formula, piece by piece<span class="subtitle">Every factor, traced back to the chapter that derived it</span></h1>
+
+<p class="lead">The coherence lattice, the CLR, the diamond, the vortex, the BKT wall, the PLM Lemma, the living-versus-static choice &mdash; twelve chapters of physics now fit into a single line of algebra. This chapter displays that line at full scale, with every symbol clickable. Each click opens the chapter where that factor was derived, along with its current numeric value. Nothing is tuned. Nothing is an input. Every piece is a consequence of the one principle <em>I</em>&nbsp;&ge;&nbsp;0 acting on the diamond lattice.</p>
+
+<h2>The formula</h2>
+
+<div class="hero-eq" id="hero-eq">
+  <span class="eq-symbol state" data-symbol="alpha">&alpha;</span>
+  <span class="equals">=</span>
+  <span class="eq-symbol op" data-symbol="R0">R<sub>0</sub></span><span class="eq-symbol struct" data-symbol="twopi">(2/&pi;)</span><span class="eq-symbol param" data-symbol="four"><sup>4</sup></span>
+  <span class="times">&times;</span>
+  <span class="eq-symbol struct" data-symbol="base">(&pi;/4)</span><sup><span class="eq-symbol param" data-symbol="n"><span style="font-size: 0.9em;">1/&radic;e</span></span>&thinsp;+&thinsp;<span class="eq-symbol op" data-symbol="schwinger"><span style="font-size: 0.9em;">&alpha;/(2&pi;)</span></span></sup>
+</div>
+
+<div class="hero-panel default-state" id="hero-panel">
+  <div class="panel-body">Click any coloured symbol above to see where it comes from, what it means, and the value it takes at the BKT critical point.</div>
+</div>
+
+<p>The single equation packages five independent physical inputs. Each comes from a theorem, a derivation, or a structural constraint proved earlier in the essay. None of them is fit to data. The self-consistency between the left and right sides &mdash; the &alpha; appearing inside its own exponent &mdash; is the Schwinger QED vertex, and it converges to a fixed point in three iterations. Here is that convergence, drawn explicitly:</p>
+
+<figure id="fig-iter">
+  <canvas id="canvas-iter" width="680" height="320"></canvas>
+  <div class="controls" id="iter-controls"><!-- buttons inserted by JS --></div>
+  <figcaption>
+    Self-consistent iteration of the formula, starting from the bare UV guess <em>&alpha;</em><sub>0</sub> = <em>V</em> = <em>R</em><sub>0</sub>(2/&pi;)<sup>4</sup> and reinserting the Schwinger correction <em>&alpha;</em>/(2&pi;) at each step. The horizontal axis is a 1/<em>&alpha;</em> number line; the orange dot is the current iterate; the green dashed line is the CODATA measured value 1/<em>&alpha;</em>&nbsp;=&nbsp;137.036. The first iteration undershoots (1/<em>&alpha;</em>&nbsp;=&nbsp;118.3, purple); each subsequent step corrects toward the fixed point. Three steps reach 137.032 &mdash; within <strong>29 ppm</strong> of the measured value. The BKT formula has no free parameters; its only observable is &alpha; itself, and it produces one self-consistent answer.
+  </figcaption>
+</figure>
+
+<p>Each iteration refines the value of &alpha; that is plugged back into the Schwinger correction. The correction is tiny &mdash; &alpha;/(2&pi;) is about 0.00116, roughly a part per thousand of the matching exponent &mdash; but its sign and magnitude determine whether the fixed point exists and where it lies. The fact that the iteration converges at all is non-trivial: it means the self-consistent QED vacuum-polarisation structure is compatible with the BKT power law at this specific coupling. Change any of the five factors and the fixed point moves.</p>
+
+<p>To see which factors matter most, nudge them:</p>
+
+<figure id="fig-sens">
+  <canvas id="canvas-sens" width="680" height="260"></canvas>
+  <div class="controls" id="sens-controls"><!-- sliders inserted by JS --></div>
+  <figcaption>
+    Each slider perturbs one factor of the formula by &plusmn;5% around its derived value. The resulting 1/<em>&alpha;</em> is displayed at the right and plotted as a coloured tick on the bottom ruler (CODATA 137.036 marked in green). <strong>R<sub>0</sub>(2/&pi;) dominates the sensitivity</strong>: a &plusmn;5% change sweeps 1/<em>&alpha;</em> through roughly 55 integer units, more than 25x the sensitivity of the Debye&ndash;Waller exponent. This is why the derivation effort is concentrated on the vertex factor &mdash; it is where the ppm precision of the BKT prediction lives.
+  </figcaption>
+</figure>
+
+<p>The hierarchy is stark: any error in <em>R</em><sub>0</sub> is amplified by the fourth power (the coordination number <em>z</em>&nbsp;=&nbsp;4 from Chapter 8). Errors in the base factor are amplified linearly by the exponent <em>n</em>&nbsp;&approx;&nbsp;0.61. Errors in 1/&radic;e barely matter. The numerical value of &alpha; is governed, above all, by a single number: the von Mises order parameter of a single bond at coupling 2/&pi;. Everything else is correction.</p>
+
+<h2>Zero free parameters, twelve chapters deep</h2>
+
+<p class="aside"><span class="label">The ledger</span>Every ingredient of the BKT formula has a chapter-level provenance. <em>R</em><sub>0</sub> is the von Mises order parameter on a single bond (Chapter 2). The coupling 2/&pi; is the BKT marginal value forced by vortex topology (Chapter 11). The exponent 4 is the coordination number of the diamond lattice (Chapter 8). The base &pi;/4 is the lattice-to-RG variance ratio (Chapter 5). The matching exponent 1/&radic;e is the Debye&ndash;Waller factor at the CLR attractor (Chapter 12). The correction &alpha;/(2&pi;) is standard Schwinger QED. None of them is a fit, a scale, or a unit convention. The only thing you have to <em>believe</em> to get &alpha; out of this framework is the inequality <em>I</em>&nbsp;&ge;&nbsp;0 &mdash; the Coherence Theorem from Chapter 4.</p>
+
+<h2>Closing the last 3%</h2>
+
+<p>The value 1/&alpha;&nbsp;=&nbsp;137.032 produced by the BKT formula is within 29 parts per million of the CODATA measurement, but not exact. The remaining 3%-of-a-percent comes from QED vacuum polarisation below the lattice crossover scale &mdash; standard physics that runs &alpha;<sub>BKT</sub> from the matching scale down to <em>Q</em>&nbsp;=&nbsp;0 (the Thomson limit). Chapter 15 walks through that linked-cluster expansion, which closes the gap to 1.5 parts per <em>billion</em>. The BKT formula is the hard part; the LCE is the polish.</p>
+
+<h2>Where this leaves us</h2>
+
+<p>Before we take the polish, one last surprise. The formula has a hidden dimensional dial &mdash; the coordination number <em>z</em>&nbsp;=&nbsp;<em>d</em>&nbsp;+&nbsp;1 (for a tetrahedral coordination in <em>d</em> dimensions). Sliding that dial from <em>d</em>&nbsp;=&nbsp;2 to <em>d</em>&nbsp;=&nbsp;5 gives 1/&alpha; values from 36 to 1290. Only <em>d</em>&nbsp;=&nbsp;3 produces the physical value. That is the next chapter &mdash; and it is the kind of demonstration that stops a reader in their tracks.</p>
+
+<nav class="nav-links">
+  <a href="12-living-vs-static.html" class="prev">Living versus static</a>
+  <a href="../index.html" class="up">contents</a>
+  <a href="14-dimension.html" class="next">Why three dimensions</a>
+</nav>
+
+</div>
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, makeSlider, R0, K_BKT, palette } from '../js/common.js';
+
+// ============================================================
+// Numeric kernel of the formula
+// ============================================================
+const PHYS = {
+  R0_val:   R0(K_BKT),           // ~0.3032
+  twopi:    2 / Math.PI,
+  four:     4,
+  base:     Math.PI / 4,         // ~0.7854
+  n_base:   1 / Math.sqrt(Math.E), // ~0.6065
+};
+
+function computeAlphaSequence() {
+  const V = Math.pow(PHYS.R0_val, PHYS.four);
+  const steps = [];
+  let a = V;
+  steps.push({ n_eff: NaN, alpha: a, inv: 1/a, note: 'bare UV (α₀ = V)' });
+  for (let i = 1; i <= 4; i++) {
+    const n_eff = PHYS.n_base + a / (2 * Math.PI);
+    a = V * Math.pow(PHYS.base, n_eff);
+    steps.push({ n_eff, alpha: a, inv: 1/a, note: `step ${i}` });
+  }
+  return steps;
+}
+
+function computeAlpha(R0_val, base_val, n_base_val) {
+  const V = Math.pow(R0_val, 4);
+  let a = V;
+  for (let i = 0; i < 30; i++) a = V * Math.pow(base_val, n_base_val + a / (2 * Math.PI));
+  return a;
+}
+
+// ============================================================
+// Hero clickable equation — detail panel wiring
+// ============================================================
+(() => {
+  const eq = document.getElementById('hero-eq');
+  const panel = document.getElementById('hero-panel');
+  if (!eq || !panel) return;
+
+  const DATA = {
+    alpha: {
+      name: '\u03B1 \u2014 the fine structure constant',
+      pronounce: '"alpha"',
+      chapter: 'The target',
+      value: `\u2248 1/${(1/computeAlpha(PHYS.R0_val, PHYS.base, PHYS.n_base)).toFixed(3)}`,
+      body: `The dimensionless strength of electromagnetism. Appears self-referentially in the exponent (via the Schwinger QED vertex \u03B1/(2\u03C0)), making the formula self-consistent rather than algebraic. Iteration converges to a unique fixed point in three steps \u2014 that fixed point is the value the formula predicts.`,
+    },
+    R0: {
+      name: 'R\u2080 \u2014 von Mises order parameter',
+      pronounce: '"R-nought of K"',
+      chapter: 'Chapter 2 \u00B7 Oscillators on a graph',
+      value: `R\u2080(2/\u03C0) = ${PHYS.R0_val.toFixed(6)}`,
+      body: `The mean coherence of a single bond at coupling K, equal to I\u2081(K)/I\u2080(K) where I are modified Bessel functions. This is the continuum limit of \u27E8cos(\u0394\u03B8)\u27E9 on a single bond with a von Mises phase distribution \u2014 the natural distribution forced by the CLR. Raised to the power z = 4 (diamond coordination), this is the <em>star-graph vertex factor</em>: four independent coherences compounded at a lattice site.`,
+    },
+    twopi: {
+      name: '2/\u03C0 \u2014 the BKT critical coupling',
+      pronounce: '"two over pi"',
+      chapter: 'Chapter 11 \u00B7 The BKT wall',
+      value: `K_BKT = ${(2/Math.PI).toFixed(6)}`,
+      body: `The exact coupling at which a vortex\u2013antivortex pair is marginally bound on a 2D XY model: the free energy F(R) = (\u03C0K \u2212 2)\u2009ln(R/a) is flat, neither confined nor proliferating. Above this value, a single vortex cannot exist; below, pairs nucleate spontaneously. The CLR drives K upward from zero; the topological constraint pins it exactly here. No free parameters \u2014 pure 2D XY physics.`,
+    },
+    four: {
+      name: 'the exponent 4 \u2014 diamond coordination',
+      pronounce: '"z equals four"',
+      chapter: 'Chapter 8 \u00B7 Why the diamond lattice',
+      value: `z = 4`,
+      body: `Every atom in the diamond lattice has exactly four nearest neighbours, tetrahedrally arranged. This is the star-graph vertex count: four independent bond coherences compound multiplicatively at a single site. The diamond lattice is the unique 3D lattice satisfying five structural filters (coordination, bipartiteness, octahedral symmetry, two-site unit cell, d \u2265 3) \u2014 so this factor of 4 is <em>selected</em>, not chosen.`,
+    },
+    base: {
+      name: '\u03C0/4 \u2014 lattice-to-RG variance ratio',
+      pronounce: '"pi over four"',
+      chapter: 'Chapter 11 \u00B7 The BKT wall (equation block)',
+      value: `\u03C0/z = ${(Math.PI/4).toFixed(6)}`,
+      body: `The ratio of the nearest-neighbour phase variance \u27E8\u0394\u03B8\u00B2\u27E9 = 1/(zK) to the standard 2D XY RG variance 1/(\u03C0K). The K cancels exactly; what remains is pure geometry: \u03C0 from 2D XY, z = 4 from diamond. This is the power-law base of the BKT correlator: each Wilsonian coarse-graining step multiplies the correlator by \u03C0/z. Zero free parameters.`,
+    },
+    n: {
+      name: '1/\u221Ae \u2014 Debye\u2013Waller intensity at the attractor',
+      pronounce: '"one over root e"',
+      chapter: 'Chapter 12 \u00B7 Living versus static',
+      value: `exp(\u2212\u03C3\u00B2) = ${PHYS.n_base.toFixed(6)}`,
+      body: `The Debye\u2013Waller factor n = exp(\u2212\u03C3\u00B2) with \u03C3\u00B2 = 2\u03B7 = 1/(\u03C0 K_BKT) = 1/2. Evaluated at the attractor, not integrated over the RG trajectory. The PLM Lemma says K freezes exponentially at K* under the CLR; observables are therefore evaluated at K*, giving the endpoint exp(\u2212\u03C3\u00B2) = 1/\u221Ae instead of the trajectory average 0.787. This single choice moves 1/\u03B1 from 143 to 137.`,
+    },
+    schwinger: {
+      name: '\u03B1/(2\u03C0) \u2014 Schwinger self-consistency',
+      pronounce: '"alpha over two pi"',
+      chapter: 'Standard QED',
+      value: `\u2248 ${(computeAlpha(PHYS.R0_val, PHYS.base, PHYS.n_base)/(2*Math.PI)).toExponential(3)}`,
+      body: `The Schwinger QED vertex correction \u2014 the tiny self-consistency term. The formula depends on \u03B1, which depends on the formula. Iteration: \u03B1\u2081 = f(\u03B1\u2080), \u03B1\u2082 = f(\u03B1\u2081), \u2026 converges in three steps. This is the only piece of standard QED in the derivation; everything else comes from lattice + topology. Its magnitude is about 0.0012 \u2014 small but enough to set the fixed point.`,
+    },
+  };
+
+  const symbols = eq.querySelectorAll('.eq-symbol');
+  symbols.forEach((s) => {
+    s.addEventListener('click', () => {
+      const key = s.dataset.symbol;
+      const info = DATA[key];
+      if (!info) return;
+      const wasActive = s.classList.contains('active');
+      symbols.forEach(x => x.classList.remove('active'));
+      if (wasActive) {
+        panel.className = 'hero-panel default-state';
+        panel.innerHTML = `<div class="panel-body">Click any coloured symbol above to see where it comes from, what it means, and the value it takes at the BKT critical point.</div>`;
+        return;
+      }
+      s.classList.add('active');
+      panel.className = 'hero-panel';
+      panel.innerHTML = `
+        <div class="panel-head">
+          <div class="panel-name">${info.name}</div>
+          <div class="panel-chapter">${info.chapter}</div>
+          <div class="panel-value">${info.value}</div>
+        </div>
+        <div class="panel-pronounce">pronounced <em>${info.pronounce}</em></div>
+        <div class="panel-body" style="margin-top: 0.6em;">${info.body}</div>
+      `;
+    });
+  });
+})();
+
+// ============================================================
+// FIGURE 1: Self-consistent iteration animation
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-iter');
+  if (!canvas) return;
+  const W = 680, H = 320;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const controls = document.getElementById('iter-controls');
+  const playBtn = document.createElement('button');
+  playBtn.textContent = '\u25B6 Run iteration';
+  playBtn.className = 'primary';
+  controls.appendChild(playBtn);
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = 'Reset';
+  controls.appendChild(resetBtn);
+
+  const steps = computeAlphaSequence();
+  const codataInv = 137.035999084;
+
+  // State: animated index from 0 to steps.length-1
+  let current = 0;              // current integer step
+  let progress = 0;             // 0..1 interpolation to next step
+  let running = false;
+  let doneFlashTimer = 0;
+
+  playBtn.addEventListener('click', () => {
+    if (current >= steps.length - 1 && !running) {
+      current = 0; progress = 0;
+    }
+    running = true;
+    playBtn.textContent = '\u23F8 Pause';
+    playBtn.classList.remove('primary');
+  });
+  resetBtn.addEventListener('click', () => {
+    current = 0; progress = 0; running = false; doneFlashTimer = 0;
+    playBtn.textContent = '\u25B6 Run iteration';
+    playBtn.classList.add('primary');
+  });
+
+  // Layout
+  const rulerY = 100, rulerXMin = 70, rulerXMax = W - 40;
+  const INV_MIN = 100, INV_MAX = 175; // window of 1/alpha values shown
+  const mapInv = (v) => rulerXMin + (v - INV_MIN) / (INV_MAX - INV_MIN) * (rulerXMax - rulerXMin);
+
+  function drawRuler() {
+    // Baseline
+    ctx.strokeStyle = palette.axis;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(rulerXMin, rulerY); ctx.lineTo(rulerXMax, rulerY);
+    ctx.stroke();
+    // Ticks
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.fillStyle = palette.textFaint;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 100; v <= 170; v += 10) {
+      const x = mapInv(v);
+      ctx.strokeStyle = palette.axis;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, rulerY - 4); ctx.lineTo(x, rulerY + 4);
+      ctx.stroke();
+      ctx.fillText(v.toString(), x, rulerY + 8);
+    }
+    ctx.fillStyle = palette.text;
+    ctx.font = 'italic 12px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('1/\u03B1', rulerXMin - 30, rulerY - 4);
+    // CODATA marker
+    const xC = mapInv(codataInv);
+    ctx.strokeStyle = '#6dc48f';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 3]);
+    ctx.beginPath();
+    ctx.moveTo(xC, rulerY - 30); ctx.lineTo(xC, rulerY + 22);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#6dc48f';
+    ctx.font = '600 11px "SF Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('CODATA  137.036', xC, rulerY - 36);
+  }
+
+  function drawDot(v, color, size = 10) {
+    const x = mapInv(Math.max(INV_MIN, Math.min(INV_MAX, v)));
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, rulerY, size, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = palette.bg;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  function drawStepList() {
+    const x = 40, y0 = 165;
+    const lineH = 22;
+    ctx.font = '600 12px "Charter", serif';
+    ctx.fillStyle = palette.text;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('iteration history', x, y0 - 4);
+    for (let i = 0; i < steps.length; i++) {
+      const y = y0 + 16 + i * lineH;
+      const s = steps[i];
+      const isCur = i === current;
+      const isDone = i < current || (current === steps.length - 1);
+      const color = isCur ? palette.alive : (isDone ? palette.textSoft : palette.textFaint);
+      ctx.fillStyle = color;
+      ctx.font = (isCur ? '600 ' : '') + '12px "SF Mono", monospace';
+      const label = i === 0 ? `\u03B1\u2080 = V  (bare UV)` : `\u03B1${i === 1 ? '\u2081' : i === 2 ? '\u2082' : i === 3 ? '\u2083' : '\u2084'}`;
+      const details = i === 0
+        ? `\u03B1 = ${s.alpha.toExponential(4)}   1/\u03B1 = ${s.inv.toFixed(4)}`
+        : `n_eff = ${s.n_eff.toFixed(5)}   1/\u03B1 = ${s.inv.toFixed(4)}`;
+      ctx.textAlign = 'left';
+      ctx.fillText(label.padEnd(18, ' '), x, y);
+      ctx.fillStyle = isCur ? palette.alive : palette.text;
+      ctx.fillText(details, x + 120, y);
+    }
+  }
+
+  function drawTitle() {
+    ctx.fillStyle = palette.text;
+    ctx.font = '600 13px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Self-consistent iteration  \u2014  \u03B1 feeds its own exponent', W/2, 28);
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.fillStyle = palette.textFaint;
+    ctx.fillText('starting from \u03B1\u2080 = V (UV bare value), three Schwinger updates reach 137.032', W/2, 46);
+  }
+
+  function currentInvAlpha() {
+    // Interpolate between steps[current] and steps[current+1] by `progress`.
+    const a = steps[current];
+    if (current >= steps.length - 1) return a.inv;
+    const b = steps[current + 1];
+    return a.inv + (b.inv - a.inv) * progress;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg;
+    ctx.fillRect(0, 0, W, H);
+    drawTitle();
+    drawRuler();
+
+    // Past steps as faded dots
+    for (let i = 0; i <= current; i++) {
+      const alpha = 0.25 + 0.55 * (i / Math.max(1, current));
+      ctx.globalAlpha = alpha;
+      drawDot(steps[i].inv, i === 0 ? '#c38df7' : palette.alive, 6);
+    }
+    ctx.globalAlpha = 1;
+
+    // Current (big) dot
+    const liveInv = currentInvAlpha();
+    const isConverged = current >= steps.length - 1 && doneFlashTimer > 0;
+    const dotCol = isConverged ? '#6dc48f' : palette.alive;
+    drawDot(liveInv, dotCol, 11);
+
+    // Big numeric readout
+    ctx.fillStyle = dotCol;
+    ctx.font = '600 22px "SF Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(`1/\u03B1 = ${liveInv.toFixed(3)}`, W/2, 82);
+    ctx.fillStyle = palette.textFaint;
+    ctx.font = 'italic 11px "Charter", serif';
+    const dist = Math.abs(liveInv - codataInv);
+    const dist_ppm = (dist / codataInv) * 1e6;
+    ctx.fillText(`distance to CODATA: ${dist.toFixed(4)}  (${dist_ppm.toFixed(1)} ppm)`, W/2, 66);
+
+    drawStepList();
+  }
+
+  function tick() {
+    if (running) {
+      if (current < steps.length - 1) {
+        progress += 0.025;
+        if (progress >= 1) {
+          progress = 0;
+          current++;
+          if (current >= steps.length - 1) {
+            running = false;
+            doneFlashTimer = 60;
+            playBtn.textContent = '\u27F3 Replay';
+            playBtn.classList.remove('primary');
+          }
+        }
+      }
+    }
+    if (doneFlashTimer > 0) doneFlashTimer--;
+    draw();
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+// ============================================================
+// FIGURE 2: Sensitivity knobs
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-sens');
+  if (!canvas) return;
+  const W = 680, H = 260;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const controls = document.getElementById('sens-controls');
+
+  // Three sliders — each starts at 1.00 (nominal) with range 0.95..1.05
+  const state = { R0: 1.0, base: 1.0, n: 1.0 };
+
+  function sliderFor(key, labelHtml) {
+    const s = makeSlider(controls, {
+      label: labelHtml,
+      min: 0.95, max: 1.05, step: 0.001,
+      value: 1.0,
+      format: (v) => (v === 1.0 ? 'nominal' : `${(v > 1 ? '+' : '')}${((v - 1) * 100).toFixed(1)}%`),
+      onChange: (v) => { state[key] = v; },
+    });
+    return s;
+  }
+  const sR0  = sliderFor('R0',   '<em>R</em>\u2080(2/\u03C0)');
+  const sBas = sliderFor('base', '&pi;/4 base');
+  const sN   = sliderFor('n',    '1/&radic;e exponent');
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = 'Reset all';
+  controls.appendChild(resetBtn);
+  resetBtn.addEventListener('click', () => {
+    state.R0 = 1; state.base = 1; state.n = 1;
+    controls.querySelectorAll('input[type="range"]').forEach(el => {
+      el.value = 1;
+      const val = el.closest('.control').querySelector('.val');
+      if (val) val.textContent = 'nominal';
+    });
+  });
+
+  const codataInv = 137.035999084;
+  const RANGE_MIN = 100, RANGE_MAX = 175;
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = palette.text;
+    ctx.font = '600 13px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Sensitivity  \u2014  \u00B15% nudge around the derived value', W/2, 26);
+
+    // Compute live 1/alpha
+    const R0v = PHYS.R0_val * state.R0;
+    const bv  = PHYS.base   * state.base;
+    const nv  = PHYS.n_base * state.n;
+    const a   = computeAlpha(R0v, bv, nv);
+    const inv = 1/a;
+
+    // Ruler — leave right margin for swing labels beneath
+    const rulerY = 90, rx0 = 60, rx1 = W - 90;
+    const mapX = (v) => rx0 + (v - RANGE_MIN) / (RANGE_MAX - RANGE_MIN) * (rx1 - rx0);
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(rx0, rulerY); ctx.lineTo(rx1, rulerY); ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 100; v <= 170; v += 10) {
+      const x = mapX(v);
+      ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, rulerY - 4); ctx.lineTo(x, rulerY + 4); ctx.stroke();
+      ctx.fillText(v.toString(), x, rulerY + 8);
+    }
+    // CODATA dashed
+    const xC = mapX(codataInv);
+    ctx.strokeStyle = '#6dc48f'; ctx.lineWidth = 2;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(xC, rulerY - 26); ctx.lineTo(xC, rulerY + 22); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#6dc48f'; ctx.font = '600 11px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillText('CODATA 137.036', xC, rulerY - 32);
+    // Current tick
+    const invClamped = Math.max(RANGE_MIN + 1, Math.min(RANGE_MAX - 1, inv));
+    const xNow = mapX(invClamped);
+    ctx.fillStyle = palette.alive;
+    ctx.beginPath(); ctx.arc(xNow, rulerY, 9, 0, 2*Math.PI); ctx.fill();
+    ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+
+    // Big numeric readout
+    ctx.fillStyle = palette.alive;
+    ctx.font = '600 22px "SF Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(`1/\u03B1 = ${inv.toFixed(3)}`, W/2, 66);
+
+    // Sensitivity bars below
+    const barsY = 140, barH = 22, gap = 14;
+    const labels = [
+      { key: 'R0',   name: 'R\u2080(2/\u03C0)',     color: '#d17a97' },
+      { key: 'base', name: '\u03C0/4',              color: '#efa57a' },
+      { key: 'n',    name: '1/\u221Ae',             color: '#6dc48f' },
+    ];
+    // Precompute full ±5% swings for each factor
+    const sweeps = labels.map(l => {
+      const R0v = PHYS.R0_val * (l.key === 'R0'  ? 0.95 : 1);
+      const bv  = PHYS.base   * (l.key === 'base' ? 0.95 : 1);
+      const nv  = PHYS.n_base * (l.key === 'n'    ? 0.95 : 1);
+      const R0h = PHYS.R0_val * (l.key === 'R0'  ? 1.05 : 1);
+      const bh  = PHYS.base   * (l.key === 'base' ? 1.05 : 1);
+      const nh  = PHYS.n_base * (l.key === 'n'    ? 1.05 : 1);
+      const invLo = 1/computeAlpha(R0v, bv, nv);
+      const invHi = 1/computeAlpha(R0h, bh, nh);
+      return { ...l, lo: Math.min(invLo, invHi), hi: Math.max(invLo, invHi), range: Math.abs(invHi - invLo) };
+    });
+
+    ctx.fillStyle = palette.text; ctx.font = '600 12px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('\u00B15% swing in each factor  \u2192  range of 1/\u03B1', 40, barsY - 8);
+
+    labels.forEach((l, i) => {
+      const y = barsY + 4 + i * (barH + gap);
+      // Label
+      ctx.fillStyle = l.color;
+      ctx.font = '600 12.5px "SF Mono", monospace';
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.fillText(l.name, 130, y + barH/2);
+      // Bar (shows the full ±5% swept range in 1/alpha space)
+      const sw = sweeps[i];
+      const xLo = mapX(Math.max(RANGE_MIN, Math.min(RANGE_MAX, sw.lo)));
+      const xHi = mapX(Math.max(RANGE_MIN, Math.min(RANGE_MAX, sw.hi)));
+      ctx.fillStyle = l.color + '55';
+      ctx.fillRect(Math.min(xLo, xHi), y, Math.abs(xHi - xLo), barH);
+      ctx.strokeStyle = l.color;
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(Math.min(xLo, xHi), y, Math.abs(xHi - xLo), barH);
+      // Range annotation
+      ctx.fillStyle = l.color;
+      ctx.font = '600 11px "SF Mono", monospace';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(`swing: ${sw.range.toFixed(1)}`, rx1 + 10, y + barH/2);
+    });
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+</script>
+</body>
+</html>

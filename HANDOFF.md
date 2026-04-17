@@ -1,9 +1,9 @@
 # Handoff — Coherence Lattice Alpha Project
 
-**Last context save**: 2026-04-17 (§12 Living vs Static shipped + dark mode default)
-**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **12 / 17** sections complete. §12 is a three-figure chapter that makes the 143-vs-137 distinction visible: side-by-side α calculator, PLM exponential convergence with Debye–Waller collapse, and a continuous window-width sweep that walks 1/α from 137.03 to 143.13. Dark mode is now the explorable's default; light mode is opt-in via the floating toggle.
+**Last context save**: 2026-04-17 (§13 "The α formula, piece by piece" shipped)
+**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **13 / 17** sections complete. §13 is the capstone equation chapter — a 28px hero α formula with seven clickable symbol chips (each opening a detail panel with chapter source + live numeric value), a self-consistent iteration animation showing convergence to 137.032 in three Schwinger updates, and a sensitivity panel making the R₀-dominates hierarchy visible.
 
-**Immediate next task**: build §13 "The α formula, piece by piece" — the chapter where the final BKT formula `α = R₀(2/π)⁴ × (π/4)^(1/√e + α/2π)` becomes a fully clickable equation, with each symbol opening its derivation trace. See **§ Next session** at the bottom.
+**Immediate next task**: build §14 "Why three dimensions" — the d-dial chapter that sweeps dimension from 2 to 5 in the α formula and shows only d = 3 gives a physical value. See **§ Next session** at the bottom.
 
 This file is intended to be read first by a fresh session along with the files in **§ Must-read files on pickup**.
 
@@ -113,8 +113,9 @@ Unchanged since last handoff:
 | 09 | The electron (identity & topology) | ✅ |
 | 10 | How the lattice makes it a fermion | ✅ |
 | 11 | The BKT wall | ✅ |
-| **12** | **Living versus static** | **✅ NEW** |
-| 13 | The α formula, piece by piece | TODO |
+| 12 | Living versus static | ✅ |
+| **13** | **The α formula, piece by piece** | **✅ NEW** |
+| 14 | Why three dimensions | TODO |
 | 13 | The α formula, piece by piece | TODO |
 | 14 | Why three dimensions | TODO |
 | 15 | Closing the gap with linked clusters | TODO |
@@ -321,42 +322,65 @@ node        scripts/test_clr_vortex_headless.mjs
 
 ---
 
-## § Next session: §13 "The α formula, piece by piece"
+## § What's in §13 (shipped this cycle)
 
-This is the explorable's capstone equation chapter. The full BKT formula `α = R₀(2/π)⁴ × (π/4)^(1/√e + α/2π)` has been assembled piece by piece over 12 chapters; §13 displays it as a clickable equation where each symbol opens a mini-chapter trace. By the end, every factor has its full derivation a click away, and the self-consistent iteration is made visible as an animation.
+### §13 — The α formula, piece by piece
+
+**Narrative arc:**
+1. Lead frames the chapter: twelve chapters of physics now fit into a single line of algebra, and this line is displayed at hero scale with every piece clickable.
+2. **Hero equation** at 28px scale with seven coloured chips: α, R₀, (2/π), ⁴, (π/4), 1/√e, α/(2π). Each click swaps a shared detail panel directly beneath the formula showing name, pronunciation, chapter source, current numeric value at the BKT point, and 2–4 sentence physics description.
+3. **Figure 1: Self-consistent iteration animation.** A 1/α number line from 100 to 175 with a CODATA 137.036 marker in green. Starts at α₀ = V = 0.00845 → 1/α = 118.32 (purple dot). Each iteration snaps to the next value with a 2.5%/frame ease. Live ppm-distance-to-CODATA readout. Iteration history printed on the left. Converges in three steps to 137.032. "Run iteration" + "Reset" + "Replay" controls.
+4. **Figure 2: Sensitivity panel.** Three ±5% sliders (R₀, π/4 base, 1/√e), each displayed as a coloured bar beneath the shared 1/α ruler showing the full ±5% sweep in 1/α space. Ranges: R₀ ≈ 55, base ≈ 8, 1/√e ≈ 2. CODATA dashed vertical line on the ruler. "Reset all" button. Makes the vertex-dominated sensitivity hierarchy visible.
+5. "Zero free parameters, twelve chapters deep" aside inventories every factor's provenance (which chapter proved it, which theorem it comes from).
+6. "Closing the last 3%" paragraph previews §15's LCE correction and names the 29-ppm vs 1.5-ppb distinction.
+7. Closing teases §14's dimensional dial surprise.
+
+### Key design decisions this cycle
+
+- **Hero equation not an equation-block.** §13 needed the formula bigger, more visually distinct from the earlier `eq-display` pattern. Built a dedicated `.hero-eq` style at 28px with extra chip padding and a hover-lift transform. Uses the same `state`/`param`/`struct`/`op` colour classes as the smaller equations so the visual grammar is consistent.
+- **Shared detail panel rather than expanding blocks.** Clicking a symbol replaces the content of one fixed panel beneath the equation (with a default "click anything" fallback state). This keeps the page length constant and lets the user quickly scan through all seven symbols without losing scroll position. Re-click to deselect.
+- **Iteration animated on a number line, not as text.** Showing α converging as a physical motion on a 1/α ruler with the CODATA mark is faster to grok than a table of numbers. Kept the step-by-step numerical history as a side panel for readers who want the precision.
+- **Sensitivity bars pre-computed at ±5%.** Rather than letting the user drive the sweep manually (which would need three simultaneous sliders at extremes to see the hierarchy), pre-computed the full ±5% bars and drew them as coloured ranges on the ruler. The live ±5% slider on top is orthogonal — it drives the single live dot, not the bars. This cleanly separates "what does a nudge do?" (the dot) from "what is the total sensitivity?" (the bars).
+- **Numerics pre-verified.** Ran `node --input-type=module` against common.js before writing to confirm iteration values (α₀ = 8.45e-3 → 1/α = 118.32; α₁ → 137.038; α₂ → 137.032; converges at step 2) and sensitivity ranges (55 / 8 / 2). Prevents typos in canonical numbers.
+
+---
+
+## § Next session: §14 "Why three dimensions"
+
+The surprising dimensional-dial chapter. The α formula has a hidden parameter: the lattice coordination number z = d + 1. Sliding d from 2 to 5 produces 1/α values ranging from ~36 to ~1290. Only d = 3 (hence diamond's z = 4) lands at the physical value. This is the kind of demonstration that stops a reader in their tracks once they realise what they are seeing.
 
 ### Must-read files for the next session
 
 1. **`HANDOFF.md`** (this file) — current state.
-2. **`AGENTS.md`** — §The Derivation Chain lists all seven ingredients of the formula with their derivation sources.
-3. **`paper.tex`** §5.8 "The BKT Formula" (full derivation, already distilled into §11–§12), Appendix A4 "Von Mises Distribution and Star Graph Vertex Factor", Appendix A8 "Self-Consistent BKT Iteration Convergence".
-4. **`explorable/sections/11-bkt-wall.html`** + **`12-living-vs-static.html`** — most recent templates, including the α-teaser equation block at the bottom of §11 (which is essentially a prototype of §13's main figure).
-5. **`scripts/alpha_137_verification.py`** — the reference Python script; §13's iteration animation should reproduce exactly what this script prints.
+2. **`AGENTS.md`** — §5-7 table of 1/α(d) values (2, 3, 4, 5) with the "viable / too strong / too weak" annotation.
+3. **`paper.tex`** §5.7 "Dimensional Selection: Why d = 3" — the whole table is there, d=2 gives 1/α ≈ 36, d=3 gives 137.032, d=4 gives 390, d=5 gives 1290.
+4. **`explorable/sections/13-alpha-formula.html`** — template for the hero-scale equation + single-figure chapter. The iteration-animation number-line idiom is likely reusable.
 
-### Proposed figure lineup for §13
+### Proposed figure lineup for §14
 
-1. **The formula, fully clickable.** Recreate §11's α-teaser at hero scale: every symbol (R₀, the 2/π, the ⁴, the π/4, the 1/√e, the α/(2π)) is its own clickable chip with a dedicated mini-panel showing: name, pronunciation, derivation chapter, 1–2-sentence description, and a thumbnail figure reused from that chapter. This is the chapter where readers go "oh, it's all here."
-2. **Self-consistent iteration animation.** An animated panel showing α = V, then α' = V·base^(1/√e + α/2π), then α″ = V·base^(1/√e + α'/2π), … for three steps. At each step display the running 1/α value and its distance to 137.032. Converges in 3 iterations to 137.032 (and then in 5–6 more to machine precision). Replay button.
-3. **Sensitivity panel.** Three small tunable-value knobs (R₀, base, 1/√e) each with a ±5% nudge; show how 1/α responds. This tells readers which factor matters most (answer: R₀ by orders of magnitude, because it is raised to z = 4). Useful for gut-checking the hierarchy of the derivation.
+1. **The d dial.** One big slider: d ∈ [2, 5] with step 0.1 (continuous even though only integer d has a lattice). 1/α responds live. Below the slider, a coloured "regime ruler" showing: d=2 "too strong — atoms collapse", d=3 "physical", d=4 "too weak — EM barely binds", d=5 "effectively non-interacting". The physical value 137.036 is a green tick that only one position on the slider (d=3) reaches. Also display z = d+1 explicitly so readers see the coordination number update.
+2. **Side-by-side lattice sketches** (optional, small): four 2D icons representing triangular (z=3), diamond (z=4), FCC (z=5?) lattices at the d values shown. Not physics-accurate but visually anchoring — the dial is not abstract, it corresponds to real crystal geometries.
+3. **Constraint visualisation**: a 2D plot of the two meeting constraints π/(d+1) ∈ [0,1] and 1/α(d) > 1 (some minimal EM bound). d=3 is the unique d where both constraints are satisfied and the value is physical. This is the "why diamond, not just any z" argument visualised.
 
 ### Physics to get right
 
-- R₀(2/π) ≈ 0.3032; V = R₀^4 ≈ 0.00845.
-- base = π/4 ≈ 0.7854 (the variance ratio from §11's equation block).
-- Exponent n = 1/√e + α/(2π) where α/(2π) is the Schwinger QED vertex correction.
-- Self-consistency converges in 3 iterations from α₀ = V to 137.032 within 0.001 ppm.
-- The factor 4 on R₀ is z, the diamond coordination number from §8. Make this clickable → §8 thumbnail.
+- `1/α(d) = (R₀(K_BKT(d)))^(d+1) × (π/(d+1))^(n + α/(2π))`.
+- K_BKT depends on d: for the 2D XY vortex, K_BKT = 2/π regardless of embedding dimension, so the only d-dependence flows through z = d+1. Paper §5.7 confirms this.
+- d=2: 1/α = 36 (way too strong, atoms collapse).
+- d=3: 1/α = 137.032 (physical).
+- d=4: 1/α ≈ 390.
+- d=5: 1/α ≈ 1290.
+- The physical bound: α has to be perturbative (α < 1) AND strong enough to bind atoms (α > α_min ~ 1/500 ish). Only d=3 satisfies both.
 
 ### Stylistic continuity
 
-- Every symbol of the equation gets its own colour-coded chip (state / param / struct / op classes from `style.css`).
-- The iteration animation should not be flashy — a clean "step N: α = x, 1/α = y" readout that advances every ~1 second, with colour fade on convergence.
-- Keep the chapter focused — it's a lookup chapter, not a derivation chapter. All derivations are a click away.
-- Expected length: medium. Target 600–800 lines of HTML.
+- Palette: green for physical (d=3 region), purple for unphysical (d<3 or d>3).
+- One very focused slider-driven figure, minimal prose. This is a "holy shit" chapter, not a derivation chapter.
+- Expected length: 400–500 lines of HTML.
 
-### After §13
+### After §14
 
-`§14 — Why three dimensions` is the surprising "d dial" chapter: sliding the dimension in the α formula from d=2 to d=5 gives unphysical values at every point except d=3. This could be a single very dramatic slider figure + a few contextual numbers, and it is the kind of thing that stops a reader in their tracks once they realise what they are seeing. Target 400–500 lines.
+`§15 — Closing the gap with linked clusters` takes 1/α from 137.032 (29 ppm) to 137.035999 (1.5 ppb) via QED vacuum polarisation. This is a more technical chapter and probably wants a convergence-table figure showing LCE orders 1, 2, 3, 4 with their residuals (28800 → 6.7 → 1.5 ppb).
 
 ---
 
