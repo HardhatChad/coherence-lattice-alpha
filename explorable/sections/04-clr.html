@@ -182,7 +182,7 @@
 </div>
 
 <script type="module">
-import { setupHiDPICanvas, wireEquation, R0, runWhenVisible } from '../js/common.js';
+import { setupHiDPICanvas, wireEquation, R0, runWhenVisible, palette } from '../js/common.js';
 
 // ============================================================
 // Interactive equation: CLR
@@ -348,7 +348,7 @@ function findKstar(cosdth, r) {
     ctx.moveTo(cxA, cyA + rOsc);
     ctx.lineTo(cxB, cyB - rOsc);
     ctx.stroke();
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 12px serif';
     ctx.textAlign = 'center';
     ctx.fillText(`K = ${K.toFixed(3)}`, cxA + 40, (cyA + cyB) / 2 + 4);
@@ -357,7 +357,7 @@ function findKstar(cosdth, r) {
     drawOsc(ctx, cxB, cyB, rOsc, thetaB, 'B', '#7d2d4f');
 
     // cos(Δθ) readout under oscillators
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 12px serif';
     ctx.textAlign = 'center';
     ctx.fillText(`cos(Δθ) = ${cosdth.toFixed(2)}`, cxA, 280);
@@ -386,18 +386,18 @@ function findKstar(cosdth, r) {
     const mapY = vv => py0 + ph - ((vv - vLo) / (vHi - vLo)) * ph;
 
     // Axis
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(px0, py0, pw, ph);
 
     [0, 1, 2, 3].forEach(kk => {
       const x = mapX(kk);
-      ctx.strokeStyle = '#e0dbcb';
+      ctx.strokeStyle = palette.grid;
       ctx.beginPath();
       ctx.moveTo(x, py0);
       ctx.lineTo(x, py0 + ph);
       ctx.stroke();
-      ctx.fillStyle = '#888';
+      ctx.fillStyle = palette.textFaint;
       ctx.font = 'italic 11px serif';
       ctx.textAlign = 'center';
       ctx.fillText(String(kk), x, py0 + ph + 16);
@@ -434,7 +434,7 @@ function findKstar(cosdth, r) {
     // Marble at current K (this IS the bond's K)
     const markX = mapX(K);
     const markY = mapY(potentialV(K, cosdth, r));
-    ctx.fillStyle = '#2a2a2a';
+    ctx.fillStyle = palette.text;
     ctx.beginPath();
     ctx.arc(markX, markY - 5, 7, 0, Math.PI * 2);
     ctx.fill();
@@ -444,7 +444,7 @@ function findKstar(cosdth, r) {
     ctx.stroke();
 
     // Potential labels
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 12px serif';
     ctx.textAlign = 'center';
     ctx.fillText('potential V(K) — marble is this bond\'s current K', px0 + pw / 2, py0 - 10);
@@ -460,8 +460,8 @@ function findKstar(cosdth, r) {
     const sx0 = 80, sy0 = 340, sw = 560, sh = 90;
     const Khmax = 2.0;
 
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(sx0, sy0, sw, sh);
     ctx.strokeRect(sx0, sy0, sw, sh);
@@ -496,7 +496,7 @@ function findKstar(cosdth, r) {
     }
     ctx.stroke();
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px serif';
     ctx.textAlign = 'right';
     ctx.fillText('K over time', sx0 - 8, sy0 + sh / 2 + 4);
@@ -511,7 +511,7 @@ function findKstar(cosdth, r) {
 
 // Shared drawOsc helper
 function drawOsc(ctx, cx, cy, r, theta, label, color) {
-  ctx.strokeStyle = '#c8c0ad';
+  ctx.strokeStyle = palette.axis;
   ctx.lineWidth = 1.5;
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -531,7 +531,7 @@ function drawOsc(ctx, cx, cy, r, theta, label, color) {
   ctx.arc(px, py, 7, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.fillStyle = '#888';
+  ctx.fillStyle = palette.textFaint;
   ctx.font = '14px serif';
   ctx.textAlign = 'center';
   ctx.fillText(label, cx - r - 14, cy + 5);
@@ -568,7 +568,7 @@ function drawOsc(ctx, cx, cy, r, theta, label, color) {
     const px0 = 70, py0 = 30, pw = 560, ph = 240;
 
     // Axes
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(px0, py0, pw, ph);
 
@@ -579,23 +579,23 @@ function drawOsc(ctx, cx, cy, r, theta, label, color) {
     // Grid + ticks
     [-1, -0.5, 0, 0.5, 1].forEach(c => {
       const x = mapX(c);
-      ctx.strokeStyle = '#e0dbcb';
+      ctx.strokeStyle = palette.grid;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(x, py0); ctx.lineTo(x, py0 + ph);
       ctx.stroke();
-      ctx.fillStyle = '#888';
+      ctx.fillStyle = palette.textFaint;
       ctx.font = 'italic 11px serif';
       ctx.textAlign = 'center';
       ctx.fillText(c.toFixed(1), x, py0 + ph + 16);
     });
     [0, 1, 2, 3].forEach(K => {
       const y = mapY(K);
-      ctx.strokeStyle = '#e0dbcb';
+      ctx.strokeStyle = palette.grid;
       ctx.beginPath();
       ctx.moveTo(px0, y); ctx.lineTo(px0 + pw, y);
       ctx.stroke();
-      ctx.fillStyle = '#888';
+      ctx.fillStyle = palette.textFaint;
       ctx.font = 'italic 11px serif';
       ctx.textAlign = 'right';
       ctx.fillText(String(K), px0 - 6, y + 4);
@@ -657,7 +657,7 @@ function drawOsc(ctx, cx, cy, r, theta, label, color) {
     ctx.beginPath();
     ctx.arc(probeX, mapY(probeK), 7, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#fdfaf3';
+    ctx.strokeStyle = palette.bgSoft;
     ctx.lineWidth = 2;
     ctx.stroke();
 
@@ -672,7 +672,7 @@ function drawOsc(ctx, cx, cy, r, theta, label, color) {
     }
 
     // Axis labels
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 13px serif';
     ctx.textAlign = 'center';
     ctx.fillText('cos(Δθ) — alignment the bond observes →', px0 + pw / 2, py0 + ph + 36);

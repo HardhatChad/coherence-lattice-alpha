@@ -128,7 +128,7 @@
 </div>
 
 <script type="module">
-import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
+import { setupHiDPICanvas, R0, runWhenVisible, palette } from '../js/common.js';
 
 // ============================================================
 // FIGURE 1: One oscillator + sine wave
@@ -161,7 +161,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
 
     // Circle (left)
     const cx = 130, cy = 140, r = 70;
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -191,7 +191,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     ctx.fill();
 
     // θ label
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 14px serif';
     ctx.textAlign = 'center';
     ctx.fillText(`θ = ${wrapAngle(theta).toFixed(2)}`, cx, cy + r + 38);
@@ -200,7 +200,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     const waveX0 = 260;
     const waveW = 380;
     const waveY = cy;
-    ctx.strokeStyle = '#e0dbcb';
+    ctx.strokeStyle = palette.grid;
     ctx.setLineDash([3, 3]);
     ctx.beginPath();
     ctx.moveTo(px + 9, py);
@@ -210,7 +210,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
 
     // Waveform (right)
     // Axis
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(waveX0, waveY - r);
@@ -307,7 +307,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
   }
 
   function drawOsc(cx, cy, r, theta, label, color) {
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -328,14 +328,14 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     ctx.arc(px, py, 8, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = '14px serif';
     ctx.textAlign = 'center';
     ctx.fillText(label, cx - r - 14, cy + 5);
   }
 
   function drawWave(x0, y0, w, r, hist, color, theta, label) {
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(x0, y0 - r);
@@ -359,7 +359,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     ctx.arc(x0 + w, y0 - Math.sin(theta) * r, 4, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px serif';
     ctx.textAlign = 'left';
     ctx.fillText(label, x0 + 6, y0 - r - 4);
@@ -433,7 +433,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     const variance = recent.reduce((s, x) => s + (x - mean) ** 2, 0) / recent.length;
     if (variance < 0.01) stableCount++; else stableCount = 0;
     stateReadout.textContent = stableCount > 30 ? 'phase-locked' : 'drifting';
-    stateReadout.style.color = stableCount > 30 ? '#d97236' : '#888';
+    stateReadout.style.color = stableCount > 30 ? '#d97236' : palette.textFaint;
   }
 
   function wrapAngle(a) {
@@ -472,13 +472,13 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     const stripH = 55;
     const stripX0 = 80;
     const stripW = 540;
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(stripX0, stripY, stripW, stripH);
     ctx.strokeRect(stripX0, stripY, stripW, stripH);
 
-    ctx.strokeStyle = '#e0dbcb';
+    ctx.strokeStyle = palette.grid;
     ctx.setLineDash([3, 3]);
     ctx.beginPath();
     ctx.moveTo(stripX0, stripY + stripH / 2);
@@ -496,7 +496,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     }
     ctx.stroke();
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px serif';
     ctx.textAlign = 'right';
     ctx.fillText('Δθ = θ_B − θ_A', stripX0 - 8, stripY + stripH / 2 + 4);
@@ -507,7 +507,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
   }
 
   function drawOsc(cx, cy, r, theta, label, color) {
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -528,14 +528,14 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     ctx.arc(px, py, 7, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = '14px serif';
     ctx.textAlign = 'center';
     ctx.fillText(label, cx - r - 14, cy + 5);
   }
 
   function drawWave(x0, y0, w, r, hist, color, theta, label) {
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(x0, y0 - r);
@@ -559,7 +559,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     ctx.arc(x0 + w, y0 - Math.sin(theta) * r, 4, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px serif';
     ctx.textAlign = 'left';
     ctx.fillText(label, x0 + 6, y0 - r - 4);
@@ -644,7 +644,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     ctx.lineTo(cx, cy2 - r);
     ctx.stroke();
 
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 12px serif';
     ctx.textAlign = 'center';
     ctx.fillText(`K = ${K.toFixed(2)}`, cx + 30, (cy1 + cy2) / 2 + 4);
@@ -664,8 +664,8 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     const stripW = 540;
     const Kmax = 2.0;
 
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(stripX0, stripY, stripW, stripH);
     ctx.strokeRect(stripX0, stripY, stripW, stripH);
@@ -698,7 +698,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     }
     ctx.stroke();
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px serif';
     ctx.textAlign = 'right';
     ctx.fillText('K over time', stripX0 - 8, stripY + stripH / 2 + 4);
@@ -708,7 +708,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
   }
 
   function drawOsc(cx, cy, r, theta, label, color) {
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -729,14 +729,14 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     ctx.arc(px, py, 7, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = '14px serif';
     ctx.textAlign = 'center';
     ctx.fillText(label, cx - r - 14, cy + 5);
   }
 
   function drawWave(x0, y0, w, r, hist, color, theta, label) {
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(x0, y0 - r);
@@ -760,7 +760,7 @@ import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
     ctx.arc(x0 + w, y0 - Math.sin(theta) * r, 4, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px serif';
     ctx.textAlign = 'left';
     ctx.fillText(label, x0 + 6, y0 - r - 4);

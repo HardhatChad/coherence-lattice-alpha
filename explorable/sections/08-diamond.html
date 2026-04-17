@@ -205,7 +205,7 @@
 
 </div>
 <script type="module">
-import { setupHiDPICanvas } from '../js/common.js';
+import { setupHiDPICanvas, palette } from '../js/common.js';
 import {
   makeCamera, attachCameraControls, renderScene, buildLatticeScene,
   diamondLattice, bondsByDistance, orientCameraAlongAxis, centralTetrahedron,
@@ -322,10 +322,10 @@ import {
 
   function draw3D() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4';
+    ctx.fillStyle = palette.bg;
     ctx.fillRect(0, 0, W, H);
     // Subtle label: lattice name, atom count, coordination
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 11px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
@@ -524,16 +524,16 @@ import {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4';
+    ctx.fillStyle = palette.bg;
     ctx.fillRect(0, 0, W, H);
 
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 12px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText(modeLabel(), 24, 22);
     ctx.font = 'italic 10.5px "Charter", serif';
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.fillText('drag to rotate', 24, 38);
 
     renderScene(ctx, W, H, scene(), camera);
@@ -668,7 +668,7 @@ import {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4';
+    ctx.fillStyle = palette.bg;
     ctx.fillRect(0, 0, W, H);
 
     // Recolour atoms from current phase + common rotation offset.
@@ -678,13 +678,13 @@ import {
 
     renderScene(ctx, W, H, { atoms, bonds }, camera);
 
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = '12px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText(viewLabels[currentView], 24, 22);
     ctx.font = 'italic 10.5px "Charter", serif';
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.fillText('drag to rotate', 24, 38);
   }
 

@@ -37,7 +37,7 @@ A three-act structure:
 | 08 | Why the diamond lattice | ✅ DONE |
 | 09 | The electron (identity & topology) | ✅ DONE |
 | 10 | How the lattice makes it a fermion | ✅ DONE |
-| 11 | The BKT wall | TODO |
+| 11 | The BKT wall | ✅ DONE |
 | 12 | Living versus static | TODO |
 | 13 | The α formula, piece by piece | TODO |
 | 14 | Why three dimensions | TODO |
@@ -148,25 +148,13 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ---
 
-### 10 — The BKT wall
+### 11 — The BKT wall
 
-**Core idea:** The CLR wants K high. The topology of a vortex requires K ≤ K_BKT = 2/π. The equilibrium sits exactly at the wall. That's where α lives.
-
-**Interactives:**
-- **Vortex free energy curve:** F(R) = (πK − 2)·ln(R/a). Three regimes visualized: confined (K > K_BKT, F → +∞), marginal (K = K_BKT, F = 0), unbound (K < K_BKT, F → −∞).
-- **K dial + single vortex:** user slides K, shows whether vortex is stable/confined/unbinding. Live readout.
-- **The wall interactive:** CLR urge arrow pushing K up; BKT wall at K_BKT; equilibrium exactly at the boundary. Show K_bulk = 16/π² as the derived consequence.
-
-**Prose:**
-- Vortex marginality theorem (Thm 5.5 in paper)
-- Three regimes of F(R)
-- The constraint boundary as the equilibrium
-- K_bulk = 16/π² = z · K_BKT² derivation
-- The topological constraint is what breaks the unconstrained Shannon equilibrium K_eq ≈ 2.1 down to K_bulk
+**Completed.** Three figures: (1) Vortex free energy F(R) with live K-slider from 0.30 to 1.00 and three frozen reference curves (K=0.50 unbound, K=2/π marginal, K=0.80 confined), live burgundy curve tracks the slider, regime strip above the plot snaps between confined/marginal/unbound. (2) Vortex-antivortex pair on a 2D phase lattice with draggable cores, K slider, force-arrow visualisation (attractive/repulsive/zero coloured by regime), Play button that releases the pair so it annihilates (K > K_BKT), flees (K < K_BKT), or drifts randomly (K = K_BKT). (3) Hero "wall" figure: 1D K-axis showing the CLR potential V(K) with marble rolling upward under Shannon-channel gradient descent, BKT wall at K_BKT, K_bulk = 16/π² marked, K_eq ≈ 2.11 marked. Play button sends marble up; Remove-vortex toggle drops the wall and lets the marble overshoot to K_eq. Two equation blocks (F(R), K_bulk derivation) plus a short base = π/z recap. Segue paragraph into §12 teases the living-vs-static exponent distinction.
 
 ---
 
-### 11 — Living versus static
+### 12 — Living versus static
 
 **Core idea:** The entire difference between 143 and 137 comes from *how* the exponent is evaluated. Static lattice integrates over the RG trajectory. Living lattice (with PLM Lemma) evaluates at the fixed point. This chapter is a pure side-by-side comparison.
 
@@ -184,7 +172,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ---
 
-### 12 — The α formula, piece by piece
+### 13 — The α formula, piece by piece
 
 **Core idea:** Build up the complete α formula factor by factor, with each piece grounded in earlier chapters.
 
@@ -208,7 +196,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ---
 
-### 13 — Why three dimensions
+### 14 — Why three dimensions
 
 **Core idea:** The α formula has a "d dial." Only d = 3 produces a physical α. This is the most surprising demonstration in the essay.
 
@@ -229,7 +217,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ---
 
-### 14 — Closing the gap with linked clusters
+### 15 — Closing the gap with linked clusters
 
 **Core idea:** BKT gives 29 ppm accuracy. A linked-cluster expansion over diamond subgraphs adds vacuum polarization running and closes to 1.5 ppb. Includes the honest open-problem flag.
 
@@ -248,7 +236,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ---
 
-### 15 — From α to g
+### 16 — From α to g
 
 **Core idea:** α → standard QED series → g-factor to 11.4 digits. Not an independent prediction; a consistency check showing the lattice α, fed through textbook QED, reproduces g.
 
@@ -267,7 +255,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ---
 
-### 16 — Coda: what just happened
+### 17 — Coda: what just happened
 
 **Core idea:** Step back. Summarize the whole climb. Reframe the paradigm. Hint at what's next (companion papers, open questions).
 
@@ -302,15 +290,16 @@ explorable/
     ├── 05-binary-field.html   ✅
     ├── 06-plm-npd.html        ✅
     ├── 07-vortices.html       ✅
-    ├── 08-diamond.html        TODO
-    ├── 09-electron.html       TODO
-    ├── 10-bkt-wall.html       TODO
-    ├── 11-living-vs-static.html TODO
-    ├── 12-alpha-formula.html  TODO
-    ├── 13-dimension.html      TODO
-    ├── 14-lce.html            TODO
-    ├── 15-g-factor.html       TODO
-    └── 16-coda.html           TODO
+    ├── 08-diamond.html        ✅
+    ├── 09-electron.html       ✅
+    ├── 10-fermion.html        ✅
+    ├── 11-bkt-wall.html       ✅
+    ├── 12-living-vs-static.html TODO
+    ├── 13-alpha-formula.html  TODO
+    ├── 14-dimension.html      TODO
+    ├── 15-lce.html            TODO
+    ├── 16-g-factor.html       TODO
+    └── 17-coda.html           TODO
 ```
 
 ## Development notes

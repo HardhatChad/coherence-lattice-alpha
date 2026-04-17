@@ -154,7 +154,7 @@
 </div>
 
 <script type="module">
-import { setupHiDPICanvas, wireEquation, R0, runWhenVisible } from '../js/common.js';
+import { setupHiDPICanvas, wireEquation, R0, runWhenVisible, palette } from '../js/common.js';
 
 // ============================================================
 // Interactive equation blocks
@@ -258,7 +258,7 @@ wireEquation('eq-fixedpoint', {
   }
 
   function drawOsc(cx, cy, r, theta, label, color) {
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -274,7 +274,7 @@ wireEquation('eq-fixedpoint', {
     ctx.beginPath();
     ctx.arc(px, py, 7, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = '14px serif';
     ctx.textAlign = 'center';
     ctx.fillText(label, cx, cy + r + 22);
@@ -287,7 +287,7 @@ wireEquation('eq-fixedpoint', {
     ctx.beginPath();
     ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
     ctx.stroke();
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 11px serif';
     ctx.textAlign = 'center';
     ctx.fillText(label, (x1 + x2) / 2, (y1 + y2) / 2 - 10);
@@ -312,8 +312,8 @@ wireEquation('eq-fixedpoint', {
     const sx0 = 60, sy0 = 200, sw = 560, sh = 130;
     const Kmax = 2.5;
 
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(sx0, sy0, sw, sh);
     ctx.strokeRect(sx0, sy0, sw, sh);
@@ -321,7 +321,7 @@ wireEquation('eq-fixedpoint', {
     // Gridlines at K=1,2
     [0.5, 1, 1.5, 2].forEach(v => {
       const y = sy0 + sh - (v / Kmax) * sh;
-      ctx.strokeStyle = '#e0dbcb';
+      ctx.strokeStyle = palette.grid;
       ctx.setLineDash([2, 3]);
       ctx.beginPath();
       ctx.moveTo(sx0, y); ctx.lineTo(sx0 + sw, y);
@@ -368,7 +368,7 @@ wireEquation('eq-fixedpoint', {
     ctx.fillText('K_AB', sx0 + 8, sy0 + 16);
     ctx.fillStyle = '#7d2d4f';
     ctx.fillText('K_BC', sx0 + 62, sy0 + 16);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.textAlign = 'center';
     ctx.fillText('coupling over time', sx0 + sw / 2, sy0 + sh + 20);
 
@@ -443,7 +443,7 @@ wireEquation('eq-fixedpoint', {
     const cx = 340, cy = 180, Rring = 130, rOsc = 32;
 
     // Ring guide
-    ctx.strokeStyle = '#e0dbcb';
+    ctx.strokeStyle = palette.grid;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.arc(cx, cy, Rring, 0, Math.PI * 2);
@@ -503,14 +503,14 @@ wireEquation('eq-fixedpoint', {
     for (let i = 0; i < N; i++) {
       const x = bx0 + i * (barW + 10);
       const Knorm = Math.min(1, Ks[i] / 2);
-      ctx.fillStyle = '#fdfaf3';
-      ctx.strokeStyle = '#c8c0ad';
+      ctx.fillStyle = palette.bgSoft;
+      ctx.strokeStyle = palette.axis;
       ctx.lineWidth = 1;
       ctx.fillRect(x, by0, barW, bh);
       ctx.strokeRect(x, by0, barW, bh);
       ctx.fillStyle = Ks[i] > 0.1 ? '#d97236' : '#a8a39a';
       ctx.fillRect(x, by0, Knorm * barW, bh);
-      ctx.fillStyle = '#555';
+      ctx.fillStyle = palette.textSoft;
       ctx.font = 'italic 10px serif';
       ctx.textAlign = 'center';
       ctx.fillText(`K${i}: ${Ks[i].toFixed(2)}`, x + barW / 2, by0 + bh + 12);
@@ -697,7 +697,7 @@ wireEquation('eq-fixedpoint', {
           const bc = 50 + b * 80;
           ctx.fillStyle = `rgb(${rc}, ${gc}, ${bc})`;
         } else {
-          ctx.fillStyle = '#f5f0e4'; // dim cream when phases hidden
+          ctx.fillStyle = palette.bg; // dim cream when phases hidden
         }
         ctx.fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
       }
@@ -739,14 +739,14 @@ wireEquation('eq-fixedpoint', {
       }
     }
 
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(x0, y0, gridW, gridW);
 
     // --- BOTTOM-LEFT: K histogram ---
     const hx0 = 30, hy0 = 360, hw = 310, hh = 130;
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(hx0, hy0, hw, hh);
     ctx.strokeRect(hx0, hy0, hw, hh);
@@ -774,7 +774,7 @@ wireEquation('eq-fixedpoint', {
     }
 
     // Axis
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px serif';
     ctx.textAlign = 'center';
     ctx.fillText('K distribution (all bonds)', hx0 + hw / 2, hy0 + 14);
@@ -787,15 +787,15 @@ wireEquation('eq-fixedpoint', {
 
     // --- BOTTOM-RIGHT: I(t) and C(t) traces ---
     const tx0 = 370, ty0 = 360, tw = 280, th = 130;
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(tx0, ty0, tw, th);
     ctx.strokeRect(tx0, ty0, tw, th);
 
     // Zero line
     const zeroY = ty0 + th - 10;
-    ctx.strokeStyle = '#e0dbcb';
+    ctx.strokeStyle = palette.grid;
     ctx.setLineDash([2, 3]);
     ctx.beginPath();
     ctx.moveTo(tx0, zeroY); ctx.lineTo(tx0 + tw, zeroY);
@@ -837,7 +837,7 @@ wireEquation('eq-fixedpoint', {
     ctx.fillText('C(t)', tx0 + 6, ty0 + 14);
     ctx.fillStyle = '#d97236';
     ctx.fillText('I(t) ≥ 0', tx0 + 50, ty0 + 14);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.textAlign = 'center';
     ctx.fillText('coherence climbing →', tx0 + tw / 2, ty0 + th + 12);
 

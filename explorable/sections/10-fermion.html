@@ -186,7 +186,7 @@
 
 </div>
 <script type="module">
-import { setupHiDPICanvas, wireEquation, runWhenVisible } from '../js/common.js';
+import { setupHiDPICanvas, wireEquation, runWhenVisible, palette } from '../js/common.js';
 import {
   makeCamera, attachCameraControls, renderScene,
   diamondLattice, orientCameraAlongAxis,
@@ -350,10 +350,10 @@ wireEquation('eq-dirac', {
   meshBonds(lowIdx, 'rgba(125, 45, 79, 0.75)');
 
   const floorA = atoms.length;
-  atoms.push({ pos: kToScene(KX_MIN, (KY_MIN+KY_MAX)/2, 0), radius: 0.015, color: '#c8c0ad', strokeColor: null });
-  atoms.push({ pos: kToScene(KX_MAX, (KY_MIN+KY_MAX)/2, 0), radius: 0.015, color: '#c8c0ad', strokeColor: null });
-  atoms.push({ pos: kToScene((KX_MIN+KX_MAX)/2, KY_MIN, 0), radius: 0.015, color: '#c8c0ad', strokeColor: null });
-  atoms.push({ pos: kToScene((KX_MIN+KX_MAX)/2, KY_MAX, 0), radius: 0.015, color: '#c8c0ad', strokeColor: null });
+  atoms.push({ pos: kToScene(KX_MIN, (KY_MIN+KY_MAX)/2, 0), radius: 0.015, color: palette.axis, strokeColor: null });
+  atoms.push({ pos: kToScene(KX_MAX, (KY_MIN+KY_MAX)/2, 0), radius: 0.015, color: palette.axis, strokeColor: null });
+  atoms.push({ pos: kToScene((KX_MIN+KX_MAX)/2, KY_MIN, 0), radius: 0.015, color: palette.axis, strokeColor: null });
+  atoms.push({ pos: kToScene((KX_MIN+KX_MAX)/2, KY_MAX, 0), radius: 0.015, color: palette.axis, strokeColor: null });
   bonds.push({ a: floorA,     b: floorA + 1, color: 'rgba(180,175,160,0.6)', width: 0.8 });
   bonds.push({ a: floorA + 2, b: floorA + 3, color: 'rgba(180,175,160,0.6)', width: 0.8 });
 
@@ -367,17 +367,17 @@ wireEquation('eq-dirac', {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
     renderScene(ctx, W, H, { atoms, bonds }, camera);
-    ctx.fillStyle = '#2a2a2a';
+    ctx.fillStyle = palette.text;
     ctx.font = '600 12px "Charter", serif';
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     ctx.fillText('E = \u00B1|f(k)|  \u2014  band structure (momentum space, kz=0 slice)', 20, 24);
     ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = '#7d2d4f';
     ctx.fillText('\u2190 this is MOMENTUM space (kx, ky, E) \u2014 how waves behave, NOT where atoms sit', 20, 40);
-    ctx.textAlign = 'right'; ctx.fillStyle = '#888';
+    ctx.textAlign = 'right'; ctx.fillStyle = palette.textFaint;
     ctx.fillText('drag to rotate; try the Side view to see the V crossing', W - 20, 40);
-    ctx.fillStyle = '#888'; ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10.5px "Charter", serif';
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     ctx.fillText('blue = upper band E = +|f|  \u00B7  burgundy = lower band E = −|f|  \u00B7  orange = nodal line where bands touch', 20, H - 10);
   }
@@ -423,14 +423,14 @@ wireEquation('eq-dirac', {
   }
 
   function drawTopSection() {
-    ctx.fillStyle = '#2a2a2a'; ctx.font = '600 12.5px "Charter", serif';
+    ctx.fillStyle = palette.text; ctx.font = '600 12.5px "Charter", serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     ctx.fillText('Transport a rotational frame around the vortex', vortexCx, 22);
     ctx.font = 'italic 10.5px "Charter", serif';
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.fillText('drag the orange walker, or press play', vortexCx, 38);
 
-    ctx.strokeStyle = '#c8c0ad'; ctx.lineWidth = 1.5;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
     ctx.setLineDash([4, 4]);
     ctx.beginPath(); ctx.arc(vortexCx, vortexCy, loopR, 0, 2*Math.PI); ctx.stroke();
     ctx.setLineDash([]);
@@ -452,7 +452,7 @@ wireEquation('eq-dirac', {
     const loops = walkerAngle / (2*Math.PI);
     const vectorRestored = Math.abs(walkerAngle % (2*Math.PI)) < 0.08 && walkerAngle > 0.5;
     const spinorRestored = Math.abs(walkerAngle % (4*Math.PI)) < 0.08 && walkerAngle > 0.5;
-    ctx.fillStyle = '#555'; ctx.font = '600 12px "SF Mono", monospace';
+    ctx.fillStyle = palette.textSoft; ctx.font = '600 12px "SF Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText(`walker: ${loops.toFixed(2)} loops  (${(walkerAngle * 180/Math.PI).toFixed(0)}°)`, W/2, 210);
 
@@ -462,21 +462,21 @@ wireEquation('eq-dirac', {
           ? 'vector restored, but spinor still half-rotated'
           : 'both still in transit');
     ctx.font = 'italic 11px "Charter", serif';
-    ctx.fillStyle = spinorRestored ? '#2d9a4e' : (vectorRestored ? '#7d2d4f' : '#888');
+    ctx.fillStyle = spinorRestored ? '#2d9a4e' : (vectorRestored ? '#7d2d4f' : palette.textFaint);
     ctx.fillText(status, W/2, 228);
   }
 
   function drawArrowPanel(cx, cy, r, label, angle, color, subtitle) {
-    ctx.fillStyle = '#2a2a2a'; ctx.font = '600 13px "Charter", serif';
+    ctx.fillStyle = palette.text; ctx.font = '600 13px "Charter", serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(label, cx, cy - r - 28);
-    ctx.fillStyle = '#888'; ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10.5px "Charter", serif';
     ctx.fillText(subtitle, cx, cy - r - 12);
 
-    ctx.strokeStyle = '#c8c0ad'; ctx.lineWidth = 1.5;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2*Math.PI); ctx.stroke();
 
-    ctx.strokeStyle = '#e0dbcb'; ctx.lineWidth = 0.8;
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 0.8;
     ctx.setLineDash([2, 3]);
     ctx.beginPath(); ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy);
     ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r); ctx.stroke();
@@ -505,17 +505,17 @@ wireEquation('eq-dirac', {
     ctx.fillStyle = color;
     ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(`${deg.toFixed(0)}°`, cx, cy + r + 18);
-    ctx.fillStyle = '#888'; ctx.font = 'italic 10px "Charter", serif';
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px "Charter", serif';
     ctx.fillText(`total: ${(angle * 180 / Math.PI).toFixed(0)}°`, cx, cy + r + 32);
   }
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
     drawTopSection();
     drawArrowPanel(leftCx, panelCy, panelR, 'Vector (SO(3))', walkerAngle, '#2a5f8f', 'rotates at walker\u2019s rate');
     drawArrowPanel(rightCx, panelCy, panelR, 'Spinor (SU(2))', walkerAngle / 2, '#d97236', 'rotates at HALF the walker\u2019s rate');
-    ctx.fillStyle = '#888'; ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10.5px "Charter", serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('SU(2) =', W/2, panelCy - 12);
     ctx.fillText('double cover', W/2, panelCy);
@@ -678,7 +678,7 @@ wireEquation('eq-dirac', {
 
   function renderPanel(ctx, K_fn, label) {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
 
     const phaseTime = performance.now() * 0.001 * omega * 3;
     for (let i = 0; i < axisIdx; i++) {
@@ -706,7 +706,7 @@ wireEquation('eq-dirac', {
 
     renderScene(ctx, W, H, { atoms, bonds }, camera);
 
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 11px "Charter", serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     const phase = (tNorm >= 1 && pauseTimer > 0)

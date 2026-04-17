@@ -166,7 +166,7 @@
 </div>
 
 <script type="module">
-import { setupHiDPICanvas, wireEquation, runWhenVisible } from '../js/common.js';
+import { setupHiDPICanvas, wireEquation, runWhenVisible, palette } from '../js/common.js';
 
 // ============================================================
 // Interactive equation: Kuramoto
@@ -281,14 +281,14 @@ wireEquation('eq-iphase', {
     ctx.clearRect(0, 0, 680, 340);
 
     // Unit circle
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.stroke();
 
     // Axes
-    ctx.strokeStyle = '#e0dbcb';
+    ctx.strokeStyle = palette.grid;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(cx - r - 10, cy);
@@ -344,7 +344,7 @@ wireEquation('eq-iphase', {
 
     // Readouts (right side)
     const rx = 380, ry = 50;
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = '14px serif';
     ctx.textAlign = 'left';
     const lines = [
@@ -358,10 +358,10 @@ wireEquation('eq-iphase', {
       [`chord length`, Math.hypot(pA.x-pB.x, pA.y-pB.y).toFixed(1) + ' px', '#7d2d4f'],
     ];
     lines.forEach(([label, val, color], i) => {
-      ctx.fillStyle = '#888';
+      ctx.fillStyle = palette.textFaint;
       ctx.font = 'italic 14px serif';
       ctx.fillText(label, rx, ry + i * 28);
-      ctx.fillStyle = color || '#333';
+      ctx.fillStyle = color || palette.text;
       ctx.font = '14px "SF Mono", Menlo, monospace';
       ctx.fillText(val, rx + 180, ry + i * 28);
     });
@@ -431,14 +431,14 @@ wireEquation('eq-iphase', {
     const cx = 340, cy = 200, R = 140, dotR = 18;
 
     // Ring guide
-    ctx.strokeStyle = '#e0dbcb';
+    ctx.strokeStyle = palette.grid;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.arc(cx, cy, R, 0, Math.PI * 2);
     ctx.stroke();
 
     // Bonds between neighbors (connective tissue)
-    ctx.strokeStyle = '#d8d4c8';
+    ctx.strokeStyle = palette.grid;
     ctx.lineWidth = 1;
     for (let i = 0; i < N; i++) {
       const a = (i / N) * Math.PI * 2 - Math.PI / 2;
@@ -488,15 +488,15 @@ wireEquation('eq-iphase', {
     const barX0 = 80;
     const barW = 520;
     const barH = 20;
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(barX0, barY, barW, barH);
     ctx.strokeRect(barX0, barY, barW, barH);
 
     // Zero marker
     const zeroX = barX0 + barW / 2;
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.setLineDash([2, 3]);
     ctx.beginPath();
     ctx.moveTo(zeroX, barY); ctx.lineTo(zeroX, barY + barH);
@@ -508,7 +508,7 @@ wireEquation('eq-iphase', {
     ctx.fillStyle = Iphase > 0 ? 'rgba(217, 114, 54, 0.55)' : 'rgba(125, 45, 79, 0.55)';
     ctx.fillRect(Math.min(zeroX, IclampX), barY + 2, Math.abs(IclampX - zeroX), barH - 4);
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 12px serif';
     ctx.textAlign = 'right';
     ctx.fillText('I_phase', barX0 - 10, barY + barH / 2 + 4);
@@ -622,7 +622,7 @@ wireEquation('eq-iphase', {
     }
 
     // Grid outline
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(x0, y0, gridW, gridW);
 
@@ -634,14 +634,14 @@ wireEquation('eq-iphase', {
     const barX0 = 80;
     const barW = 520;
     const barH = 20;
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(barX0, barY, barW, barH);
     ctx.strokeRect(barX0, barY, barW, barH);
 
     const zeroX = barX0 + barW / 2;
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.setLineDash([2, 3]);
     ctx.beginPath();
     ctx.moveTo(zeroX, barY); ctx.lineTo(zeroX, barY + barH);
@@ -652,7 +652,7 @@ wireEquation('eq-iphase', {
     ctx.fillStyle = Iphase > 0 ? 'rgba(217, 114, 54, 0.55)' : 'rgba(125, 45, 79, 0.55)';
     ctx.fillRect(Math.min(zeroX, IclampX), barY + 2, Math.abs(IclampX - zeroX), barH - 4);
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 12px serif';
     ctx.textAlign = 'right';
     ctx.fillText('I_phase', barX0 - 10, barY + barH / 2 + 4);

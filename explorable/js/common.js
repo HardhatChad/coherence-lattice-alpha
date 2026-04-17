@@ -1,5 +1,138 @@
 /* Shared utilities for the Coherence Lattice explorable. */
 
+// --- Theme system ------------------------------------------------------
+//
+// `palette` is a live getter-object: every property read re-evaluates the
+// current theme from the DOM (the CSS variables under :root[data-theme]).
+// Canvas code calls `palette.bg`, `palette.text`, etc. on every draw; when
+// the theme flips, the next frame paints with the new colours automatically.
+//
+// Exports:
+//   palette          — live colour object (drop-in for hex strings)
+//   getTheme()       — returns 'light' | 'dark'
+//   setTheme(theme)  — persist + apply
+//   installThemeToggle() — injects a floating button (auto-runs on import)
+
+const _cssVars = {
+  bg:              '--canvas-bg',
+  bgSoft:          '--canvas-bg-soft',
+  text:            '--canvas-text',
+  textSoft:        '--canvas-text-soft',
+  textFaint:       '--canvas-text-faint',
+  grid:            '--canvas-grid',
+  axis:            '--canvas-axis',
+  axisBold:        '--canvas-axis-bold',
+  blue:            '--c-blue',
+  green:           '--c-green',
+  orange:          '--c-orange',
+  burgundy:        '--c-burgundy',
+  purple:          '--c-purple',
+  accent:          '--accent',
+  alive:           '--alive',
+  vortex:          '--vortex',
+};
+
+// Derived composite colours. Not mapped to CSS vars individually — computed
+// from the current theme so they track the toggle.
+function _derived(key) {
+  if (key === 'bondDefault') {
+    // Mid-grey line that reads on both cream and dark backgrounds.
+    return getTheme() === 'dark'
+      ? 'rgba(180, 175, 160, 0.55)'
+      : 'rgba(60, 60, 60, 0.5)';
+  }
+  if (key === 'bondFaint') {
+    return getTheme() === 'dark'
+      ? 'rgba(120, 115, 100, 0.4)'
+      : 'rgba(30, 30, 30, 0.45)';
+  }
+  return null;
+}
+
+// Light-theme fallback values (used only before DOM is available, e.g. at
+// module-init time on a headless test).
+const _fallback = {
+  bg: '#f5f0e4', bgSoft: '#fdfaf3',
+  text: '#2a2a2a', textSoft: '#555', textFaint: '#888',
+  grid: '#e0dbcb', axis: '#c8c0ad', axisBold: '#c0b9a0',
+  blue: '#2a5f8f', green: '#2d7d4f', orange: '#d97236',
+  burgundy: '#7d2d4f', purple: '#a855f7',
+  accent: '#2a5f8f', alive: '#d97236', vortex: '#7d2d4f',
+};
+
+function _cssVar(name, fallback) {
+  if (typeof document === 'undefined') return fallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name);
+  return (v && v.trim()) || fallback;
+}
+
+export const palette = new Proxy({}, {
+  get(_target, key) {
+    const cssName = _cssVars[key];
+    if (cssName) return _cssVar(cssName, _fallback[key] || '#888');
+    const derived = _derived(key);
+    if (derived !== null) return derived;
+    return _fallback[key] || '#888';
+  },
+  has(_target, key) {
+    return key in _cssVars || key in _fallback || _derived(key) !== null;
+  },
+});
+
+export function getTheme() {
+  if (typeof document === 'undefined') return 'dark';
+  const explicit = document.documentElement.getAttribute('data-theme');
+  if (explicit) return explicit;
+  return 'dark'; // dark is the default when nothing is set
+}
+
+export function setTheme(theme) {
+  if (typeof document === 'undefined') return;
+  document.documentElement.setAttribute('data-theme', theme);
+  try { localStorage.setItem('coh-theme', theme); } catch (_) {}
+  document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+}
+
+function _loadPersistedTheme() {
+  if (typeof document === 'undefined') return;
+  try {
+    const saved = localStorage.getItem('coh-theme');
+    if (saved === 'light' || saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+  } catch (_) {}
+}
+
+export function installThemeToggle() {
+  if (typeof document === 'undefined') return;
+  _loadPersistedTheme();
+  if (document.querySelector('.theme-toggle')) return;  // already installed
+
+  const btn = document.createElement('button');
+  btn.className = 'theme-toggle';
+  btn.type = 'button';
+  btn.setAttribute('aria-label', 'Toggle dark mode');
+  btn.title = 'Toggle dark mode';
+  function refreshIcon() {
+    btn.textContent = getTheme() === 'dark' ? '\u263C' : '\u263E'; // ☼ / ☾
+  }
+  refreshIcon();
+  btn.addEventListener('click', () => {
+    setTheme(getTheme() === 'dark' ? 'light' : 'dark');
+    refreshIcon();
+  });
+  // Install on DOM-ready so <body> exists.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => document.body.appendChild(btn));
+  } else {
+    document.body.appendChild(btn);
+  }
+}
+
+// Auto-install so every page that imports anything from common.js gets the toggle.
+installThemeToggle();
+
+
 // --- Modified Bessel functions I_0 and I_1 (series + asymptotic) ---
 
 export function bessel_I0(x) {

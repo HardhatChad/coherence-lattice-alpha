@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The BKT wall — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.regime-lozenge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font: 600 12px "SF Mono", monospace;
+  margin: 0 4px;
+}
+/* Dark-mode lozenge colours are default; light overrides below. */
+.reg-confined  { background: rgba(45, 125, 79, 0.18); color: #6dc48f; }
+.reg-marginal  { background: rgba(217, 114, 54, 0.22); color: #efa57a; }
+.reg-unbound   { background: rgba(168, 85, 247, 0.18); color: #c38df7; }
+:root[data-theme="light"] .reg-confined { background: rgba(45, 125, 79, 0.15); color: #2d7d4f; }
+:root[data-theme="light"] .reg-marginal { background: rgba(217, 114, 54, 0.18); color: #a84f14; }
+:root[data-theme="light"] .reg-unbound  { background: rgba(168, 85, 247, 0.15); color: #6b2fb3; }
+.k-readout {
+  font: 600 13px "SF Mono", monospace;
+  color: #2a5f8f;
+  padding: 1px 6px;
+  background: rgba(42, 95, 143, 0.08);
+  border-radius: 3px;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 11 / 17</span>
+</nav>
+
+<h1>The BKT wall<span class="subtitle">Where the CLR's push meets a topological ceiling &mdash; and where &alpha; lives</span></h1>
+
+<p class="lead">Chapter 10 closed on a provocation: &alpha; is not a property of the electron. It is a property of the vacuum. This chapter unpacks that claim. The Coherence Learning Rule <em>wants</em> coupling to be as high as possible &mdash; the Shannon channel (Chapter 4) climbs the potential toward a preferred <em>K</em><sub>eq</sub>&nbsp;&approx;&nbsp;2.11. But the vortex we identified as the electron cannot exist above a specific coupling: <em>K</em><sub>BKT</sub>&nbsp;=&nbsp;2/&pi;. Push past that value and the vortex is confined; drop below and it unbinds. The CLR drives the system up against this wall, and it stops there. The wall's position is what fixes the value of &alpha;.</p>
+
+<h2>Two forces meet</h2>
+
+<p>Every story in the universe eventually reduces to two competing tendencies. In this one, the competition is clean:</p>
+
+<ul style="margin: 0.4em 0 1em 1.6em; line-height: 1.6;">
+  <li><strong>The CLR wants <em>K</em> high.</strong> The Shannon channel (Chapter 4) rewards alignment, and alignment grows with coupling. Without any constraint, the bond potential <em>V</em>(<em>K</em>)&nbsp;=&nbsp;<em>K</em>&sup2;/<em>r</em>&nbsp;&minus;&nbsp;cos(&Delta;&theta;)&thinsp;ln&thinsp;<em>I</em><sub>0</sub>(<em>K</em>) has its minimum near <em>K</em><sub>eq</sub>&nbsp;&asymp;&nbsp;2.11 (at <em>r</em>&nbsp;=&nbsp;5.9, cos&nbsp;=&nbsp;1). That is where the CLR would send every bond if the lattice were featureless.</li>
+  <li><strong>The vortex forbids <em>K</em><sub>eff</sub>&thinsp;&gt;&thinsp;<em>K</em><sub>BKT</sub>.</strong> A vortex is a line defect (Chapter 7). The free energy of a vortex&ndash;antivortex pair at separation <em>R</em> is <em>F</em>(<em>R</em>)&nbsp;=&nbsp;(&pi;<em>K</em><sub>eff</sub>&nbsp;&minus;&nbsp;2)&thinsp;ln(<em>R</em>/<em>a</em>). If &pi;<em>K</em><sub>eff</sub> exceeds 2, the pair is attractive and a single isolated vortex costs infinite energy &mdash; it is <em>confined</em>. If &pi;<em>K</em><sub>eff</sub> falls below 2, pairs proliferate spontaneously and the single-vortex state is destroyed. The vortex exists as a free, stable excitation at exactly one value: <em>K</em><sub>eff</sub>&nbsp;=&nbsp;2/&pi;.</li>
+</ul>
+
+<p>Two forces, two fixed points. The CLR wants <em>K</em>&nbsp;&rarr;&nbsp;2.11. Topology requires <em>K</em><sub>eff</sub>&nbsp;&le;&nbsp;2/&pi;&nbsp;&asymp;&nbsp;0.637. The electron exists only because the system resolves this contradiction at the <em>boundary</em> &mdash; pushed by the CLR into the highest coupling compatible with topology, and held there by the constraint. That is the BKT wall.</p>
+
+<h2>The vortex free energy: three regimes</h2>
+
+<p>The physical object governing the wall is the <strong>vortex free energy</strong> &mdash; the cost in coherence capital of separating a vortex from its antivortex by a distance <em>R</em>. Kosterlitz and Thouless derived this formula in 1972 for the two-dimensional XY model; on the diamond lattice it applies transversely to each cross-section of the vortex line:</p>
+
+<div class="equation-block" id="eq-fofr">
+  <div class="eq-display">
+    <span class="eq-symbol op" data-symbol="F">F(R)</span>
+    &nbsp;=&nbsp;
+    (
+    <span class="eq-symbol param" data-symbol="pi-K">&pi;<em>K</em><sub>eff</sub></span>
+    &nbsp;&minus;&nbsp;
+    <span class="eq-symbol struct" data-symbol="two">2</span>
+    )
+    &nbsp;
+    <span class="eq-symbol state" data-symbol="log">ln(<em>R</em>/<em>a</em>)</span>
+  </div>
+  <p class="eq-prompt">Click any coloured symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    The free energy needed to pull a vortex and antivortex apart by distance <em>R</em>, measured in units of the lattice spacing <em>a</em>. Two contributions fight: a <em>bond-energy</em> term proportional to &pi;<em>K</em><sub>eff</sub> (pulling the pair apart costs energy because bonds want to align) and an <em>entropic</em> term equal to 2 (there are many possible positions, which favours the pair unbinding). Their difference, multiplied by the logarithm of separation, is the vortex free energy. The sign of (&pi;<em>K</em><sub>eff</sub>&nbsp;&minus;&nbsp;2) is the whole story.
+  </div>
+</div>
+
+<p>The slope of <em>F</em>(<em>R</em>) sets everything. Drag the <em>K</em><sub>eff</sub> slider in the figure below to see what happens:</p>
+
+<figure id="fig-fofr">
+  <canvas id="canvas-fofr" width="680" height="400"></canvas>
+  <div class="controls" id="fofr-controls">
+    <!-- slider inserted by JS -->
+  </div>
+  <figcaption>
+    Vortex free energy <em>F</em>(<em>R</em>) plotted against pair separation <em>R</em>/<em>a</em>. The three frozen reference curves fix the regimes: <span class="reg-confined">K&thinsp;&gt;&thinsp;K<sub>BKT</sub> &mdash; confined</span>, <span class="reg-marginal">K&thinsp;=&thinsp;K<sub>BKT</sub> &mdash; marginal (flat)</span>, <span class="reg-unbound">K&thinsp;&lt;&thinsp;K<sub>BKT</sub> &mdash; unbound</span>. The live burgundy curve tracks the slider. Only at <em>K</em><sub>eff</sub>&nbsp;=&nbsp;2/&pi; does the curve flatten to zero &mdash; a single vortex neither collapses onto an antivortex partner nor nucleates one. That is the unique coupling at which the electron exists as a free, stable excitation. Move the slider and watch the regime indicator above the plot snap between the three possibilities.
+  </figcaption>
+</figure>
+
+<p>The flat curve is not a neutral outcome. It is a <em>balance</em> &mdash; the only place where two opposing forces cancel. A millimetre above <em>K</em><sub>BKT</sub> and the vortex is trapped on top of its antivortex (the pair collapses). A millimetre below and the vacuum fills with vortex&ndash;antivortex pairs (the single-vortex state is swamped). The fine structure constant lives in the specific balance at the exact boundary &mdash; not in any of the three regimes, but in the razor's edge between them.</p>
+
+<h2>Watching the wall</h2>
+
+<p>The free energy plot is abstract. Here is the same physics made tangible: a vortex and its antivortex, sitting on a 2D phase field, with a slider that sets the coupling. At each <em>K</em>, the pair force is shown as an arrow; hit <em>Play</em> to let the physics run and see what happens to the pair.</p>
+
+<figure id="fig-kdial">
+  <canvas id="canvas-kdial" width="680" height="420"></canvas>
+  <div class="controls" id="kdial-controls">
+    <!-- slider + buttons inserted by JS -->
+  </div>
+  <figcaption>
+    A vortex (right, winding&nbsp;+1) and an antivortex (left, winding&nbsp;&minus;1) seeded on a square phase lattice, separated by a draggable distance. The <strong>force arrow</strong> between them is the gradient of <em>F</em>(<em>R</em>): attractive (pointing inward) when <em>K</em>&nbsp;&gt;&nbsp;<em>K</em><sub>BKT</sub>, zero at the wall, repulsive when <em>K</em>&nbsp;&lt;&nbsp;<em>K</em><sub>BKT</sub>. Press <strong>Play</strong> to release them: above the wall they rush together and annihilate; below the wall they flee to the lattice edge; at the wall they drift only by random imbalance. The regime strip at the top tracks the slider in real time.
+    <br><br>
+    <em style="color: var(--text-faint); font-size: 0.9em;">The pair dynamics are the 2D BKT point-vortex approximation (Nelson &amp; Kosterlitz 1977), with force magnitude |&pi;<em>K</em><sub>eff</sub>&nbsp;&minus;&nbsp;2|&thinsp;/&thinsp;<em>R</em>. Real CLR dynamics on the 3D lattice are more complex, but the three-regime structure is identical.</em>
+  </figcaption>
+</figure>
+
+<h2>The CLR meets the wall</h2>
+
+<p>Here is the punchline, drawn in one picture. The Coherence Learning Rule pushes coupling upward toward its unconstrained equilibrium <em>K</em><sub>eq</sub>. The vortex, as a topological object, imposes a ceiling at <em>K</em><sub>BKT</sub>. The CLR cannot push past the ceiling (to do so would destroy the vortex, which the CLR itself created and sustains), so it settles exactly at the boundary:</p>
+
+<figure id="fig-wall">
+  <canvas id="canvas-wall" width="680" height="360"></canvas>
+  <div class="controls" id="wall-controls">
+    <!-- buttons inserted by JS -->
+  </div>
+  <figcaption>
+    A one-dimensional view of the coupling axis. The <span style="color: #2a5f8f; font-weight: 600;">CLR potential</span> <em>V</em>(<em>K</em>) has its unconstrained minimum at <em>K</em><sub>eq</sub>&nbsp;&asymp;&nbsp;2.11 (where the Shannon channel would send the bond if left alone). The <span style="color: #a855f7; font-weight: 600;">BKT wall</span> sits at <em>K</em><sub>BKT</sub>&nbsp;=&nbsp;2/&pi;&nbsp;&asymp;&nbsp;0.637 &mdash; the vortex forbids any coupling above this value. The <span style="color: #d97236; font-weight: 600;">marble</span> is the bond's current <em>K</em>. Press <strong>Play</strong>: with the vortex present, the marble rolls up the potential and stops at the wall; toggle <strong>Remove vortex</strong> and watch it shoot past to <em>K</em><sub>eq</sub>. <em>K</em><sub>BKT</sub> is not a minimum of <em>V</em>. It is a constraint boundary &mdash; the CLR is pressing against it from below.
+  </figcaption>
+</figure>
+
+<p>This is the central image of the paper. Without topology the CLR has no anchor &mdash; coupling runs up to the Shannon equilibrium and the theory has no particular number to offer. With topology the system is pinned at exactly one coupling. The Shannon channel provides the <em>force</em>; the vortex provides the <em>stopping condition</em>. Their meeting point is where &alpha; lives.</p>
+
+<h2>From <em>K</em><sub>eff</sub> to the bulk coupling</h2>
+
+<p>The quantity in the wall picture is <em>K</em><sub>eff</sub> &mdash; the coupling that appears in the BKT free energy, which is the <strong>renormalization-group coupling at the crossover scale</strong> one e-folding above the lattice. The couplings living directly on each bond are larger, and they are what the CLR actually adjusts. The ratio between them was derived in a single line back in Chapter 5, from the variance of phase differences:</p>
+
+<div class="equation-block" id="eq-base">
+  <div class="eq-display">
+    <span class="eq-symbol struct" data-symbol="base">base</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol param" data-symbol="lat-rg">&lang;&Delta;&theta;&sup2;&rang;<sub>lat</sub> / &lang;&Delta;&theta;&sup2;&rang;<sub>RG</sub></span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol state" data-symbol="piz">&pi;/<em>z</em></span>
+  </div>
+  <p class="eq-prompt">Click any coloured symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    On the lattice, the variance of the phase difference across a nearest-neighbour bond is &lang;&Delta;&theta;&sup2;&rang;<sub>lat</sub>&nbsp;=&nbsp;1/(<em>zK</em>). Standard 2D XY theory says the variance per unit RG log scale is &lang;&Delta;&theta;&sup2;&rang;<sub>RG</sub>&nbsp;=&nbsp;1/(&pi;<em>K</em>). The ratio &mdash; the fraction of one RG e-folding captured per lattice step &mdash; is &pi;/<em>z</em>. The coupling <em>K</em> cancels. For diamond (<em>z</em>&nbsp;=&nbsp;4), this is &pi;/4&nbsp;&asymp;&nbsp;0.785.
+  </div>
+</div>
+
+<p>Applied to the BKT condition:</p>
+
+<div class="equation-block" id="eq-kbulk">
+  <div class="eq-display">
+    <span class="eq-symbol op" data-symbol="Kbulk">K<sub>bulk</sub></span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol struct" data-symbol="z">z</span>
+    &middot;
+    <span class="eq-symbol state" data-symbol="KBKTsq">(K<sub>BKT</sub>)&sup2;</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol param" data-symbol="result">16/&pi;&sup2; &asymp; 1.621</span>
+  </div>
+  <p class="eq-prompt">Click any coloured symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    The bulk coupling <em>K</em><sub>bulk</sub> is the average coupling of surviving bonds in the diamond lattice once the CLR has converged with a vortex present. The lattice-to-RG ratio &pi;/<em>z</em>&nbsp;=&nbsp;2<em>K</em><sub>BKT</sub>/<em>K</em><sub>bulk</sub> (from Chapter 5's variance identity) rearranges to <em>K</em><sub>bulk</sub>&nbsp;=&nbsp;2<em>z</em>&thinsp;<em>K</em><sub>BKT</sub>/&pi;. Because <em>K</em><sub>BKT</sub>&nbsp;=&nbsp;2/&pi;, this equals <em>z</em>(<em>K</em><sub>BKT</sub>)&sup2;&nbsp;=&nbsp;16/&pi;&sup2;&nbsp;&asymp;&nbsp;1.6211. That is the value the CLR converges to on the lattice &mdash; and it is exactly what the paper&apos;s numerical simulation finds: 1.59 at <em>L</em>&nbsp;=&nbsp;6, 1.64 at <em>L</em>&nbsp;=&nbsp;8, bracketing 16/&pi;&sup2; with the alternating-sign convergence characteristic of bipartite lattices.
+  </div>
+</div>
+
+<p>So: the CLR settles bulk couplings at <em>K</em><sub>bulk</sub>&nbsp;=&nbsp;16/&pi;&sup2;, which the BKT renormalisation group sees as <em>K</em><sub>eff</sub>&nbsp;=&nbsp;2/&pi;, which is exactly the critical coupling for a stable isolated vortex. The three numbers are one number expressed in three languages.</p>
+
+<h2>Why the wall doesn't budge</h2>
+
+<p class="aside"><span class="label">Two sources, one location</span>The BKT wall at <em>K</em><sub>BKT</sub>&nbsp;=&nbsp;2/&pi; has <em>no free parameters</em>. The value 2/&pi; comes from pure two-dimensional XY physics: the exact <em>K</em> at which the entropic term (2&thinsp;ln&thinsp;<em>R</em> from the number of positions available to a second vortex) exactly cancels the bond-alignment cost (&pi;<em>K</em>&thinsp;ln&thinsp;<em>R</em>). Nothing about diamond, or the CLR, or <em>r</em>, or the Shannon channel, enters this derivation. The wall is a property of phase topology itself. The lattice just supplies the force that pushes the system against it.</p>
+
+<h2>Where this leaves us</h2>
+
+<p>We now have the exact coupling at which the CLR places the lattice: <em>K</em><sub>eff</sub>&nbsp;=&nbsp;2/&pi; &mdash; where the electron's topology is marginally stable, where vortex&ndash;antivortex pairs neither proliferate nor collapse. Plug this coupling into the BKT correlator at the lattice's nearest-neighbour scale, raise to the power of the coordination number (four bonds meet at each diamond atom), and you get a formula with zero free parameters:</p>
+
+<div class="equation-block" id="eq-alpha-teaser">
+  <div class="eq-display" style="font-size: 17px;">
+    <span class="eq-symbol state" data-symbol="alpha">&alpha;</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol op" data-symbol="vertex">R<sub>0</sub>(2/&pi;)<sup>4</sup></span>
+    &nbsp;&times;&nbsp;
+    <span class="eq-symbol struct" data-symbol="base">(&pi;/4)</span><sup><span class="eq-symbol param" data-symbol="n">1/&radic;e</span>&thinsp;+&thinsp;<span class="eq-symbol op" data-symbol="schwinger">&alpha;/(2&pi;)</span></sup>
+    &nbsp;&asymp;&nbsp;
+    <span class="eq-symbol state" data-symbol="result">1/137.032</span>
+  </div>
+  <p class="eq-prompt">Click any coloured symbol for a short explanation and a pointer to the chapter that derives it. Chapter 13 builds this formula factor by factor.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    This is the BKT formula for the fine structure constant. The first factor is the bare UV coupling on the diamond lattice &mdash; four von Mises weights <em>R</em><sub>0</sub>(<em>K</em><sub>BKT</sub>) multiplied together, one per tetrahedral bond at each atom. The second factor is the BKT power-law running from the lattice scale to the QED matching scale, with exponent 1/&radic;e (Debye&ndash;Waller intensity at the attractor) plus a tiny Schwinger self-consistency correction. Every piece is derived in earlier chapters. Evaluated self-consistently, this formula reproduces 1/&alpha;&nbsp;=&nbsp;137.032 &mdash; 29 ppm from CODATA. Chapter 14 closes the last 3% with linked-cluster vacuum polarisation and gets 1/&alpha;&nbsp;=&nbsp;137.035999, 1.5 ppb from experiment.
+  </div>
+</div>
+
+<p>Almost. The formula above contains one subtlety we have not yet addressed: the exponent uses <em>exp(&minus;&sigma;&sup2;)</em> at the attractor, not an integral of <em>exp(&minus;&sigma;&sup2;l)</em> along the RG flow. That choice &mdash; evaluating the Debye&ndash;Waller factor at the fixed point rather than integrating along the trajectory &mdash; is the difference between <em>1/&alpha;</em>&nbsp;=&nbsp;137 (correct) and <em>1/&alpha;</em>&nbsp;=&nbsp;143 (wrong). It is not a calculation detail. It is the signature of the living lattice: <em>K</em> is not a free parameter you tune and integrate over, it is a dynamical variable that settles at an attractor &mdash; and observables are evaluated there.</p>
+
+<p>The next chapter makes the living-versus-static distinction explicit, with a side-by-side comparison of the two calculations on identical inputs. The exponent sweep alone will move <em>1/&alpha;</em> from 143 to 137 in front of you. This is the most important conceptual distinction in the paper, and it deserves its own chapter.</p>
+
+<nav class="nav-links">
+  <a href="10-fermion.html" class="prev">How the lattice makes it a fermion</a>
+  <a href="../index.html" class="up">contents</a>
+  <a href="12-living-vs-static.html" class="next">Living versus static</a>
+</nav>
+
+</div>
+<script type="module">
+import { setupHiDPICanvas, wireEquation, runWhenVisible, makeSlider, K_BKT, K_BULK, R0, palette } from '../js/common.js';
+
+// ============================================================
+// Palette + shared helpers
+// Physics-specific regime colours are captured as consts; generic paper
+// colours (bg/text/axis/grid) are read live from the palette each frame so
+// dark-mode toggle paints correctly on the next repaint.
+// ============================================================
+const COL_CONFINED = '#2d7d4f';
+const COL_MARGINAL = '#d97236';
+const COL_UNBOUND  = '#a855f7';
+
+function regimeOf(K) {
+  const d = K - K_BKT;
+  if (Math.abs(d) < 0.012) return 'marginal';
+  return d > 0 ? 'confined' : 'unbound';
+}
+function regimeColor(r) {
+  return r === 'confined' ? COL_CONFINED : r === 'unbound' ? COL_UNBOUND : COL_MARGINAL;
+}
+function regimeLabel(r) {
+  if (r === 'confined') return 'confined \u2014 vortex trapped';
+  if (r === 'unbound')  return 'unbound \u2014 pairs proliferate';
+  return 'marginal \u2014 \u03B1 lives here';
+}
+
+// ============================================================
+// Equation blocks
+// ============================================================
+wireEquation('eq-fofr', {
+  F: { name: 'F(R) \u2014 vortex free energy', pronounce: '"F of R"',
+    description: 'The free energy cost of separating a vortex and its antivortex by distance R on the lattice. Measures how much coherence capital is required to pull the pair apart. Sign tells you whether the pair attracts (+), repels (\u2212), or is marginal (0).' },
+  'pi-K': { name: '\u03C0K<sub>eff</sub> \u2014 bond-alignment cost', pronounce: '"pi K effective"',
+    description: 'The energetic cost of the bonds in between the vortex and antivortex as you pull them apart. Bonds want to align, so pulling winding defects apart costs energy proportional to \u03C0K<sub>eff</sub>. Larger K<sub>eff</sub> means stronger alignment drive, deeper wells, more cost.' },
+  two: { name: '2 \u2014 the entropic constant', pronounce: '"two"',
+    description: 'The entropy gain from placing the second vortex somewhere on a 2D plane. There are roughly \u03C0R\u00B2 locations available at separation R, giving an entropy ln(\u03C0R\u00B2) = 2 ln R + const. That constant factor of 2 is the entropic pressure resisting the alignment cost.' },
+  log: { name: 'ln(R/a) \u2014 the logarithmic divergence', pronounce: '"log R over a"',
+    description: 'The 2D Coulomb potential of point vortices is logarithmic (not 1/R like 3D charges). Whether F(R) grows or shrinks with R depends entirely on the sign of (\u03C0K<sub>eff</sub> \u2212 2). This log is what makes the BKT transition exist as a sharp boundary rather than a smooth crossover.' },
+});
+
+wireEquation('eq-base', {
+  base: { name: 'base \u2014 lattice-to-RG variance ratio', pronounce: '"base"',
+    description: 'A dimensionless ratio that tells you how much of one Wilsonian RG coarse-graining step a single bond captures. Equal to \u03C0/z where z is the lattice coordination number. For diamond (z = 4), base = \u03C0/4 \u2248 0.785.' },
+  'lat-rg': { name: '\u27E8\u0394\u03B8\u00B2\u27E9 \u2014 variance ratio', pronounce: '"lattice over RG variance"',
+    description: 'Numerator: the variance of phase difference across one nearest-neighbour bond, 1/(zK), computed from the lattice Green function (Theorem A.1: G_diff = 1/z). Denominator: the variance per unit logarithmic RG scale, 1/(\u03C0K), from standard 2D XY theory.' },
+  piz: { name: '\u03C0/z \u2014 dimensionless ratio', pronounce: '"pi over z"',
+    description: 'Everything else (including K) cancels. What remains is pure geometry: \u03C0 from the 2D XY correlator, z from the coordination of the lattice. For diamond this is \u03C0/4.' },
+});
+
+wireEquation('eq-alpha-teaser', {
+  alpha: { name: '\u03B1 \u2014 the fine structure constant', pronounce: '"alpha"',
+    description: 'The dimensionless strength of electromagnetism: \u03B1 \u2248 1/137.036. Every atomic spectrum, every chemical bond, every photon-electron interaction ultimately traces back to this one number. For a century, standard physics treated it as an empirical constant to be measured. On the coherence lattice, it falls out of topology and dynamics \u2014 derived, not fit. Full walkthrough in Chapter 13.' },
+  vertex: { name: 'R\u2080(2/\u03C0)\u2074 \u2014 the star-graph vertex factor', pronounce: '"R nought of two over pi, to the fourth"',
+    description: 'The bare coupling at the UV lattice scale: four von Mises weights R\u2080(K_BKT) = I\u2081(K)/I\u2080(K) multiplied together, one per tetrahedral nearest-neighbour bond at an atom (coordination number z = 4, derived in Chapter 8). This contributes roughly 97% of ln(1/\u03B1). The von Mises distribution came from Chapter 2\'s single-bond coherence; the exponent 4 came from Chapter 8\'s diamond selection.' },
+  base: { name: '\u03C0/4 \u2014 the lattice-to-RG ratio (this chapter)', pronounce: '"pi over four"',
+    description: 'The fraction of one Wilsonian RG e-folding captured per lattice step, derived above as base = \u03C0/z. For diamond (z = 4) this is \u03C0/4 \u2248 0.785. This is the power-law base of the BKT correlator running from the lattice scale to the QED matching scale. Everything else (K cancels) is pure geometry.' },
+  n: { name: '1/\u221Ae \u2014 the Debye\u2013Waller intensity at the attractor (Chapter 12)', pronounce: '"one over square root of e"',
+    description: 'The intensity factor n = exp(\u2212\u03C3\u00B2) evaluated at the CLR\'s fixed point, with \u03C3\u00B2 = 2\u03B7 = 1/2 at the BKT critical point. Crucially, this is the endpoint value, not an integral along the RG trajectory. That distinction is the entire difference between 1/\u03B1 = 143 (standard lattice field theory) and 1/\u03B1 = 137 (correct). Chapter 12 is dedicated to this choice and why the PLM Lemma forces it.' },
+  schwinger: { name: '\u03B1/(2\u03C0) \u2014 Schwinger self-consistency correction', pronounce: '"alpha over two pi"',
+    description: 'A tiny self-consistency term: the formula depends on \u03B1, which depends on the formula. This is the Schwinger QED vertex correction \u03B1/(2\u03C0) \u2248 0.00116, added to the matching exponent. Iterating \u03B1\u2081 = f(\u03B1\u2080), \u03B1\u2082 = f(\u03B1\u2081), \u2026 converges in 3 steps (see Appendix A8 of the paper). Makes the formula fully self-consistent without any external QED input.' },
+  result: { name: '1/137.032 \u2014 the result, with zero free parameters', pronounce: '"one over one-thirty-seven point oh-three-two"',
+    description: 'CODATA measured value: 1/\u03B1 = 137.035999206\u2026. The BKT formula gives 137.032 (29 ppm off). Chapter 14 closes the remaining 3% via a linked-cluster vacuum-polarisation expansion to 137.035999, 1.5 ppb from experiment. Zero free parameters in the whole chain. No other derivation in the literature matches this accuracy or this parameter count.' },
+});
+
+wireEquation('eq-kbulk', {
+  Kbulk: { name: 'K<sub>bulk</sub> \u2014 mean bulk coupling', pronounce: '"K bulk"',
+    description: 'The average coupling of surviving bonds once the CLR has converged with a vortex present. This is what a numerical simulation of the full CLR dynamics on diamond actually reports: 1.59 at L=6, 1.64 at L=8, converging to 16/\u03C0\u00B2 = 1.6211.' },
+  z: { name: 'z = 4 \u2014 diamond coordination', pronounce: '"z"',
+    description: 'Each atom in the diamond lattice has four nearest neighbours. Selected uniquely (Chapter 8) by the five filters. This is where the lattice enters the formula.' },
+  KBKTsq: { name: '(K<sub>BKT</sub>)\u00B2 = (2/\u03C0)\u00B2 \u2014 critical coupling squared', pronounce: '"K BKT squared"',
+    description: 'The BKT critical coupling at the RG crossover scale, squared because the lattice-to-RG ratio base = \u03C0/z = K<sub>BKT</sub>/K<sub>cross</sub> enters on both sides of the coexistence equation (K-scaling invariance, Lemma 5.2).' },
+  result: { name: '16/\u03C0\u00B2 \u2248 1.6211 \u2014 the number', pronounce: '"sixteen over pi squared"',
+    description: 'The coupling value the CLR converges to on the bulk bonds of diamond in the single-vortex sector. It has zero free parameters: \u03C0 from topology, 16 from the product z (K<sub>BKT</sub>)\u00B2 = 4 \u00D7 (2/\u03C0)\u00B2.' },
+});
+
+// ============================================================
+// FIGURE 1: Vortex free energy F(R)
+// F(R) = (\u03C0K\u2212 2) ln(R/a), live slider + three frozen reference curves.
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-fofr');
+  if (!canvas) return;
+  const W = 680, H = 400;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const controls = document.getElementById('fofr-controls');
+  let K = K_BKT;
+  const slider = makeSlider(controls, {
+    label: 'K<sub>eff</sub>',
+    min: 0.30, max: 1.00, step: 0.005,
+    value: K_BKT,
+    format: (v) => v.toFixed(3),
+    onChange: (v) => { K = v; },
+  });
+
+  const px0 = 70, py0 = 60, pw = 560, ph = 280;
+  const R_MIN = 1, R_MAX = 50;
+  const F_MAX = 3.5;
+  const F_MIN = -3.5;
+
+  function mapX(R) {
+    const lr = Math.log(R) / Math.log(R_MAX);
+    return px0 + lr * pw;
+  }
+  function mapY(F) {
+    return py0 + ph / 2 - (F / (F_MAX - F_MIN)) * ph;
+  }
+  function F_of_R(K, R) {
+    return (Math.PI * K - 2) * Math.log(R);
+  }
+
+  function drawAxes() {
+    ctx.strokeStyle = palette.axis;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(px0, py0, pw, ph);
+
+    ctx.strokeStyle = palette.grid;
+    ctx.lineWidth = 0.8;
+    // horizontal F=0 line (bold)
+    ctx.strokeStyle = palette.axisBold;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    const zeroY = mapY(0);
+    ctx.moveTo(px0, zeroY); ctx.lineTo(px0 + pw, zeroY);
+    ctx.stroke();
+
+    // R ticks (log spaced)
+    [1, 2, 5, 10, 20, 50].forEach(r => {
+      if (r >= R_MIN && r <= R_MAX) {
+        const x = mapX(r);
+        ctx.strokeStyle = palette.grid;
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(x, py0); ctx.lineTo(x, py0 + ph);
+        ctx.stroke();
+        ctx.fillStyle = palette.textFaint;
+        ctx.font = 'italic 11px "Charter", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(String(r), x, py0 + ph + 16);
+      }
+    });
+    // F ticks
+    [-3, -2, -1, 0, 1, 2, 3].forEach(f => {
+      const y = mapY(f);
+      ctx.strokeStyle = palette.grid;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(px0, y); ctx.lineTo(px0 + pw, y);
+      ctx.stroke();
+      ctx.fillStyle = palette.textFaint;
+      ctx.font = 'italic 11px "Charter", serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(f.toFixed(0), px0 - 6, y + 4);
+    });
+
+    // Axis labels
+    ctx.fillStyle = palette.text;
+    ctx.font = 'italic 12px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('R / a  (pair separation, log scale)', px0 + pw / 2, py0 + ph + 34);
+
+    ctx.save();
+    ctx.translate(24, py0 + ph / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillText('F(R)  \u2014  pair free energy', 0, 0);
+    ctx.restore();
+  }
+
+  function drawCurve(Kval, color, width, dashed) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    if (dashed) ctx.setLineDash([4, 4]);
+    else ctx.setLineDash([]);
+    ctx.beginPath();
+    let first = true;
+    for (let i = 0; i <= 200; i++) {
+      const lr = i / 200;
+      const R = Math.pow(R_MAX, lr);
+      const F = F_of_R(Kval, R);
+      const x = mapX(R);
+      const y = Math.max(py0 - 2, Math.min(py0 + ph + 2, mapY(F)));
+      if (first) { ctx.moveTo(x, y); first = false; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function drawRegimeStrip() {
+    const stripY = 14, stripH = 26;
+    const r = regimeOf(K);
+    const col = regimeColor(r);
+
+    ctx.fillStyle = col;
+    ctx.globalAlpha = 0.15;
+    ctx.fillRect(px0, stripY, pw, stripH);
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = col;
+    ctx.font = '600 13px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(regimeLabel(r), px0 + pw / 2, stripY + stripH / 2);
+
+    ctx.fillStyle = palette.text;
+    ctx.font = '600 12px "SF Mono", monospace';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(`K<sub>eff</sub>=${K.toFixed(3)}`.replace('<sub>eff</sub>',' eff '), px0 + 6, stripY + stripH / 2);
+
+    ctx.textAlign = 'right';
+    ctx.fillText(`K<sub>BKT</sub>=0.637`.replace('<sub>BKT</sub>',' BKT '), px0 + pw - 6, stripY + stripH / 2);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    drawRegimeStrip();
+    drawAxes();
+
+    // Frozen reference curves (faint)
+    drawCurve(0.50, 'rgba(168, 85, 247, 0.45)', 1.4, true);  // unbound
+    drawCurve(K_BKT, 'rgba(217, 114, 54, 0.55)', 1.6, true); // marginal
+    drawCurve(0.80, 'rgba(45, 125, 79, 0.45)', 1.4, true);   // confined
+
+    // Labels on reference curves (R = 30)
+    ctx.font = 'italic 10.5px "Charter", serif'; ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.85)';
+    ctx.fillText('K=0.50  (unbound)', mapX(32), mapY(F_of_R(0.50, 32)) + 4);
+    ctx.fillStyle = 'rgba(217, 114, 54, 1)';
+    ctx.fillText('K=2/\u03C0  (marginal)', mapX(32), mapY(0) - 4);
+    ctx.fillStyle = 'rgba(45, 125, 79, 0.95)';
+    ctx.fillText('K=0.80  (confined)', mapX(32), mapY(F_of_R(0.80, 32)) - 4);
+
+    // Live curve
+    drawCurve(K, '#7d2d4f', 3.0, false);
+
+    // Highlight K_BKT on the K axis via a marker (just in the legend strip)
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIGURE 2: Vortex-antivortex pair on a phase lattice + K slider
+// The pair exerts a force F_pair = -(\u03C0K - 2)/R.
+// Below the wall: repulsive. Above: attractive. At the wall: zero.
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-kdial');
+  if (!canvas) return;
+  const W = 680, H = 420;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const controls = document.getElementById('kdial-controls');
+
+  let K = K_BKT;
+  const slider = makeSlider(controls, {
+    label: 'K<sub>eff</sub>',
+    min: 0.30, max: 1.00, step: 0.005,
+    value: K_BKT,
+    format: (v) => v.toFixed(3),
+    onChange: (v) => { K = v; },
+  });
+  const playBtn = document.createElement('button');
+  playBtn.textContent = '\u25B6 Play';
+  playBtn.className = '';
+  controls.appendChild(playBtn);
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = 'Reset pair';
+  controls.appendChild(resetBtn);
+
+  // Pair geometry: vortex at +xV, antivortex at -xV, both at y=0.
+  // "Lab frame": lattice center at (cx, cy), scale pixelsPerUnit.
+  const cx = 340, cy = 250, ppu = 18; // 18 px per lattice unit
+  const LAT_HALF = 12;                 // lattice extends from -12..+12 units
+  const R_MIN_PAIR = 1.5;
+  const R_MAX_PAIR = 11;
+  const SEED_R = 5.5;                  // initial half-separation
+  let xV = SEED_R;                     // vortex x-position (antivortex at -xV)
+  let playing = false;
+  let annihilated = false;
+
+  // Phase field rendering grid (sampled, not a full lattice)
+  const GRID_STEP = 1.2;
+  const nodes = [];
+  for (let yy = -LAT_HALF; yy <= LAT_HALF; yy += GRID_STEP) {
+    for (let xx = -LAT_HALF; xx <= LAT_HALF; xx += GRID_STEP) {
+      nodes.push([xx, yy]);
+    }
+  }
+
+  function phaseAt(x, y, vxPos) {
+    // +1 vortex at (+vxPos, 0), -1 antivortex at (-vxPos, 0)
+    const t1 = Math.atan2(y,        x - vxPos);
+    const t2 = Math.atan2(y,        x + vxPos);
+    return t1 - t2;
+  }
+
+  function phaseColor(th) {
+    const deg = ((th * 180 / Math.PI) % 360 + 360) % 360;
+    return `hsl(${deg.toFixed(1)}, 72%, 58%)`;
+  }
+
+  // Drag: allow user to reposition the pair by dragging either vortex
+  let dragging = null; // 'left' | 'right' | null
+  function eventPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const sx = W / rect.width, sy = H / rect.height;
+    const cxp = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const cyp = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    return [cxp * sx, cyp * sy];
+  }
+  function latToPx(lx, ly) { return [cx + lx * ppu, cy - ly * ppu]; }
+  function pxToLat(px, py) { return [(px - cx) / ppu, -(py - cy) / ppu]; }
+
+  canvas.addEventListener('mousedown', (e) => {
+    const [mx, my] = eventPos(e);
+    const [vxPx, vyPx] = latToPx(xV, 0);
+    const [avxPx, avyPx] = latToPx(-xV, 0);
+    const dV = Math.hypot(mx - vxPx, my - vyPx);
+    const dA = Math.hypot(mx - avxPx, my - avyPx);
+    if (dV < 18 || dA < 18) {
+      dragging = dV < dA ? 'right' : 'left';
+      playing = false;
+      playBtn.textContent = '\u25B6 Play';
+      playBtn.classList.remove('primary');
+      e.preventDefault();
+    }
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    const [mx] = eventPos(e);
+    const [lx] = pxToLat(mx, cy);
+    let nx = Math.abs(lx);
+    nx = Math.max(R_MIN_PAIR, Math.min(R_MAX_PAIR, nx));
+    xV = nx;
+    annihilated = false;
+    e.preventDefault();
+  });
+  window.addEventListener('mouseup', () => { dragging = null; });
+
+  canvas.addEventListener('touchstart', (e) => {
+    const [mx, my] = eventPos(e);
+    const [vxPx, vyPx] = latToPx(xV, 0);
+    const [avxPx, avyPx] = latToPx(-xV, 0);
+    const dV = Math.hypot(mx - vxPx, my - vyPx);
+    const dA = Math.hypot(mx - avxPx, my - avyPx);
+    if (dV < 32 || dA < 32) {
+      dragging = dV < dA ? 'right' : 'left';
+      playing = false;
+      e.preventDefault();
+    }
+  }, { passive: false });
+  window.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    const [mx] = eventPos(e);
+    const [lx] = pxToLat(mx, cy);
+    let nx = Math.abs(lx);
+    nx = Math.max(R_MIN_PAIR, Math.min(R_MAX_PAIR, nx));
+    xV = nx;
+    annihilated = false;
+    e.preventDefault();
+  }, { passive: false });
+  window.addEventListener('touchend', () => { dragging = null; });
+
+  playBtn.addEventListener('click', () => {
+    if (annihilated) { xV = SEED_R; annihilated = false; }
+    playing = !playing;
+    playBtn.textContent = playing ? '\u25A0 Pause' : '\u25B6 Play';
+    playBtn.classList.toggle('primary', playing);
+  });
+  resetBtn.addEventListener('click', () => {
+    xV = SEED_R;
+    annihilated = false;
+    playing = false;
+    playBtn.textContent = '\u25B6 Play';
+    playBtn.classList.remove('primary');
+  });
+
+  let time = 0;
+  function step() {
+    // Pair distance R = 2 xV. Force on vortex from BKT energy: dF/dR = (\u03C0K-2)/R
+    // (attractive for K > K_BKT). Dynamics: dxV/dt = - F / (drag).
+    if (!playing || dragging) return;
+    const R = 2 * xV;
+    if (R <= 0) return;
+    const signed = (Math.PI * K - 2) / R;  // positive = attractive (pulls vortices together)
+    // xV decreases (toward 0) when attractive.
+    const dt = 0.02;
+    xV -= signed * dt * 0.6; // mobility
+    // Random thermal wobble at marginality so the system is not perfectly frozen.
+    const regime = regimeOf(K);
+    if (regime === 'marginal') {
+      xV += (Math.random() - 0.5) * 0.04;
+    }
+    if (xV < R_MIN_PAIR) {
+      // Annihilation event
+      xV = 0;
+      annihilated = true;
+      playing = false;
+      playBtn.textContent = '\u25B6 Play';
+      playBtn.classList.remove('primary');
+    }
+    xV = Math.max(0, Math.min(R_MAX_PAIR, xV));
+  }
+
+  function drawRegimeStrip() {
+    const stripY = 12, stripH = 26, stripX = 40, stripW = W - 80;
+    const r = regimeOf(K);
+    const col = regimeColor(r);
+    ctx.fillStyle = col;
+    ctx.globalAlpha = 0.15;
+    ctx.fillRect(stripX, stripY, stripW, stripH);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = col;
+    ctx.font = '600 13px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(regimeLabel(r), W/2, stripY + stripH / 2);
+    ctx.fillStyle = palette.text;
+    ctx.font = '600 11px "SF Mono", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`K=${K.toFixed(3)}`, stripX + 6, stripY + stripH / 2);
+    ctx.textAlign = 'right';
+    const dx = K - K_BKT;
+    const piK2 = (Math.PI * K - 2);
+    ctx.fillText(`\u03C0K\u22122=${piK2.toFixed(3)}`, stripX + stripW - 6, stripY + stripH / 2);
+  }
+
+  function drawPhaseField() {
+    // Light background grid
+    const r = regimeOf(K);
+    const haloCol = regimeColor(r);
+
+    // Phase-coloured dots on the sampling grid
+    for (let i = 0; i < nodes.length; i++) {
+      const [nx, ny] = nodes[i];
+      const th = xV > 0.01 ? phaseAt(nx, ny, xV) : 0;
+      const [px, py] = latToPx(nx, ny);
+      ctx.fillStyle = phaseColor(th);
+      ctx.beginPath(); ctx.arc(px, py, 2.2, 0, 2*Math.PI); ctx.fill();
+    }
+
+    // Soft halo around each core to help legibility
+    if (xV > 0.01 && !annihilated) {
+      ['right', 'left'].forEach(side => {
+        const [px, py] = latToPx(side === 'right' ? xV : -xV, 0);
+        const g = ctx.createRadialGradient(px, py, 2, px, py, 22);
+        g.addColorStop(0, 'rgba(255,255,255,0.85)');
+        g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(px, py, 22, 0, 2*Math.PI); ctx.fill();
+      });
+    }
+
+    // Vortex / antivortex markers
+    if (!annihilated) {
+      const [vxPx, vyPx] = latToPx(xV, 0);
+      const [avxPx, avyPx] = latToPx(-xV, 0);
+      // vortex (+1): burgundy disk with "+"
+      ctx.fillStyle = '#7d2d4f';
+      ctx.beginPath(); ctx.arc(vxPx, vyPx, 11, 0, 2*Math.PI); ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.font = '700 13px "SF Mono", monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('+', vxPx, vyPx);
+      // antivortex (\u22121): blue disk with "\u2212"
+      ctx.fillStyle = '#2a5f8f';
+      ctx.beginPath(); ctx.arc(avxPx, avyPx, 11, 0, 2*Math.PI); ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.font = '700 14px "SF Mono", monospace';
+      ctx.fillText('\u2212', avxPx, avyPx);
+
+      // Force arrow between them
+      const piK2 = Math.PI * K - 2;
+      const R = 2 * xV;
+      const fmag = Math.abs(piK2) / Math.max(0.1, R);
+      // Scale arrow length to lattice units (visible but capped)
+      const armLen = Math.min(4.2, fmag * 3.8) * ppu;
+      if (armLen > 4) {
+        const dir = piK2 > 0 ? -1 : 1; // +: attractive, arrows point inward
+        const colA = piK2 > 0 ? COL_CONFINED : piK2 < 0 ? COL_UNBOUND : COL_MARGINAL;
+        ctx.strokeStyle = colA; ctx.fillStyle = colA;
+        ctx.lineWidth = 3; ctx.lineCap = 'round';
+        // arrow at vortex pointing in ±x direction
+        drawArrow(vxPx, vyPx, vxPx + dir * armLen, vyPx);
+        drawArrow(avxPx, avyPx, avxPx - dir * armLen, avyPx);
+        ctx.lineCap = 'butt';
+      } else {
+        // Near marginal: small orange "at rest" marker
+        ctx.strokeStyle = COL_MARGINAL;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(vxPx, vyPx, 20, 0, 2*Math.PI); ctx.stroke();
+        ctx.beginPath(); ctx.arc(avxPx, avyPx, 20, 0, 2*Math.PI); ctx.stroke();
+      }
+
+      // Separation label
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter", serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+      const midX = (vxPx + avxPx) / 2;
+      ctx.fillText(`R = ${R.toFixed(2)} a`, midX, vyPx + 34);
+    } else {
+      // annihilation halo
+      ctx.fillStyle = 'rgba(217,114,54,0.35)';
+      const [px, py] = latToPx(0, 0);
+      ctx.beginPath(); ctx.arc(px, py, 26, 0, 2*Math.PI); ctx.fill();
+      ctx.fillStyle = '#d97236';
+      ctx.font = '600 13px "Charter", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('annihilated', px, py + 56);
+    }
+  }
+
+  function drawArrow(x0, y0, x1, y1) {
+    ctx.beginPath();
+    ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
+    ctx.stroke();
+    const ang = Math.atan2(y1 - y0, x1 - x0);
+    const hl = 9, ha = 0.4;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - hl*Math.cos(ang - ha), y1 - hl*Math.sin(ang - ha));
+    ctx.lineTo(x1 - hl*Math.cos(ang + ha), y1 - hl*Math.sin(ang + ha));
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    drawRegimeStrip();
+    // Lattice-area backdrop
+    ctx.fillStyle = palette.bgSoft;
+    ctx.fillRect(cx - LAT_HALF*ppu, cy - LAT_HALF*ppu*0.5, 2*LAT_HALF*ppu, LAT_HALF*ppu);
+
+    drawPhaseField();
+
+    // Legend
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('drag either core; press Play to release the pair', 40, H - 14);
+  }
+
+  function loop() {
+    step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ============================================================
+// FIGURE 3: The wall (hero). 1D K-axis with CLR potential,
+// BKT wall, rolling marble.
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-wall');
+  if (!canvas) return;
+  const W = 680, H = 360;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const controls = document.getElementById('wall-controls');
+  const playBtn = document.createElement('button');
+  playBtn.textContent = '\u25B6 Play';
+  controls.appendChild(playBtn);
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = 'Reset';
+  controls.appendChild(resetBtn);
+  const toggleBtn = document.createElement('button');
+  toggleBtn.textContent = 'Remove vortex';
+  controls.appendChild(toggleBtn);
+
+  // CLR potential V(K) = K^2/r - cos(\u0394\u03B8) ln I_0(K).
+  // Use cos=1, r=5.905 -> equilibrium at K_eq \u2248 2.11.
+  const r_star = 5.905;
+  function bessI0(x) {
+    const ax = Math.abs(x);
+    if (ax < 3.75) {
+      const t = (x / 3.75) ** 2;
+      return 1.0 + t * (3.5156229 + t * (3.0899424 + t * (1.2067492 +
+             t * (0.2659732 + t * (0.0360768 + t * 0.0045813)))));
+    }
+    const t = 3.75 / ax;
+    const poly = 0.39894228 + t * (0.01328592 + t * (0.00225319 +
+                 t * (-0.00157565 + t * (0.00916281 + t * (-0.02057706 +
+                 t * (0.02635537 + t * (-0.01647633 + t * 0.00392377)))))));
+    return (Math.exp(ax) / Math.sqrt(ax)) * poly;
+  }
+  function V(K) { return K*K/r_star - Math.log(bessI0(K)); }
+  // dV/dK derivative
+  function dV(K) {
+    // dV/dK = 2K/r - R0(K). R0(K) = I1/I0. Use common.js R0.
+    return 2*K/r_star - R0(K);
+  }
+
+  const K_eq = 2.112;
+  const K_AXIS_MIN = 0.0;
+  const K_AXIS_MAX = 2.7;
+
+  const px0 = 70, py0 = 70, pw = 560, ph = 210;
+  const V_MIN = V(K_eq) - 0.08;     // minimum of potential
+  const V_MAX = Math.max(V(0), V(K_AXIS_MAX)) + 0.08;
+
+  function mapX(K) { return px0 + ((K - K_AXIS_MIN) / (K_AXIS_MAX - K_AXIS_MIN)) * pw; }
+  function mapY(Vval) { return py0 + ((Vval - V_MIN) / (V_MAX - V_MIN)) * ph; }
+
+  let K_now = 0.02;
+  let playing = false;
+  let vortexPresent = true;
+  let annihilated = false;
+
+  playBtn.addEventListener('click', () => {
+    playing = !playing;
+    playBtn.textContent = playing ? '\u25A0 Pause' : '\u25B6 Play';
+    playBtn.classList.toggle('primary', playing);
+  });
+  resetBtn.addEventListener('click', () => {
+    K_now = 0.02;
+    playing = false;
+    playBtn.textContent = '\u25B6 Play';
+    playBtn.classList.remove('primary');
+  });
+  toggleBtn.addEventListener('click', () => {
+    vortexPresent = !vortexPresent;
+    toggleBtn.textContent = vortexPresent ? 'Remove vortex' : 'Restore vortex';
+    toggleBtn.classList.toggle('primary', !vortexPresent);
+  });
+
+  function drawPotentialCurve() {
+    ctx.strokeStyle = '#2a5f8f';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    let first = true;
+    for (let i = 0; i <= 400; i++) {
+      const K = K_AXIS_MIN + (i / 400) * (K_AXIS_MAX - K_AXIS_MIN);
+      const x = mapX(K);
+      const y = mapY(V(K));
+      if (first) { ctx.moveTo(x, y); first = false; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  function drawAxes() {
+    ctx.strokeStyle = palette.axis;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(px0, py0, pw, ph);
+
+    // K ticks
+    [0, 0.5, 1.0, 1.5, 2.0, 2.5].forEach(K => {
+      const x = mapX(K);
+      ctx.strokeStyle = palette.grid;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(x, py0); ctx.lineTo(x, py0 + ph);
+      ctx.stroke();
+      ctx.fillStyle = palette.textFaint;
+      ctx.font = 'italic 11px "Charter", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(K.toFixed(1), x, py0 + ph + 16);
+    });
+    ctx.fillStyle = palette.text;
+    ctx.font = 'italic 12px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('K   (bond coupling)', px0 + pw / 2, py0 + ph + 34);
+
+    // V label (rotated)
+    ctx.save();
+    ctx.translate(26, py0 + ph / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = palette.text;
+    ctx.fillText('V(K)   (cost; lower is better)', 0, 0);
+    ctx.restore();
+  }
+
+  function drawLandmarks() {
+    // BKT wall (only drawn if vortex is present)
+    if (vortexPresent) {
+      const xWall = mapX(K_BKT);
+      // Shaded forbidden region
+      ctx.fillStyle = 'rgba(168, 85, 247, 0.08)';
+      ctx.fillRect(xWall, py0, (px0 + pw) - xWall, ph);
+      // Wall line
+      ctx.strokeStyle = COL_UNBOUND;
+      ctx.lineWidth = 4;
+      ctx.setLineDash([6, 3]);
+      ctx.beginPath();
+      ctx.moveTo(xWall, py0); ctx.lineTo(xWall, py0 + ph);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Wall label
+      ctx.fillStyle = COL_UNBOUND;
+      ctx.font = '600 12px "Charter", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('BKT wall', xWall, py0 - 34);
+      ctx.font = 'italic 11px "Charter", serif';
+      ctx.fillText('K\u209D = 2/\u03C0', xWall, py0 - 18);
+      // Tag on the axis
+      ctx.fillStyle = COL_UNBOUND;
+      ctx.font = '600 11px "SF Mono", monospace';
+      ctx.fillText('0.637', xWall, py0 + ph + 48);
+    }
+
+    // K_eq marker (faint)
+    const xEq = mapX(K_eq);
+    ctx.strokeStyle = 'rgba(42, 95, 143, 0.35)';
+    ctx.lineWidth = 1.2;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(xEq, py0); ctx.lineTo(xEq, py0 + ph);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(42, 95, 143, 0.9)';
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('K\u2091\u0071 (unconstrained)', xEq, py0 - 18);
+    ctx.font = '600 11px "SF Mono", monospace';
+    ctx.fillText('2.11', xEq, py0 + ph + 48);
+
+    // K_bulk marker (between wall and K_eq)
+    const xBulk = mapX(K_BULK);
+    ctx.strokeStyle = 'rgba(45, 125, 79, 0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(xBulk, py0); ctx.lineTo(xBulk, py0 + ph);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = COL_CONFINED;
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('K\u1D47\u1D64\u2097\u1D4F', xBulk, py0 - 18);
+    ctx.font = '600 11px "SF Mono", monospace';
+    ctx.fillText('16/\u03C0\u00B2 = 1.62', xBulk, py0 + ph + 48);
+  }
+
+  function drawCLRArrow() {
+    // Draw an upward/rightward "push" arrow from current K toward K_eq.
+    const x0 = mapX(K_now);
+    const V0 = V(K_now);
+    const y0 = mapY(V0) - 20;
+    const targetK = vortexPresent ? K_BKT : K_eq;
+    const x1 = mapX(targetK);
+    const y1 = y0;
+    if (Math.abs(x1 - x0) < 6) return;
+    const col = '#2a5f8f';
+    ctx.strokeStyle = col; ctx.fillStyle = col;
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x1 - 6, y1);
+    ctx.stroke();
+    const ang = 0;
+    const hl = 9, ha = 0.4;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - hl*Math.cos(ang - ha), y1 - hl*Math.sin(ang - ha));
+    ctx.lineTo(x1 - hl*Math.cos(ang + ha), y1 - hl*Math.sin(ang + ha));
+    ctx.closePath();
+    ctx.fill();
+    ctx.lineCap = 'butt';
+
+    ctx.fillStyle = col;
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center';
+    const midX = (x0 + x1) / 2;
+    ctx.fillText('CLR push', midX, y0 - 6);
+  }
+
+  function drawMarble() {
+    const mx = mapX(K_now);
+    const my = mapY(V(K_now));
+    ctx.fillStyle = 'rgba(217, 114, 54, 0.25)';
+    ctx.beginPath(); ctx.arc(mx, my, 13, 0, 2*Math.PI); ctx.fill();
+    ctx.fillStyle = '#d97236';
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(mx, my, 8, 0, 2*Math.PI); ctx.fill(); ctx.stroke();
+  }
+
+  function drawReadout() {
+    const stripY = 14, stripH = 30;
+    // Regime strip: show where marble is
+    let phase, col;
+    if (vortexPresent) {
+      if (K_now < K_BKT - 0.01) { phase = 'CLR climbing toward the wall'; col = '#2a5f8f'; }
+      else if (Math.abs(K_now - K_BKT) < 0.015) { phase = 'AT THE WALL \u2014 \u03B1 = 1/137'; col = COL_MARGINAL; }
+      else if (K_now <= K_BKT + 0.03) { phase = 'constrained at K\u209D = 2/\u03C0'; col = COL_MARGINAL; }
+      else { phase = 'forbidden (vortex confined)'; col = COL_UNBOUND; }
+    } else {
+      if (K_now < K_eq - 0.02) { phase = 'CLR climbing freely (no wall)'; col = '#2a5f8f'; }
+      else if (Math.abs(K_now - K_eq) < 0.03) { phase = 'AT K\u2091\u0071 \u2014 no physics here'; col = COL_CONFINED; }
+      else { phase = 'above equilibrium (impossible)'; col = palette.textFaint; }
+    }
+    ctx.fillStyle = col;
+    ctx.globalAlpha = 0.15;
+    ctx.fillRect(px0, stripY, pw, stripH);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = col;
+    ctx.font = '600 13px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(phase, px0 + pw / 2, stripY + stripH / 2);
+
+    ctx.fillStyle = palette.text;
+    ctx.font = '600 11px "SF Mono", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`K=${K_now.toFixed(3)}`, px0 + 6, stripY + stripH / 2);
+    ctx.textAlign = 'right';
+    ctx.fillText(`V(K)=${V(K_now).toFixed(3)}`, px0 + pw - 6, stripY + stripH / 2);
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    drawReadout();
+    drawAxes();
+    drawLandmarks();
+    drawPotentialCurve();
+    drawCLRArrow();
+    drawMarble();
+  }
+
+  function step() {
+    if (!playing) return;
+    const dt = 0.015;
+    const force = -dV(K_now);       // CLR descent is in the direction of -dV
+    K_now += force * dt;
+    // Wall enforcement when vortex is present
+    if (vortexPresent && K_now > K_BKT) {
+      K_now = K_BKT; // pin at wall
+    }
+    // Asymptotic stop at K_eq when no vortex
+    if (!vortexPresent && K_now >= K_eq) K_now = K_eq;
+    K_now = Math.max(0, Math.min(K_AXIS_MAX, K_now));
+  }
+
+  function loop() {
+    step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+</body>
+</html>

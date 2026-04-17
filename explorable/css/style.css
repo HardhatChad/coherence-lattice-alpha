@@ -2,8 +2,43 @@
  * Typography and layout inspired by Bret Victor's essays.
  */
 
-:root {
+/* Dark is the default. Light mode is opt-in via data-theme="light". */
+:root,
+:root[data-theme="dark"] {
+  --bg: #18160f;
+  --bg-soft: #23201a;
+  --text: #e8e2d3;
+  --text-soft: #b8b0a0;
+  --text-faint: #847e71;
+  --rule: #3a342c;
+  --accent: #7db3dd;
+  --accent-light: #9cc6e6;
+  --alive: #e89564;
+  --alive-soft: #8a6442;
+  --dead: #5a554c;
+  --highlight: #4a3f1a;
+  --vortex: #d17a97;
+  --panel: #23201a;
+  --panel-border: #4a4339;
+  --canvas-bg: #23201a;
+  --canvas-bg-soft: #2c2822;
+  --canvas-text: #e8e2d3;
+  --canvas-text-soft: #b8b0a0;
+  --canvas-text-faint: #847e71;
+  --canvas-grid: #3a342c;
+  --canvas-axis: #55503f;
+  --canvas-axis-bold: #6a6450;
+  /* Physics colours, brightened for dark contrast. */
+  --c-blue: #6ba4d4;
+  --c-green: #5ea87a;
+  --c-orange: #e89564;
+  --c-burgundy: #d17a97;
+  --c-purple: #c38df7;
+}
+
+:root[data-theme="light"] {
   --bg: #fdfaf3;
+  --bg-soft: #f5f0e4;
   --text: #2a2a2a;
   --text-soft: #555;
   --text-faint: #888;
@@ -17,6 +52,19 @@
   --vortex: #7d2d4f;
   --panel: #f5f0e4;
   --panel-border: #c8c0ad;
+  --canvas-bg: #f5f0e4;
+  --canvas-bg-soft: #fdfaf3;
+  --canvas-text: #2a2a2a;
+  --canvas-text-soft: #555;
+  --canvas-text-faint: #888;
+  --canvas-grid: #e0dbcb;
+  --canvas-axis: #c8c0ad;
+  --canvas-axis-bold: #c0b9a0;
+  --c-blue: #2a5f8f;
+  --c-green: #2d7d4f;
+  --c-orange: #d97236;
+  --c-burgundy: #7d2d4f;
+  --c-purple: #a855f7;
 }
 
 * { box-sizing: border-box; }
@@ -175,15 +223,27 @@ hr {
 
 /* --- Figures and interactives --- */
 
+/* Default (dark-mode) figure treatment: bordered box with rounded corners.
+ * Light-mode override below uses top/bottom bands for a cream-paper feel. */
 figure {
-  margin: 2em -32px;
+  margin: 2em 0;
   padding: 24px 32px;
-  background: var(--panel);
-  border-top: 1px solid var(--panel-border);
-  border-bottom: 1px solid var(--panel-border);
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
 }
 
-figure.plain {
+:root[data-theme="light"] figure {
+  margin: 2em -32px;
+  background: var(--panel);
+  border: none;
+  border-top: 1px solid var(--panel-border);
+  border-bottom: 1px solid var(--panel-border);
+  border-radius: 0;
+}
+
+figure.plain,
+:root[data-theme="light"] figure.plain {
   background: transparent;
   border: none;
   padding: 0;
@@ -522,6 +582,42 @@ nav.toc .status {
   margin-right: 0.5em;
 }
 
+/* --- Theme toggle --- */
+
+.theme-toggle {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 100;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 50%;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: transform 0.15s, background 0.15s, color 0.15s;
+}
+.theme-toggle:hover {
+  background: var(--highlight);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .theme-toggle { top: 12px; right: 12px; width: 34px; height: 34px; font-size: 16px; }
+}
+
 /* --- Responsive --- */
 
 @media (max-width: 720px) {
@@ -530,3 +626,39 @@ nav.toc .status {
   h1 { font-size: 1.9em; }
   h2 { font-size: 1.35em; }
 }
+
+/* --- Theme-specific aesthetic tweaks ---
+ * Dark is the default — these rules apply unless [data-theme="light"] overrides.
+ */
+
+/* eq-symbol hover/active tint: yellow highlight reads differently on each bg. */
+.eq-symbol:hover {
+  background: rgba(244, 228, 168, 0.18);
+}
+.eq-symbol.active {
+  background: rgba(244, 228, 168, 0.28);
+  box-shadow: 0 0 0 1px var(--accent-light);
+}
+:root[data-theme="light"] .eq-symbol:hover {
+  background: rgba(244, 228, 168, 0.55);
+}
+:root[data-theme="light"] .eq-symbol.active {
+  background: rgba(244, 228, 168, 0.9);
+  box-shadow: 0 0 0 1px var(--accent-light);
+}
+
+/* Primary buttons: dark-mode accent is light, so flip the text colour. */
+button.primary { color: #18160f; }
+button.primary:hover { background: var(--accent-light); border-color: var(--accent-light); }
+:root[data-theme="light"] button.primary { color: white; }
+:root[data-theme="light"] button.primary:hover { background: #1f4870; border-color: #1f4870; }
+
+/* Physics-coloured eq-symbol classes — brighten for dark bg by default. */
+.eq-symbol.state  { color: #7fb0d9; }
+.eq-symbol.param  { color: #6dc48f; }
+.eq-symbol.struct { color: #efa57a; }
+.eq-symbol.op     { color: #e091ac; }
+:root[data-theme="light"] .eq-symbol.state  { color: #2a5f8f; }
+:root[data-theme="light"] .eq-symbol.param  { color: #2d7d4f; }
+:root[data-theme="light"] .eq-symbol.struct { color: #d97236; }
+:root[data-theme="light"] .eq-symbol.op     { color: #7d2d4f; }

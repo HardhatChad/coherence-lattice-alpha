@@ -196,7 +196,7 @@
 
 </div>
 <script type="module">
-import { setupHiDPICanvas, wireEquation, runWhenVisible, R0, K_BULK } from '../js/common.js';
+import { setupHiDPICanvas, wireEquation, runWhenVisible, R0, K_BULK, palette } from '../js/common.js';
 import { computeFiedler, gridLaplacian, gridFiedlerSensitivity } from '../js/fiedler.js';
 
 // --- Equation block ----------------------------------------------------
@@ -314,7 +314,7 @@ wireEquation('eq-winding', {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4';
+    ctx.fillStyle = palette.bg;
     ctx.fillRect(0, 0, W, H);
 
     drawLoop();
@@ -325,17 +325,17 @@ wireEquation('eq-winding', {
 
   function drawLoop() {
     // Title
-    ctx.fillStyle = '#2a2a2a';
+    ctx.fillStyle = palette.text;
     ctx.font = '13px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText('the loop you walk', 30, 28);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11.5px "Charter", serif';
     ctx.fillText('drag any oscillator to rotate its phase', 30, 45);
 
     // Guide ring
-    ctx.strokeStyle = '#d8d4c8';
+    ctx.strokeStyle = palette.grid;
     ctx.lineWidth = 1;
     ctx.setLineDash([3, 4]);
     ctx.beginPath();
@@ -348,7 +348,7 @@ wireEquation('eq-winding', {
       const [x, y] = cellPos(i);
       // Outer stroke — darker if cell is being dragged
       ctx.fillStyle = phaseToColor(phases[i]);
-      ctx.strokeStyle = (i === draggingIdx) ? '#2a2a2a' : '#55504a';
+      ctx.strokeStyle = (i === draggingIdx) ? palette.text : '#55504a';
       ctx.lineWidth = (i === draggingIdx) ? 2.5 : 1.2;
       ctx.beginPath();
       ctx.arc(x, y, cellR, 0, 2 * Math.PI);
@@ -376,7 +376,7 @@ wireEquation('eq-winding', {
     ctx.fill();
     // Core
     ctx.fillStyle = '#d97236';
-    ctx.strokeStyle = '#fdfaf3';
+    ctx.strokeStyle = palette.bgSoft;
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(wx, wy, 7, 0, 2 * Math.PI);
@@ -395,7 +395,7 @@ wireEquation('eq-winding', {
     ctx.stroke();
 
     // Central caption — walker progress
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px "Charter", serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -403,19 +403,19 @@ wireEquation('eq-winding', {
     ctx.fillStyle = '#d97236';
     ctx.font = '600 17px "SF Mono", monospace';
     ctx.fillText(walker.toFixed(2) + ' / 1.00', loopCx, loopCy + 12);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 10px "Charter", serif';
     ctx.fillText('loops', loopCx, loopCy + 28);
   }
 
   function drawPhaseCircle() {
     // Title
-    ctx.fillStyle = '#2a2a2a';
+    ctx.fillStyle = palette.text;
     ctx.font = '13px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText('the phase circle S¹', 392, 28);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11.5px "Charter", serif';
     ctx.fillText('where the walker\u2019s phase lives', 392, 45);
 
@@ -445,7 +445,7 @@ wireEquation('eq-winding', {
 
     // Tick labels at θ = 0, π/2, π, −π/2
     const tickLabels = [['0', 0], ['π/2', Math.PI / 2], ['±π', Math.PI], ['−π/2', -Math.PI / 2]];
-    ctx.fillStyle = '#2a2a2a';
+    ctx.fillStyle = palette.text;
     ctx.font = '600 10px "SF Mono", monospace';
     for (const [t, th] of tickLabels) {
       const a = th - Math.PI / 2;  // convert phase to canvas angle
@@ -484,7 +484,7 @@ wireEquation('eq-winding', {
     ctx.stroke();
     // Pointer head
     ctx.fillStyle = '#7d2d4f';
-    ctx.strokeStyle = '#fdfaf3';
+    ctx.strokeStyle = palette.bgSoft;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(ptX, ptY, 8, 0, 2 * Math.PI);
@@ -492,7 +492,7 @@ wireEquation('eq-winding', {
     ctx.stroke();
 
     // Central caption — pointer laps
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px "Charter", serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -502,7 +502,7 @@ wireEquation('eq-winding', {
     const lapsFloat = accumPhase / (2 * Math.PI);
     const lapsStr = (lapsFloat >= 0 ? '+' : '') + lapsFloat.toFixed(2);
     ctx.fillText(lapsStr, phiCx, phiCy + 12);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 10px "Charter", serif';
     ctx.fillText('full turns', phiCx, phiCy + 28);
   }
@@ -511,7 +511,7 @@ wireEquation('eq-winding', {
     // A light "equals" hint between the two completions — no, actually a subtle hint
     // that the two counters should match at lap end (for n=1) or diverge (for n=0).
     const y = loopCy;
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.setLineDash([2, 4]);
     ctx.beginPath();
@@ -522,7 +522,7 @@ wireEquation('eq-winding', {
 
     // Small arrow in middle, "mapped to"
     const mx = (loopCx + phiCx) / 2;
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px "Charter", serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
@@ -534,14 +534,14 @@ wireEquation('eq-winding', {
     const cx = W / 2;
 
     // Frame
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(180, 400, 320, 140);
     ctx.strokeRect(180, 400, 320, 140);
 
     // Label
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = '11px "Charter", serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
@@ -552,7 +552,7 @@ wireEquation('eq-winding', {
     if (absn === 0) color = '#a8a39a';
     else if (absn === 1) color = '#d97236';
     else if (absn === 2) color = '#7d2d4f';
-    else color = '#2a2a2a';
+    else color = palette.text;
 
     ctx.fillStyle = color;
     ctx.font = '600 78px "Latin Modern Math", Georgia, serif';
@@ -561,7 +561,7 @@ wireEquation('eq-winding', {
     ctx.fillText((n > 0 ? '+' : '') + String(n), cx, 480);
 
     ctx.font = 'italic 11px "Charter", serif';
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.textBaseline = 'alphabetic';
     const msg = absn === 0 ? 'pointer returns home after one loop'
               : absn === 1 ? 'pointer completes one full turn per loop'
@@ -856,7 +856,7 @@ wireEquation('eq-winding', {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4';
+    ctx.fillStyle = palette.bg;
     ctx.fillRect(0, 0, W, H);
 
     drawTitles();
@@ -872,7 +872,7 @@ wireEquation('eq-winding', {
       const [px, py] = cellToPx(c.x + 0.5, c.y + 0.5);
       const color = c.charge > 0 ? '#7d2d4f' : '#2a5f8f';
       // Ring + crosshair
-      ctx.fillStyle = '#fdfaf3';
+      ctx.fillStyle = palette.bgSoft;
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -894,12 +894,12 @@ wireEquation('eq-winding', {
   }
 
   function drawTitles() {
-    ctx.fillStyle = '#2a2a2a';
+    ctx.fillStyle = palette.text;
     ctx.font = '13px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText('16 × 16 grid with a seeded +1 vortex', gridX0, 30);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11.5px "Charter", serif';
     ctx.fillText('colour = phase; drag the burgundy loop to measure its winding', gridX0, 47);
   }
@@ -985,7 +985,7 @@ wireEquation('eq-winding', {
     const corners = [[x0, y0], [x1, y0], [x0, y1], [x1, y1]];
     for (const [cx, cy] of corners) {
       const [px, py] = cellToPx(cx + 0.5, cy + 0.5);
-      ctx.fillStyle = '#fdfaf3';
+      ctx.fillStyle = palette.bgSoft;
       ctx.strokeStyle = '#7d2d4f';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -1001,13 +1001,13 @@ wireEquation('eq-winding', {
     const color = absn === 0 ? '#a8a39a'
                 : absn === 1 ? '#d97236'
                 : '#7d2d4f';
-    ctx.fillStyle = '#fdfaf3';
+    ctx.fillStyle = palette.bgSoft;
     ctx.strokeStyle = color;
     ctx.lineWidth = 1.5;
     const badgeW = 74, badgeH = 26;
     ctx.fillRect(bx - badgeW / 2, by - badgeH, badgeW, badgeH);
     ctx.strokeRect(bx - badgeW / 2, by - badgeH, badgeW, badgeH);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = '10px "Charter", serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
@@ -1020,7 +1020,7 @@ wireEquation('eq-winding', {
   function drawReadout() {
     // Footer hint about how to interact
     const ty = gridY0 + gridH + 22;
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11.5px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
@@ -1031,12 +1031,12 @@ wireEquation('eq-winding', {
     const rx = gridX0 + gridW + 22;
     let ry = gridY0 + 8;
 
-    ctx.fillStyle = '#2a2a2a';
+    ctx.fillStyle = palette.text;
     ctx.font = '13px "Charter", serif';
     ctx.fillText('this loop', rx, ry); ry += 20;
 
     ctx.font = '11px "SF Mono", monospace';
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.fillText(`centre  (${loop.cx.toFixed(1)}, ${loop.cy.toFixed(1)})`, rx, ry); ry += 16;
     ctx.fillText(`size    ${2 * loop.hw + 1}×${2 * loop.hh + 1} cells`, rx, ry); ry += 16;
     const p = loopPath();
@@ -1047,7 +1047,7 @@ wireEquation('eq-winding', {
     const color = absn === 0 ? '#a8a39a'
                 : absn === 1 ? '#d97236'
                 : '#7d2d4f';
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = '11px "Charter", serif';
     ctx.fillText('winding number', rx, ry); ry += 8;
     ctx.fillStyle = color;
@@ -1055,7 +1055,7 @@ wireEquation('eq-winding', {
     ctx.textBaseline = 'alphabetic';
     ctx.fillText((n > 0 ? '+' : '') + String(n), rx, ry + 40); ry += 56;
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px "Charter", serif';
     const msg = absn === 0
       ? 'loop encloses no defect'
@@ -1064,7 +1064,7 @@ wireEquation('eq-winding', {
         : 'encloses multiple defects';
     ctx.fillText(msg, rx, ry); ry += 26;
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 10.5px "Charter", serif';
     ctx.fillText('try: enclose the core,', rx, ry); ry += 14;
     ctx.fillText('then move the loop off,', rx, ry); ry += 14;
@@ -1346,16 +1346,16 @@ wireEquation('eq-winding', {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4';
+    ctx.fillStyle = palette.bg;
     ctx.fillRect(0, 0, W, H);
 
     // Title
-    ctx.fillStyle = '#2a2a2a';
+    ctx.fillStyle = palette.text;
     ctx.font = '13px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText('co-evolution: Kuramoto + Shannon-CLR on a 20×20 periodic grid', gridX0, 28);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11.5px "Charter", serif';
     ctx.fillText('coloured cells: phase · black lines: coupling K · ± circles: detected vortices', gridX0, 47);
 
@@ -1375,7 +1375,7 @@ wireEquation('eq-winding', {
       }
     }
     // Grid outline
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(gridX0, gridY0, L * cellPx, L * cellPx);
   }
@@ -1425,7 +1425,7 @@ wireEquation('eq-winding', {
         const cx = gridX0 + (x + 1) * cellPx;
         const cy = gridY0 + (y + 1) * cellPx;
         const color = c > 0 ? '#7d2d4f' : '#2a5f8f';
-        ctx.fillStyle = '#fdfaf3';
+        ctx.fillStyle = palette.bgSoft;
         ctx.strokeStyle = color;
         ctx.lineWidth = 1.5;
         ctx.beginPath();
@@ -1446,25 +1446,25 @@ wireEquation('eq-winding', {
     let ry = gridY0;
 
     // Step header
-    ctx.fillStyle = '#2a2a2a';
+    ctx.fillStyle = palette.text;
     ctx.font = '13px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText('step ' + step, rx, ry); ry += 6;
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx + 220, ry); ctx.stroke();
     ry += 16;
 
     // Metrics
     ctx.font = '11px "SF Mono", monospace';
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     const rows = [
       ['I_phase', m.I.toFixed(3), '#2a5f8f'],
       ['alive', (m.alive * 100).toFixed(0) + '%', '#d97236'],
       ['vortices', '+' + m.nPos + ' / −' + m.nNeg, '#7d2d4f'],
     ];
     for (const [label, value, color] of rows) {
-      ctx.fillStyle = '#888';
+      ctx.fillStyle = palette.textFaint;
       ctx.fillText(label.padEnd(10, ' '), rx, ry);
       ctx.fillStyle = color;
       ctx.fillText(value, rx + 85, ry);
@@ -1475,7 +1475,7 @@ wireEquation('eq-winding', {
     // Narrative
     const msg = narrativeForStep(step, m);
     ctx.font = 'italic 11.5px "Charter", serif';
-    ctx.fillStyle = '#444';
+    ctx.fillStyle = palette.textSoft;
     const usedLines = wrapText(ctx, msg, rx, ry, 220, 15);
     ry += usedLines * 15 + 12;
 
@@ -1486,12 +1486,12 @@ wireEquation('eq-winding', {
   }
 
   function drawTrace(x, y, w, h, label, data, ymax, color) {
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(x, y, w, h);
     ctx.strokeRect(x, y, w, h);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 10px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
@@ -1806,18 +1806,18 @@ wireEquation('eq-winding', {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4';
+    ctx.fillStyle = palette.bg;
     ctx.fillRect(0, 0, W, H);
 
     // Title + step counter
-    ctx.fillStyle = '#2a2a2a';
+    ctx.fillStyle = palette.text;
     ctx.font = '13px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
     ctx.fillText('same atan2 vortex seed, same Shannon-CLR — one extra structural term', 30, 24);
 
     ctx.textAlign = 'right';
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = '12px "SF Mono", monospace';
     ctx.fillText('K-step ' + step, W - 30, 24);
 
@@ -1830,7 +1830,7 @@ wireEquation('eq-winding', {
     ctx.fillStyle = '#2d9d5f';
     ctx.fillText('Shannon  +  Fiedler', rightX + gridSize / 2, 60);
 
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px "Charter", serif';
     ctx.fillText('the core dies', leftX + gridSize / 2, 74);
     ctx.fillText('the core is saved', rightX + gridSize / 2, 74);
@@ -1914,7 +1914,7 @@ wireEquation('eq-winding', {
     }
 
     // Grid outline
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(x0, y0, gridSize, gridSize);
   }
@@ -1962,7 +1962,7 @@ wireEquation('eq-winding', {
     // Headline: prominent dead-bond count (huge if there are many)
     const deadBonds = Math.round(m.deadFrac * 2 * N);
     ctx.font = '600 11px "Charter", serif';
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.fillText('dead bonds', x, y + 14);
     ctx.font = '700 20px "SF Mono", monospace';
     ctx.fillStyle = deadBonds > 0 ? '#c62828' : '#2d9d5f';
@@ -1976,7 +1976,7 @@ wireEquation('eq-winding', {
     ];
     let cx = x2;
     for (const [label, value] of cols) {
-      ctx.fillStyle = '#888';
+      ctx.fillStyle = palette.textFaint;
       ctx.fillText(label, cx, y + 14);
       ctx.fillStyle = labelColor;
       ctx.fillText(value, cx, y + 28);
@@ -2000,7 +2000,7 @@ wireEquation('eq-winding', {
       dataA: simA.hist.K, colorA: '#7d2d4f',
       dataB: simB.hist.K, colorB: '#2d9d5f',
       yMax: 2.6,
-      targetLines: [[K_EQ, 'K_eq', '#888']],
+      targetLines: [[K_EQ, 'K_eq', palette.textFaint]],
       ticks: [[0, '0.0'], [K_EQ, 'K_eq']],
     });
 
@@ -2017,13 +2017,13 @@ wireEquation('eq-winding', {
   }
 
   function drawTracePanel({ x, y, w, h, title, dataA, colorA, dataB, colorB, yMax, targetLines, ticks }) {
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.fillRect(x, y, w, h);
     ctx.strokeRect(x, y, w, h);
 
-    ctx.fillStyle = '#555';
+    ctx.fillStyle = palette.textSoft;
     ctx.font = 'italic 11px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
@@ -2047,7 +2047,7 @@ wireEquation('eq-winding', {
     }
 
     // Tick labels
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = '10px "SF Mono", monospace';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';

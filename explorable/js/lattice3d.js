@@ -1,3 +1,5 @@
+import { palette } from './common.js';
+
 /*
  * lattice3d.js — minimal 3D scene renderer for lattice visualisations.
  *
@@ -159,7 +161,7 @@ export function renderScene(ctx, W, H, scene, camera) {
         kind: 'bond',
         depth: (pa.z + pb.z) / 2,
         pa, pb,
-        color: b.color || 'rgba(60, 60, 60, 0.5)',
+        color: b.color || palette.bondDefault,
         width: b.width || 1,
       });
     }
@@ -174,7 +176,7 @@ export function renderScene(ctx, W, H, scene, camera) {
       kind: 'atom',
       depth: p.z,
       p,
-      color: a.color || '#888',
+      color: a.color || palette.textFaint,
       baseRadius: a.radius || 0.18,
       label: a.label,
       strokeColor: a.strokeColor,
@@ -238,11 +240,14 @@ export function renderScene(ctx, W, H, scene, camera) {
       }
       ctx.globalAlpha = 1;
       if (it.label) {
-        ctx.fillStyle = `rgba(0, 0, 0, ${(0.35 + 0.5 * close).toFixed(2)})`;
+        ctx.save();
+        ctx.globalAlpha = 0.35 + 0.5 * close;
+        ctx.fillStyle = palette.text;
         ctx.font = '9px "SF Mono", monospace';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(it.label, it.p.x, it.p.y);
+        ctx.restore();
       }
     }
   }
@@ -589,13 +594,13 @@ export function buildLatticeScene(kind, {
     } else if (isBipartite && at.sublattice === 'B') {
       at.color = colorB; at.strokeColor = strokeB; at.radius = 0.2;
     } else {
-      at.color = colorNonBipartite; at.strokeColor = '#1e1e1e'; at.radius = 0.2;
+      at.color = colorNonBipartite; at.strokeColor = palette.text; at.radius = 0.2;
     }
   }
 
   return {
     atoms: lat.atoms,
-    bonds: lat.bonds.map(b => ({ ...b, color: 'rgba(30, 30, 30, 0.5)', width: 1.3 })),
+    bonds: lat.bonds.map(b => ({ ...b, color: palette.bondFaint, width: 1.3 })),
     bondLength: 1,
     extent,
     isBipartite,

@@ -576,7 +576,7 @@
 
 </div>
 <script type="module">
-import { setupHiDPICanvas, wireEquation, runWhenVisible } from '../js/common.js';
+import { setupHiDPICanvas, wireEquation, runWhenVisible, palette } from '../js/common.js';
 import {
   makeCamera, attachCameraControls, renderScene,
   diamondLattice, orientCameraAlongAxis,
@@ -739,10 +739,10 @@ function phaseToColor(th, s = 75, l = 55) {
 
     // Photon
     ctxP.clearRect(0, 0, W, H);
-    ctxP.fillStyle = '#f5f0e4'; ctxP.fillRect(0, 0, W, H);
+    ctxP.fillStyle = palette.bg; ctxP.fillRect(0, 0, W, H);
     for (const at of photonAtoms) at.color = colorFor(at.kDot + t);
     renderScene(ctxP, W, H, { atoms: photonAtoms, bonds }, camera);
-    ctxP.fillStyle = '#888'; ctxP.font = 'italic 10.5px "Charter", serif';
+    ctxP.fillStyle = palette.textFaint; ctxP.font = 'italic 10.5px "Charter", serif';
     ctxP.textAlign = 'center';
     ctxP.fillText(mode === 'colour'
       ? 'n = 0 · colours sweep uniformly'
@@ -750,10 +750,10 @@ function phaseToColor(th, s = 75, l = 55) {
 
     // Electron
     ctxE.clearRect(0, 0, W, H);
-    ctxE.fillStyle = '#f5f0e4'; ctxE.fillRect(0, 0, W, H);
+    ctxE.fillStyle = palette.bg; ctxE.fillRect(0, 0, W, H);
     for (const at of electronAtoms) at.color = colorFor(at.theta0 + t);
     renderScene(ctxE, W, H, { atoms: electronAtoms, bonds }, camera);
-    ctxE.fillStyle = '#888'; ctxE.font = 'italic 10.5px "Charter", serif';
+    ctxE.fillStyle = palette.textFaint; ctxE.font = 'italic 10.5px "Charter", serif';
     ctxE.textAlign = 'center';
     ctxE.fillText(mode === 'colour'
       ? 'n = 1 · pinwheel rotates, winding stays'
@@ -898,7 +898,7 @@ function bondHealthWidth(health) {
     } else {
       // 'bonds' mode: grey out the atoms so bond colours dominate
       for (let i = 0; i < N; i++) {
-        atoms[i].color = '#c8c0ad';
+        atoms[i].color = palette.axis;
         atoms[i].radius = 0.13;
       }
     }
@@ -908,17 +908,17 @@ function bondHealthWidth(health) {
   function draw() {
     t += omega;
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
 
     renderScene(ctx, W, H, { atoms: buildAtoms(), bonds: buildBonds() }, camera);
 
-    ctx.fillStyle = '#555'; ctx.font = '12px "Charter", serif';
+    ctx.fillStyle = palette.textSoft; ctx.font = '12px "Charter", serif';
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     const label = mode === 'phase'
       ? 'Electron: phase (rainbow) + bond health (green alive / purple dead)'
       : 'Electron: bond K-field only — green alive, purple dead, vortex axis in burgundy';
     ctx.fillText(label, 24, 22);
-    ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = '#888';
+    ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = palette.textFaint;
     ctx.fillText('phases oscillate; winding and dead-core stay fixed · drag to rotate', 24, 38);
   }
   function loop() { draw(); requestAnimationFrame(loop); }
@@ -1015,14 +1015,14 @@ function bondHealthWidth(health) {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
 
     renderScene(ctx, W, H, { atoms, bonds }, camera);
 
-    ctx.fillStyle = '#555'; ctx.font = '12px "Charter", serif';
+    ctx.fillStyle = palette.textSoft; ctx.font = '12px "Charter", serif';
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     ctx.fillText('Phase current j = K·sin(Δθ)  ·  orange = +  ·  blue = −', 24, 22);
-    ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = '#888';
+    ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = palette.textFaint;
     ctx.fillText('the ring of bright bonds around the centre is the orbital current', 24, 38);
   }
   function loop() { draw(); requestAnimationFrame(loop); }
@@ -1089,15 +1089,15 @@ function bondHealthWidth(health) {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
     renderScene(ctx, W, H, scene(), camera);
-    ctx.fillStyle = '#555'; ctx.font = '12px "Charter", serif';
+    ctx.fillStyle = palette.textSoft; ctx.font = '12px "Charter", serif';
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     const label = mode === 'A' ? 'Bound state on A: A atoms in phase colour, B atoms grey'
                 : mode === 'B' ? 'Bound state on B: B atoms in phase colour, A atoms grey'
                 : 'Both sublattices in full phase colour';
     ctx.fillText(label, 24, 22);
-    ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = '#888';
+    ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = palette.textFaint;
     ctx.fillText('drag to rotate', 24, 38);
   }
   function loop() { draw(); requestAnimationFrame(loop); }

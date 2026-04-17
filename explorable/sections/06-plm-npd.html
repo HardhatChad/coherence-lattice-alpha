@@ -218,7 +218,7 @@
 </div>
 
 <script type="module">
-import { setupHiDPICanvas, wireEquation, R0, runWhenVisible, coherenceMetrics, drawMetricsStrip } from '../js/common.js';
+import { setupHiDPICanvas, wireEquation, R0, runWhenVisible, coherenceMetrics, drawMetricsStrip, palette } from '../js/common.js';
 
 // ============================================================
 // Interactive equation blocks
@@ -457,14 +457,14 @@ function shadePhase(baseHex, brightness) {
       }
     }
 
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(x0, y0, gridW, gridW);
 
     // PLM size bar chart
     const bx0 = 40, by0 = 420, bw = 600, bh = 50;
-    ctx.fillStyle = '#fdfaf3';
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillStyle = palette.bgSoft;
+    ctx.strokeStyle = palette.axis;
     ctx.fillRect(bx0, by0, bw, bh);
     ctx.strokeRect(bx0, by0, bw, bh);
 
@@ -476,7 +476,7 @@ function shadePhase(baseHex, brightness) {
       ctx.fillStyle = plmPalette[i % plmPalette.length];
       ctx.fillRect(bx0 + i * barW + 1, by0 + bh - h - 3, barW - 2, h);
     }
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px serif';
     ctx.textAlign = 'left';
     ctx.fillText(`${count} PLM${count === 1 ? '' : 's'} total — largest has ${sizes[0] || 0} members`, bx0, by0 - 6);
@@ -731,12 +731,12 @@ function shadePhase(baseHex, brightness) {
       }
     }
 
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(x0, y0, gridW, gridW);
 
     // Legend
-    ctx.fillStyle = driveOn ? '#d97236' : '#888';
+    ctx.fillStyle = driveOn ? '#d97236' : palette.textFaint;
     ctx.font = 'italic 13px serif';
     ctx.textAlign = 'center';
     ctx.fillText(
@@ -971,7 +971,7 @@ function shadePhase(baseHex, brightness) {
 
     // Drive label above grid (tells you what's being presented)
     const pLabel = PATTERNS.find(pp => pp.id === currentPatternId).label;
-    ctx.fillStyle = driveOn ? '#d97236' : '#888';
+    ctx.fillStyle = driveOn ? '#d97236' : palette.textFaint;
     ctx.font = 'italic 12px serif';
     ctx.textAlign = 'center';
     ctx.fillText(
@@ -1017,7 +1017,7 @@ function shadePhase(baseHex, brightness) {
       }
     }
 
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(x0, y0, gridW, gridW);
 
@@ -1027,7 +1027,7 @@ function shadePhase(baseHex, brightness) {
     readout.textContent = `I_phase = ${m.Iphat.toFixed(3)},  ρ = ${m.rho.toFixed(3)},  C = ${m.C.toFixed(3)}`;
 
     // Status line below the grid
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 12px serif';
     ctx.textAlign = 'center';
     let statusLine;

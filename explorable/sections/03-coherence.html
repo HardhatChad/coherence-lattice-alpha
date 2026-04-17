@@ -99,7 +99,7 @@
 </div>
 
 <script type="module">
-import { setupHiDPICanvas, wireEquation, runWhenVisible } from '../js/common.js';
+import { setupHiDPICanvas, wireEquation, runWhenVisible, palette } from '../js/common.js';
 
 // ============================================================
 // Interactive equation: Coherence capital
@@ -247,12 +247,12 @@ function computeMetrics(thetas, L, periodic = true) {
           ctx.fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
         }
       }
-      ctx.strokeStyle = '#c8c0ad';
+      ctx.strokeStyle = palette.axis;
       ctx.lineWidth = 1;
       ctx.strokeRect(x0, y0, gridW, gridW);
 
       // Label
-      ctx.fillStyle = '#555';
+      ctx.fillStyle = palette.textSoft;
       ctx.font = 'italic 14px serif';
       ctx.textAlign = 'center';
       ctx.fillText(p.label, x0 + gridW / 2, y0 - 10);
@@ -260,7 +260,7 @@ function computeMetrics(thetas, L, periodic = true) {
       // Metrics
       const m = computeMetrics(p.thetas, L);
       const my = y0 + gridW + 18;
-      ctx.fillStyle = '#888';
+      ctx.fillStyle = palette.textFaint;
       ctx.font = 'italic 11px serif';
       ctx.textAlign = 'left';
       ctx.fillText(`I_phase`, x0, my);
@@ -281,8 +281,8 @@ function computeMetrics(thetas, L, periodic = true) {
       [[m.Iphat, my + 5, '#2a5f8f', 1],
        [m.rho, my + 33, '#7d2d4f', 1],
        [m.C, my + 61, '#d97236', 0.6]].forEach(([v, by, color, vmax]) => {
-        ctx.fillStyle = '#fdfaf3';
-        ctx.strokeStyle = '#d8d4c8';
+        ctx.fillStyle = palette.bgSoft;
+        ctx.strokeStyle = palette.grid;
         ctx.lineWidth = 0.5;
         ctx.fillRect(x0, by, barW, barH);
         ctx.strokeRect(x0, by, barW, barH);
@@ -371,10 +371,10 @@ function computeMetrics(thetas, L, periodic = true) {
         ctx.fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
       }
     }
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(x0, y0, gridW, gridW);
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 12px serif';
     ctx.textAlign = 'center';
     ctx.fillText('the network (live)', x0 + gridW / 2, y0 - 10);
@@ -392,14 +392,14 @@ function computeMetrics(thetas, L, periodic = true) {
       ['C', m.C, 0.6, '#d97236', y0 + 130],
     ];
     barSet.forEach(([label, val, vmax, color, by]) => {
-      ctx.fillStyle = '#fdfaf3';
-      ctx.strokeStyle = '#c8c0ad';
+      ctx.fillStyle = palette.bgSoft;
+      ctx.strokeStyle = palette.axis;
       ctx.lineWidth = 1;
       ctx.fillRect(bx0, by, bw, bh);
       ctx.strokeRect(bx0, by, bw, bh);
       ctx.fillStyle = color;
       ctx.fillRect(bx0, by, (val / vmax) * bw, bh);
-      ctx.fillStyle = '#888';
+      ctx.fillStyle = palette.textFaint;
       ctx.font = 'italic 12px serif';
       ctx.textAlign = 'right';
       ctx.fillText(label, bx0 - 6, by + bh / 2 + 4);
@@ -416,7 +416,7 @@ function computeMetrics(thetas, L, periodic = true) {
     const pH = 200;
 
     // Axes
-    ctx.strokeStyle = '#c8c0ad';
+    ctx.strokeStyle = palette.axis;
     ctx.lineWidth = 1;
     ctx.strokeRect(pX0, pY0, pW, pH);
 
@@ -447,12 +447,12 @@ function computeMetrics(thetas, L, periodic = true) {
     ctx.beginPath();
     ctx.arc(dx, dy, 7, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#fdfaf3';
+    ctx.strokeStyle = palette.bgSoft;
     ctx.lineWidth = 2;
     ctx.stroke();
 
     // Axis labels
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 11px serif';
     ctx.textAlign = 'center';
     ctx.fillText('I_phase →', pX0 + pW / 2, pY0 + pH + 18);
@@ -478,7 +478,7 @@ function computeMetrics(thetas, L, periodic = true) {
     step();
 
     // Bottom: legend
-    ctx.fillStyle = '#888';
+    ctx.fillStyle = palette.textFaint;
     ctx.font = 'italic 12px serif';
     ctx.textAlign = 'left';
     ctx.fillText('The dot is your state. The curves are lines of equal C. C peaks where', 30, y0 + gridW + 40);

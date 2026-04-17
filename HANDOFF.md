@@ -1,9 +1,9 @@
 # Handoff — Coherence Lattice Alpha Project
 
-**Last context save**: 2026-04-16 (evening — end of §9/§10 build + split)
-**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **10 / 17** sections complete. §9 grew so large it was split into **§9 (electron identity & topology)** and **§10 (how the lattice makes it a fermion)**. All prior "TODO" sections shifted by one: former §10 (BKT wall) is now §11, and total section count is 17.
+**Last context save**: 2026-04-16 (late evening — §11 BKT wall shipped)
+**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **11 / 17** sections complete. §11 adds the three-figure BKT-wall chapter (F(R), vortex-pair K dial, hero wall figure) where α operationally lives.
 
-**Immediate next task**: build §11 "The BKT wall" — the chapter where α lives. See **§ Next session** at the bottom.
+**Immediate next task**: build §12 "Living versus static" — the chapter where `1/α = 143` becomes `1/α = 137` purely through the exponent-evaluation choice. See **§ Next session** at the bottom.
 
 This file is intended to be read first by a fresh session along with the files in **§ Must-read files on pickup**.
 
@@ -98,7 +98,7 @@ Unchanged since last handoff:
 - `I ≥ 0` theorem boxed as Theorem 1.1 with Remark citing the forthcoming companion paper
 - CC BY-NC 4.0 for paper, AGPL-3.0 for scripts
 
-### Explorable — 10 / 17 sections done
+### Explorable — 11 / 17 sections done
 
 | # | Title | Status |
 |---|-------|--------|
@@ -110,9 +110,9 @@ Unchanged since last handoff:
 | 06 | Phase-locked modes: geometry and memory | ✅ |
 | 07 | Spontaneous vortices | ✅ |
 | 08 | Why the diamond lattice | ✅ |
-| **09** | **The electron (identity & topology)** | **✅ NEW** |
-| **10** | **How the lattice makes it a fermion** | **✅ NEW** |
-| 11 | The BKT wall | TODO |
+| 09 | The electron (identity & topology) | ✅ |
+| 10 | How the lattice makes it a fermion | ✅ |
+| **11** | **The BKT wall** | **✅ NEW** |
 | 12 | Living versus static | TODO |
 | 13 | The α formula, piece by piece | TODO |
 | 14 | Why three dimensions | TODO |
@@ -272,36 +272,68 @@ node        scripts/test_clr_vortex_headless.mjs
 
 ---
 
-## § Next session: §11 "The BKT wall"
+## § What's in §11 (shipped this cycle)
 
-This is the chapter where α lives. Everything in §9 and §10 built toward this: the electron is a vortex whose topology forces K ≤ K_BKT, and the CLR drives K up against that wall. The equilibrium is exactly at K_BKT = 2/π, and that's where the fine structure constant is computed.
+### §11 — The BKT wall
+
+**Narrative arc:**
+1. Lead: picks up §10's punchline ("α is a property of the vacuum") and unpacks it as a two-force balance.
+2. "Two forces meet" — CLR wants K → K_eq ≈ 2.11; vortex forbids K_eff > K_BKT = 2/π. The wall sits at the boundary.
+3. **Figure 1: Vortex free energy F(R).** Live `K_eff` slider (0.30–1.00, step 0.005). Three frozen reference curves (K=0.50 unbound / K=2/π marginal / K=0.80 confined). Live burgundy curve tracks the slider. Top strip regime indicator snaps between confined / marginal / unbound. Log-scaled R axis 1–50.
+4. **Figure 2: Vortex-antivortex pair on a phase lattice.** Draggable vortex (+1, burgundy) and antivortex (−1, blue) on a 2D HSL-coloured phase field. Force arrows between them, coloured by regime (green attractive / orange zero / purple repulsive), length ∝ |πK−2|/R. Play releases the pair: above wall → annihilate, below → flee, at wall → drift randomly.
+5. **Figure 3: the hero "wall" figure.** 1D K-axis showing CLR potential V(K) = K²/r − ln I₀(K) at r = 5.905. Marble rolls up under Shannon gradient descent. BKT wall drawn as purple dashed line at K_BKT; K_bulk = 16/π² and K_eq = 2.11 marked too. "Remove vortex" toggle drops the wall so the marble overshoots to K_eq — this is the defining demonstration of the chapter.
+6. Two equation blocks (F(R) and K_bulk = 16/π²), one "base = π/z" equation recap, one aside explaining K_BKT is a property of topology (no free parameters).
+7. Closing paragraph writes down `α = R₀(2/π)⁴ × (π/4)^(1/√e + α/2π)` and teases the exponent-evaluation distinction as the §12 hook.
+
+### Key design decisions this cycle
+
+- **Palette consistency:** green = confined (attractive, bound), orange = marginal (α lives here), purple = unbound (the wall and the forbidden region). This reuses §9/§10's green/purple but re-purposes orange as "the marginal edge" — a role earlier sections used for drive/process. Worked fine in context because Figure 3 makes the orange = "CLR's target when constrained" reading vivid.
+- **Regime strips at the top of figures.** Every interactive figure has a coloured bar above it showing the live regime. This gives users immediate feedback when dragging the K slider — the bar snaps colour *before* the curve shape change registers visually.
+- **Figure 2 as particle simulation, not phase dynamics.** Kept the phase-field purely decorative (sampled HSL dots, no evolution) and moved the physics to the pair coordinate: one ODE, dx/dt ∝ −(πK−2)/R. Clean, visually legible, honest (prose labels the approximation).
+- **Hero figure uses V(K) not F(R).** The wall belongs on the familiar CLR landscape readers already know from §4 — adding the wall as a constraint is a clearer pedagogical move than re-plotting F(R). The `Remove vortex` toggle is the "aha" that welds §4's bond potential to §11's topology constraint.
+- **Log-spaced R axis on Figure 1.** Linear R makes the three regimes compress into a corner; log R gives equal visual weight to small and large separations. Standard BKT figure convention.
+
+---
+
+## § Next session: §12 "Living versus static"
+
+This is the single-chapter explanation of how `1/α` goes from 143 (standard lattice field theory answer) to 137 (correct answer) without changing a single physical input — only by evaluating the Debye-Waller factor at the attractor rather than integrating along the RG trajectory. This is the deepest conceptual move in the entire paper.
 
 ### Must-read files for the next session
 
 1. **`HANDOFF.md`** (this file) — current state.
-2. **`AGENTS.md`** — physics spine. §The Derivation Chain is especially relevant: steps 2–3 (CLR → binary K-field, CLR + vortex → K_eff = K_BKT) and step 4 (K_BKT = 2/π).
-3. **`paper.tex`** §5.5 "Vortex Marginality" (Theorem 5.5) — the key theorem for §11. Also §5.8 for the BKT correlator derivation and how the power-law exponent is evaluated at the fixed point (living vs static, deferred to §12).
-4. **`explorable/sections/10-fermion.html`** — layout template for side-by-side panels, view-mode toggles, wireEquation patterns.
+2. **`AGENTS.md`** — physics spine. §The Derivation Chain step 6 (Debye-Waller exponent n = exp(−σ²)) and the PLM-Lemma-as-freezer.
+3. **`paper.tex`** §5.8 "The BKT Formula", particularly the Remark (`rem:matching-exponent`) which spells out the integral-vs-endpoint distinction and gives the numerical values (n_static = 0.787 → 1/α_static = 143; n_living = 1/√e ≈ 0.607 → 1/α = 137.032).
+4. **`explorable/sections/11-bkt-wall.html`** — most recent template. The V(K) potential landscape pattern from Figure 3 there (marble + potential curve with landmark lines) may be reusable for a PLM-trajectory visualisation in §12.
+5. **`paper.tex`** Lemma 5.2 (PLM K-field freezing) — the reason evaluating at the endpoint is physically correct: the CLR converges to a fixed point exponentially; once there, K is frozen and observables evaluate at K*.
 
-### Proposed figure lineup for §11
+### Proposed figure lineup for §12
 
-1. **Vortex free energy** (2D plot): F(R) vs R for three K values — K > K_BKT (confined, F → +∞), K = K_BKT (marginal, F = 0), K < K_BKT (unbound, F → −∞). K slider so the user sees the curve cross over as K passes 2/π.
-2. **K dial + vortex state indicator**: slider from K = 0.3 to K = 1.0, showing a single vortex that confines (green), goes marginal (orange, at K_BKT = 0.6366), or unbinds (purple) as K varies.
-3. **"The wall" hero figure**: CLR urge arrow pushing K upward; BKT wall at K_BKT as a vertical line; equilibrium dot sits exactly at the wall. Annotate with K_bulk = 16/π² as the derived consequence. Maybe show the paper's 3-regime table visually (subcritical, BKT window, supercritical).
+1. **Two-panel α calculator**: left = static integration (shaded area under exp(−σ²l) from l=0 to l=1), right = living endpoint (single tall bar at l=1 with value exp(−σ²)). Same inputs (σ² = 1/2, z = 4), different n_eff, different α. Output: 1/α_static = 143 (left) vs 1/α_living = 137 (right). Toggling between them should be dramatic — the two numbers change by 6 units.
+2. **Interpolation slider**: a single slider that sweeps between "integrate over [0, ξ]" and "evaluate at ξ". Watch 1/α slide from 143 down to 137 as ξ collapses to 1. Make the physical meaning of ξ explicit — it's the fraction of the RG trajectory the calculation averages over.
+3. **PLM trajectory illustration**: a K-vs-time plot showing K(t) converging exponentially to K*. Shade the area under n(l) over the trajectory vs mark the endpoint value. The marble-on-potential idiom from §11's Figure 3 could be reused to show "the marble settles and sits" — observables use the sitting value, not the rolling average.
 
 ### Physics to get right
 
-- `K_BKT = 2/π = 0.6366...` is the per-bond critical coupling (not K_bulk).
-- `K_bulk = 16/π² = z·K_BKT²` where z=4 for diamond.
-- Vortex free energy: `F(R) = (πK − 2) ln(R/a)` (in natural units, with the thermal fluctuation contribution and bond-energy gain combining to this form at criticality).
-- The "urge" of the CLR comes from Shannon wanting K high; the "wall" comes from the vortex's topological constraint. Theorem 5.5 formalises this.
+- `σ² = 2η = 1/(π K_BKT) = 1/2` (exact at BKT).
+- `n_living = exp(−σ²) = 1/√e ≈ 0.6065 → 1/α = 137.032`.
+- `n_static = ∫₀¹ exp(−σ²l) dl = (1 − 1/√e)/σ² ≈ 0.7866 → 1/α ≈ 143` (recompute via `alpha_BKT(z, ...)` helper or inline).
+- The PLM Lemma is what makes the endpoint evaluation legitimate: because K freezes exponentially at K*, the Debye-Waller integral's "time" variable is frozen and the integrand collapses to its endpoint value. This is *not* a choice — it's a consequence of the CLR dynamics.
+- The paper's Remark also mentions the self-consistency correction `n_eff = 1/√e + α/(2π)` (Schwinger). §12 can preview this but the full self-consistent iteration belongs in §13.
 
 ### Stylistic continuity
 
-- Palette: green alive, purple dead, orange = state/process, blue = band/sublattice.
-- Top-down default for any 3D figures, side view as secondary.
-- Keep it focused — §11 is about *where* the CLR places the system and *why* that location gives α. Don't drift back into Dirac/spin.
+- Palette: blue for state/trajectory, orange for endpoint/attractor, green for correct answer, purple for incorrect answer or forbidden.
+- Keep equation blocks short — §12 is a comparison chapter, not a derivation chapter. Most real estate goes to the side-by-side figure.
+- Expected length: shorter than §9/§10/§11 — one big comparison figure + two smaller illustrations. Target 400–500 lines of HTML.
 
-### After §11
+### After §12
 
-`§12 — Living versus static` is the natural follow-up: the Debye-Waller power-law exponent is evaluated at the CLR attractor (giving `1/α = 137`) rather than integrated along the trajectory (which gives `1/α = 143`). That's one of the deepest claims of the paper and a clean visualisation opportunity.
+`§13 — The α formula, piece by piece` is where the full clickable equation lives. Every factor (R₀(2/π), ⁴, π/4, 1/√e, α/(2π)) has a clickable symbol that cites the chapter where it was derived. §12 is prerequisite to §13 because the `1/√e` exponent is the living-vs-static choice, and §13 will leverage §12's figure as one of its per-symbol explanations.
+
+---
+
+## § Inherited housekeeping (from prior cycle, now partially resolved)
+
+- OUTLINE.md's section brief-details block was renumbered to match the 17-section layout — the old 10=BKT-wall naming has been replaced with the current 11=BKT-wall, and subsequent sections bumped 11→12, 12→13, 13→14, 14→15, 15→16, 16→17. File-locations block at the bottom is now in sync.
+- Breadcrumb inconsistency in sections 1–7 (`/15` or `/16` where it should be `/17`) is still outstanding. Non-blocking, noted in prior handoff. Fix in a future touch-up pass via global search/replace.
