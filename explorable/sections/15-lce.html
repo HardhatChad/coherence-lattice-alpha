@@ -106,11 +106,30 @@
   border: 1px solid var(--panel-border);
   border-radius: 6px;
   text-align: center;
+  position: relative;
+}
+.sub3d-card.open-card {
+  border: 1px dashed var(--panel-border);
+  opacity: 0.9;
 }
 .sub3d-card .sub3d-title {
   font: 600 13px "Charter", serif;
   color: var(--accent);
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.sub3d-card.open-card .sub3d-title { color: var(--text-soft); }
+.sub3d-card .open-badge {
+  display: inline-block;
+  font: 700 9.5px "SF Mono", monospace;
+  color: #c38df7;
+  background: rgba(195, 141, 247, 0.15);
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase; letter-spacing: 0.12em;
 }
 .sub3d-card canvas {
   display: block; margin: 0 auto; max-width: 100%;
@@ -120,6 +139,15 @@
   font-size: 13px; color: var(--text-soft);
   margin-top: 10px; line-height: 1.5; text-align: left;
 }
+.sub3d-card .sub3d-metric {
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid var(--panel-border);
+  display: flex; justify-content: space-between; gap: 8px;
+  font: 600 11.5px "SF Mono", monospace;
+}
+.sub3d-card .sub3d-metric .label { color: var(--text-faint); font-weight: 400; font-style: italic; font-size: 11px; }
+.sub3d-card .sub3d-metric .val { color: #efa57a; }
+.sub3d-card.open-card .sub3d-metric .val { color: #c38df7; }
 @media (max-width: 620px) {
   .sub3d-row { grid-template-columns: 1fr; }
 }
@@ -184,18 +212,44 @@
 
 <h2>The same subgraphs in 3D</h2>
 
-<p>The 2D schematics above flatten the tetrahedral geometry of diamond &mdash; real bonds meet at 109.47&deg;, and the dumbbell is a pair of interpenetrating tetrahedra that can only be understood in three dimensions. Here are both subgraphs drawn as they actually sit in a diamond crystal. <strong>Drag to rotate</strong>; the orbit continues on its own between drags.</p>
+<p>The 2D schematics above flatten the tetrahedral geometry of diamond &mdash; real bonds meet at 109.47&deg;, and higher-order subgraphs become interpenetrating tetrahedra that can only be understood in three dimensions. Below are <strong>four</strong> subgraphs of the expansion drawn as they actually sit in a diamond crystal. The first two are the ones the paper computes. The last two are the <em>frontier</em>: the next-order corrections we have not yet calculated. <strong>Drag to rotate</strong> any canvas; each one auto-rotates between drags.</p>
 
 <div class="sub3d-row">
   <div class="sub3d-card">
     <div class="sub3d-title">Single-vertex star</div>
     <canvas class="sub3d-canvas" id="canvas-star3d" width="300" height="240"></canvas>
-    <div class="sub3d-caption">One atom at the centre, four nearest-neighbour atoms at the tetrahedron corners. Every bond meets the others at the tetrahedral angle 109.47&deg;. The four highlighted bonds are the lattice version of QED's "four-fold vertex" &mdash; the vortex couples to the K-field through all four simultaneously.</div>
+    <div class="sub3d-caption">One atom at the centre, four nearest-neighbour atoms at the tetrahedron corners. Every bond meets the others at the tetrahedral angle 109.47&deg;. The lattice version of QED's four-fold vertex &mdash; the vortex couples to the K-field through all four bonds simultaneously.</div>
+    <div class="sub3d-metric">
+      <span><span class="label">order </span><span class="val">1</span></span>
+      <span><span class="label">contribution </span><span class="val">&delta;c = 2.9747</span></span>
+    </div>
   </div>
   <div class="sub3d-card">
     <div class="sub3d-title">Two-vertex dumbbell</div>
     <canvas class="sub3d-canvas" id="canvas-dumb3d" width="300" height="240"></canvas>
-    <div class="sub3d-caption">Two adjacent atoms sharing a single bond (drawn <span style="color: #e091ac;">pink</span>), with each atom's three other neighbours fanning out. Two interpenetrating tetrahedra. The shared bond is the "Markov channel" across which a virtual K-fluctuation at one vertex couples to a virtual K-fluctuation at the adjacent vertex &mdash; the next-to-leading combinatorial correction.</div>
+    <div class="sub3d-caption">Two adjacent atoms sharing a single bond (drawn <span style="color: #e091ac;">pink</span>), with each atom's three other neighbours fanning out. Two interpenetrating tetrahedra. The shared bond is the Markov channel across which a virtual K-fluctuation at one vertex couples to one at the neighbour.</div>
+    <div class="sub3d-metric">
+      <span><span class="label">order </span><span class="val">2</span></span>
+      <span><span class="label">contribution </span><span class="val">&delta;c = 0.0111</span></span>
+    </div>
+  </div>
+  <div class="sub3d-card open-card">
+    <div class="sub3d-title">Three-vertex path <span class="open-badge">open</span></div>
+    <canvas class="sub3d-canvas" id="canvas-path3d" width="300" height="240"></canvas>
+    <div class="sub3d-caption">A central atom with two of its four neighbours occupied &mdash; a "V" of two bonds meeting at the tetrahedral angle. This is the first subgraph spanning three vertices. It would capture the next term in the combinatorial expansion: a virtual fluctuation that hops two bonds rather than one. Rough magnitude estimate is of order 10<sup>&minus;4</sup>&nbsp;ppb &mdash; invisible to current experiments, but a natural consistency check.</div>
+    <div class="sub3d-metric">
+      <span><span class="label">order </span><span class="val">3</span></span>
+      <span><span class="label">contribution </span><span class="val">not yet computed</span></span>
+    </div>
+  </div>
+  <div class="sub3d-card open-card">
+    <div class="sub3d-title">Six-atom ring <span class="open-badge">open</span></div>
+    <canvas class="sub3d-canvas" id="canvas-ring3d" width="300" height="240"></canvas>
+    <div class="sub3d-caption">The smallest closed cycle in the diamond lattice &mdash; six atoms alternating A and B in a puckered "chair" hexagon, the same ring organic chemists call cyclohexane. The first topologically non-trivial subgraph: it encloses area, supports winding, and its contribution is the next qualitatively distinct correction to the vertex factor. Also not yet computed in our derivation.</div>
+    <div class="sub3d-metric">
+      <span><span class="label">order </span><span class="val">6</span></span>
+      <span><span class="label">contribution </span><span class="val">not yet computed</span></span>
+    </div>
   </div>
 </div>
 
@@ -556,6 +610,54 @@ function buildStarScene() {
   return { atoms, bonds };
 }
 
+// Open-subgraph palette — muted versions of the computed colours so these
+// cards read as "speculative but structurally real".
+const OPEN_A = '#b88a6f';    // dusty orange
+const OPEN_A_STROKE = '#6a4e3c';
+const OPEN_B = '#6a88a5';    // dusty blue
+const OPEN_B_STROKE = '#2c4a6c';
+const OPEN_BOND = '#8a7a6a';
+
+function buildPathScene() {
+  // Three-vertex "path": central A at origin + two of its B neighbours.
+  // Draw only the three atoms and two bonds — minimal subgraph,
+  // no external context (this is the open frontier, not a computed subgraph).
+  const atoms = [];
+  const bonds = [];
+  // Central A
+  atoms.push({ pos: [0, 0, 0], radius: 0.4, color: OPEN_A, strokeColor: OPEN_A_STROKE });
+  // Two B neighbours (pick two non-adjacent NN offsets for a V shape)
+  atoms.push({ pos: NN_OFFSETS[0], radius: 0.35, color: OPEN_B, strokeColor: OPEN_B_STROKE });
+  atoms.push({ pos: NN_OFFSETS[1], radius: 0.35, color: OPEN_B, strokeColor: OPEN_B_STROKE });
+  bonds.push({ a: 0, b: 1, color: OPEN_BOND, width: 3 });
+  bonds.push({ a: 0, b: 2, color: OPEN_BOND, width: 3 });
+  return { atoms, bonds };
+}
+
+function buildRingScene() {
+  // Six-atom "chair" hexagon. Approximate coordinates on a hexagon with
+  // alternating z-puckering.
+  const R = 1.4;
+  const Z = 0.42;
+  const atoms = [];
+  const bonds = [];
+  for (let i = 0; i < 6; i++) {
+    const a = (Math.PI / 3) * i;
+    const z = (i % 2 === 0) ? +Z : -Z;
+    const isA = (i % 2 === 0);
+    atoms.push({
+      pos: [R * Math.cos(a), R * Math.sin(a), z],
+      radius: 0.34,
+      color: isA ? OPEN_A : OPEN_B,
+      strokeColor: isA ? OPEN_A_STROKE : OPEN_B_STROKE,
+    });
+  }
+  for (let i = 0; i < 6; i++) {
+    bonds.push({ a: i, b: (i + 1) % 6, color: OPEN_BOND, width: 3 });
+  }
+  return { atoms, bonds };
+}
+
 function buildDumbbellScene() {
   // Central A at origin, central B at NN[0] = (+1,+1,+1).
   // A's other 3 NNs (B sublattice) at NN[1..3].
@@ -631,6 +733,8 @@ function runSubgraph3D(canvasId, scene, { distance = 7, autoRotateSpeed = 0.004 
 
 runSubgraph3D('canvas-star3d', buildStarScene(), { distance: 5.8 });
 runSubgraph3D('canvas-dumb3d', buildDumbbellScene(), { distance: 9 });
+runSubgraph3D('canvas-path3d', buildPathScene(), { distance: 5.0, autoRotateSpeed: 0.006 });
+runSubgraph3D('canvas-ring3d', buildRingScene(), { distance: 5.8, autoRotateSpeed: 0.006 });
 </script>
 </body>
 </html>
