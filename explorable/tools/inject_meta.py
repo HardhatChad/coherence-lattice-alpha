@@ -24,7 +24,7 @@ TWITTER     = ""   # e.g. "@your_handle" — leave blank to omit
 # client-side key — safe to commit). Set POSTHOG_HOST to your PostHog region
 # (US: https://us.i.posthog.com  ·  EU: https://eu.i.posthog.com  ·  self-host
 # your own URL). Leave POSTHOG_KEY empty to skip injecting analytics.
-POSTHOG_KEY  = ""
+POSTHOG_KEY  = "phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g"
 POSTHOG_HOST = "https://us.i.posthog.com"
 
 def _posthog_snippet(key: str, host: str) -> str:
