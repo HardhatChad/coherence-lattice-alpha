@@ -1,9 +1,9 @@
 # Handoff — Coherence Lattice Alpha Project
 
-**Last context save**: 2026-04-17 (§15 LCE shipped)
-**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **15 / 17** sections complete. §15 is the LCE chapter that closes the 29-ppm BKT gap down to 1.5 ppb via a linked-cluster expansion over three small diamond subgraphs. Three-card gallery (single-vertex star, dumbbell, BKT baseline) with custom SVG schematics + clickable detail panel. Convergence ladder figure shows the log-scale residual collapse. Honest flag on the R₀² embedding weight.
+**Last context save**: 2026-04-17 (§16 g-factor shipped)
+**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **16 / 17** sections complete. §16 is the QED consistency-check chapter: lattice α plugged into the standard anomalous-magnetic-moment series, digit-by-digit comparison to Fan et al 2023 experiment. Eleven matching digits with the divergence at the 12th tracking the 1.5 ppb embedding-weight uncertainty.
 
-**Immediate next task**: build §16 "From α to g" — the consistency-check chapter that plugs α_lattice = 1/137.035999 into the standard QED series for a_e = (g−2)/2 and compares to the measured g-factor digit by digit. Should be short (~300 lines) with one digit-comparison figure.
+**Immediate next task**: build §17 "Coda: what just happened" — the closing chapter that steps back from the full 16-chapter climb, summarises the derivation in a single clickable chain diagram, states the paradigm crisply, and names open questions + next steps. This is the essay's farewell.
 
 This file is intended to be read first by a fresh session along with the files in **§ Must-read files on pickup**.
 
@@ -116,8 +116,9 @@ Unchanged since last handoff:
 | 12 | Living versus static | ✅ |
 | 13 | The α formula, piece by piece | ✅ |
 | 14 | Why three dimensions | ✅ |
-| **15** | **Closing the gap with linked clusters** | **✅ NEW** |
-| 16 | From α to g | TODO |
+| 15 | Closing the gap with linked clusters | ✅ |
+| **16** | **From α to g** | **✅ NEW** |
+| 17 | Coda: what just happened | TODO |
 | 13 | The α formula, piece by piece | TODO |
 | 14 | Why three dimensions | TODO |
 | 15 | Closing the gap with linked clusters | TODO |
@@ -393,51 +394,64 @@ node        scripts/test_clr_vortex_headless.mjs
 
 ---
 
-## § Next session: §16 "From α to g"
+## § What's in §16 (shipped this cycle)
 
-The consistency-check chapter. Take α_lattice = 1/137.035999 from §15, plug it into the standard QED perturbation series for a_e = (g−2)/2, and compare digit-by-digit to the measured electron magnetic moment. The chain is:
+### §16 — From α to g
 
-- Lattice α = 1/137.035999 (from 15 chapters of physics)
-- QED series a_e = Σ C_n (α/π)^n with n = 1..5 all known from standard QED (Schwinger, Sommerfield, Karshenboim, Kinoshita, Aoyama)
-- Plug in α_lattice → get g_predicted = 2.002319304355
-- Compare to g_measured = 2.00231930436146 — **11 matching digits** before divergence
+**Narrative arc:**
+1. Lead: we have α from 15 chapters. The obvious test is to plug it through the QED g-factor series and see if it survives the most precise prediction in physics. We plug in. We compare digit by digit.
+2. "What the test is": Dirac predicted g=2 exactly, experiment found an anomaly at the 0.116% level, Schwinger computed the first correction and won a Nobel Prize.
+3. Standard series a_e = (g−2)/2 = Σ C_n (α/π)^n written plainly; framing that every C_n is a pure number with no free parameters.
+4. **QED series table** (five-row): order 1–5 with source attribution (Schwinger 1948, Sommerfield 1957, Laporta-Remiddi 1996, Kinoshita 2018, Aoyama/Kinoshita/Nio 2019), each row showing the coefficient, contribution size, and running g value. Footer note: order 5 alone is 12,672 Feynman diagrams evaluated over tens of millions of CPU-hours.
+5. **Hero figure: digit-by-digit comparison.** Two rows of boxed digits — experiment (Fan 2023) above, lattice→QED below — with matching digits in green, diverging in purple. Live α slider drives the lattice row. Snap buttons for "lattice prediction" and "CODATA". At the lattice's α, eleven digits match before the first disagreement.
+6. Short paragraph explaining that the 12th-digit disagreement corresponds to the 1.5 ppb uncertainty in the lattice's α (from §15's embedding weight).
+7. "What this is, and what this isn't" aside: the test is a consistency check, not new lattice physics. It's binary; if any earlier chapter had a bug, the digits wouldn't line up. They do.
+8. Closing: pivots to §17 coda.
 
-This is a pure consistency check. It does not add new lattice physics. But it's essential because it demonstrates that the framework is compatible with — not just adjacent to — the most precise prediction in physics.
+### Key design decisions this cycle
+
+- **Digit-by-digit comparison as HTML, not canvas.** Crisp text rendering at all resolutions. Each digit is its own `<div class="digit-box">` with match/mismatch state computed live when α slider moves. The green-border / purple-border treatment makes matching vs diverging instantly scannable.
+- **Live α slider drives the digit comparison.** The single most striking interaction in the chapter: slide α by a few ppb, watch a digit flip from green to purple. Teaches that α's precision is the bottleneck without a separate "sensitivity" figure.
+- **Snap buttons for lattice and CODATA.** Nailing exact floating-point values on a 137.03–137.04 range with step 1e-6 is difficult by drag alone. Two dedicated buttons let the reader hit the two canonical points with one click.
+- **Attribution in the QED table.** The source column names individual physicists (Schwinger, Sommerfield, Petermann, Laporta, Remiddi, Kinoshita, Aoyama, Nio) with years. Grounds the computation in real human effort — 70+ years of human work for the coefficients the lattice ingests in one line.
+- **Numerics verified with node against common.js.** Ran the full series once with α_lat to confirm g_lat = 2.002319304355292 vs measured 2.00231930436118 → 11 matching digits. Values in the HTML tables are copy-pasted from that run.
+
+---
+
+## § Next session: §17 "Coda: what just happened"
+
+The final chapter. The essay's goodbye. Steps back from the 16-chapter climb and names what was just built.
+
+Target structure:
+1. Brief re-statement of what we did: "16 chapters. Zero free parameters. We derived α and g to the limit of experiment."
+2. A single visual: the full derivation chain rendered as a connected graph or flowchart, with every node clickable to its chapter. The reader can trace any factor of α back to its origin in one click.
+3. The paradigm in three sentences — what the coherence lattice is, operationally, as a way of doing physics. Not "a new theory of everything"; "a framework in which coupling constants are not inputs but outputs of CLR dynamics on a specific lattice".
+4. What comes next: lepton generations (hexagonal DOFs → muon, tau), gauge sector (SO(3) frame → weak force), gravity (phase gradients → curved spacetime). Brief pointers, not promises.
+5. Open questions: R₀² embedding weight (§15), large-L convergence of the LCE, frame-sector dynamics, VCO bench test.
+6. Closing paragraph — something direct and quotable. Close on the inequality I ≥ 0 and what it has produced.
 
 ### Must-read files for the next session
 
 1. **`HANDOFF.md`** (this file).
-2. **`AGENTS.md`** — §g-factor / §anomalous magnetic moment. Confirm the matching-digit count and the C_n coefficients.
-3. **`paper.tex`** §6.2 "Lepton Generations" and §7 for g-factor cross-references.
-4. **`scripts/g_factor_from_lattice.py`** — the canonical Python script that does this calculation. §16's main figure should reproduce what this prints.
-5. **`explorable/sections/13-alpha-formula.html`** (iteration animation) — might reuse the number-line/digit-compare idiom.
+2. **`paper.tex`** §8 "Discussion" and §8-1 "Relationship to Standard Physics" — the paper's own closing framing.
+3. **`AGENTS.md`** — the derivation chain summary. This is what the §17 chain-diagram should visualise.
+4. **`explorable/index.html`** — reference what's linked from the TOC.
+5. **`explorable/sections/13-alpha-formula.html`** (hero clickable equation) — the chain diagram might reuse that click-to-detail idiom.
 
-### Proposed figure lineup for §16
+### Proposed figure lineup for §17
 
-1. **Digit-comparison figure** (hero): two lines of digits — lattice's g vs measured g — with matching digits in green and diverging digits in red. Like a code-golf diff view, but for physics. Dramatic visual: 11 green digits then red. Probably THE figure for the chapter.
-2. **QED series expansion**: a small, clickable equation a_e = C_1 (α/π) + C_2 (α/π)² + C_3 (α/π)³ + ... with each term's numeric value and the running sum displayed. Shows how adding higher-order QED terms refines g toward the measured value. Keep it small and expository — not the hero.
-3. **Sensitivity to α**: a slider on α that drives g. Wiggle α by 1 ppb, watch g change in the 11th digit. Shows that α is the bottleneck — the rest of QED is rock-solid.
-
-### Physics to get right
-
-- Schwinger 1948: a_e(1) = α/(2π) ≈ 0.00116.
-- Sommerfield 1957: C_2 = -0.328478965...
-- Laporta-Remiddi 1996: C_3 ≈ 1.18124...
-- Kinoshita 2018: C_4 ≈ -1.912...
-- Aoyama-Kinoshita-Nio: C_5 ≈ 6.7...
-- Plug α_lattice into the series: g_lattice = 2 × (1 + a_e) = 2.002319304355.
-- Measured: g_exp = 2.00231930436146(56). Uncertainty on measured g: ±56 in the 14th decimal.
-- Matching: 11-12 digits agree. The remaining difference is below experimental precision.
+1. **The full derivation chain** (hero): a connected flowchart or layered diagram showing how each chapter feeds the next. `I ≥ 0 → CLR → K-field → diamond → vortex → BKT → α → g`. Every node is clickable and jumps to its chapter. Could be SVG or Canvas. This is the essay's navigation map + closing image.
+2. **Timeline strip** (optional, small): hypothesis → derivation → numerical verification → publication. Shows the process, not just the result.
 
 ### Stylistic continuity
 
-- Palette: green for matching digits, red/purple for diverging, orange for α itself.
-- Short chapter — 300-400 lines of HTML. One hero figure + one or two small supporting figures.
-- The framing is: "we've derived α. Does it survive standard QED?" Answer: yes, to 11 digits. Stop.
+- Palette: full rainbow. This is the chapter where every strand of the essay resolves.
+- Shorter prose than §13–§16. More white space. The reader has done the work; now they get to stand on the summit.
+- Target 400-500 lines of HTML.
 
-### After §16
+### After §17
 
-`§17 — Coda: what just happened` — the closing chapter that summarises the whole 17-step climb from I ≥ 0 to g = 2.0023... with every step a clickable back-link. Plus the paradigm statement, open questions, and final prose. Target 500-600 lines. This is the essay's goodbye.
+The explorable is complete. 17/17 sections done. Final housekeeping: breadcrumb numbers in §1–§7 (currently `/15` or `/16`) need bumping to `/17` — known issue from the §9/§10 split cycle.
 
 ---
 

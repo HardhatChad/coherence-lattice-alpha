@@ -42,7 +42,7 @@ A three-act structure:
 | 13 | The α formula, piece by piece | ✅ DONE |
 | 14 | Why three dimensions | ✅ DONE |
 | 15 | Closing the gap with linked clusters | ✅ DONE |
-| 16 | From α to g | TODO |
+| 16 | From α to g | ✅ DONE |
 | 17 | Coda: what just happened | TODO |
 
 ---
@@ -180,20 +180,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ### 16 — From α to g
 
-**Core idea:** α → standard QED series → g-factor to 11.4 digits. Not an independent prediction; a consistency check showing the lattice α, fed through textbook QED, reproduces g.
-
-**Interactives:**
-- **QED series:** clickable Taylor series in α/π. Each term's contribution shown. Total a_e = Σ C_n (α/π)^n.
-- **Comparison:** digit-by-digit comparison of lattice g vs measured g. 11 matching digits, then divergence.
-- **Sensitivity:** wiggle α, watch g response. Shows α is the bottleneck.
-
-**Prose:**
-- QED perturbation series for a_e = (g−2)/2
-- Schwinger: a_e(1) = α/(2π)
-- Higher orders: C_2, C_3, C_4, C_5 all known from standard QED
-- Plug in lattice α → get g = 2.002319304355
-- 11.4 matching digits with experiment
-- The chain: lattice → α → QED → g. No part of QED is modified.
+**Completed.** Consistency-check chapter: lattice α plugged into the standard QED anomalous-moment series, digit-by-digit comparison to experiment. Opens with "what is g, what is a_e": Dirac predicted g=2 exactly, measurement found a small anomaly, Schwinger won a Nobel Prize for the first correction. Then the QED series a_e = Σ C_n (α/π)^n is laid out as a five-row table with full attribution (Schwinger 1948, Sommerfield & Petermann 1957, Laporta & Remiddi 1996, Kinoshita et al 2018, Aoyama/Kinoshita/Nio 2019), showing each order's coefficient, contribution magnitude, and running g value. Hero digit-compare figure: two rows of boxed digits — experiment (Fan 2023) above, lattice→QED below — with matching digits in green and diverging in purple. Live α slider drives the lattice row so the reader can wiggle α and watch digits peel off. Snap buttons for "lattice prediction (137.035998994)" and "CODATA (137.035999084)". Result: eleven matching digits, divergence at the 12th corresponding to the 1.5 ppb embedding-weight uncertainty from §15. "What this is, and what this isn't" aside clarifies the consistency-check framing — this doesn't add new lattice physics, it confirms that the derived α is compatible with the most precisely measured dimensionless number in science. Closes by pivoting to §17 coda.
 
 ---
 
@@ -240,7 +227,7 @@ explorable/
     ├── 13-alpha-formula.html  ✅
     ├── 14-dimension.html      ✅
     ├── 15-lce.html            ✅
-    ├── 16-g-factor.html       TODO
+    ├── 16-g-factor.html       ✅
     └── 17-coda.html           TODO
 ```
 
