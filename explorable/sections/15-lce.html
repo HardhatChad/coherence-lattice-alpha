@@ -95,6 +95,35 @@
   padding: 1.2em 0;
 }
 
+/* 3D subgraph viewer */
+.sub3d-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin: 1em 0 1.4em;
+}
+.sub3d-card {
+  padding: 12px 14px;
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  text-align: center;
+}
+.sub3d-card .sub3d-title {
+  font: 600 13px "Charter", serif;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.sub3d-card canvas {
+  display: block; margin: 0 auto; max-width: 100%;
+  background: var(--canvas-bg); border-radius: 3px;
+}
+.sub3d-card .sub3d-caption {
+  font-size: 13px; color: var(--text-soft);
+  margin-top: 10px; line-height: 1.5; text-align: left;
+}
+@media (max-width: 620px) {
+  .sub3d-row { grid-template-columns: 1fr; }
+}
+
 /* Flag callout */
 .flag-callout {
   margin: 1.6em 0;
@@ -153,6 +182,23 @@
 
 <div class="sub-detail default-state" id="sub-detail">Click a card above to read what physical process it captures and where the correction comes from.</div>
 
+<h2>The same subgraphs in 3D</h2>
+
+<p>The 2D schematics above flatten the tetrahedral geometry of diamond &mdash; real bonds meet at 109.47&deg;, and the dumbbell is a pair of interpenetrating tetrahedra that can only be understood in three dimensions. Here are both subgraphs drawn as they actually sit in a diamond crystal. <strong>Drag to rotate</strong>; the orbit continues on its own between drags.</p>
+
+<div class="sub3d-row">
+  <div class="sub3d-card">
+    <div class="sub3d-title">Single-vertex star</div>
+    <canvas class="sub3d-canvas" id="canvas-star3d" width="300" height="240"></canvas>
+    <div class="sub3d-caption">One atom at the centre, four nearest-neighbour atoms at the tetrahedron corners. Every bond meets the others at the tetrahedral angle 109.47&deg;. The four highlighted bonds are the lattice version of QED's "four-fold vertex" &mdash; the vortex couples to the K-field through all four simultaneously.</div>
+  </div>
+  <div class="sub3d-card">
+    <div class="sub3d-title">Two-vertex dumbbell</div>
+    <canvas class="sub3d-canvas" id="canvas-dumb3d" width="300" height="240"></canvas>
+    <div class="sub3d-caption">Two adjacent atoms sharing a single bond (drawn <span style="color: #e091ac;">pink</span>), with each atom's three other neighbours fanning out. Two interpenetrating tetrahedra. The shared bond is the "Markov channel" across which a virtual K-fluctuation at one vertex couples to a virtual K-fluctuation at the adjacent vertex &mdash; the next-to-leading combinatorial correction.</div>
+  </div>
+</div>
+
 <h2>Convergence</h2>
 
 <p>Plotted as a log-scale collapse, the successive LCE layers drop the residual by nearly four orders of magnitude in two steps:</p>
@@ -185,6 +231,7 @@
 </div>
 <script type="module">
 import { setupHiDPICanvas, runWhenVisible, R0, K_BKT, palette } from '../js/common.js';
+import { makeCamera, attachCameraControls, renderScene } from '../js/lattice3d.js';
 
 // Numerical values used everywhere
 const CODATA_INV = 137.035999084;
@@ -484,6 +531,106 @@ function subgraphSvg(layer) {
 
   runWhenVisible(canvas, draw);
 })();
+
+// ============================================================
+// 3D subgraph viewers — real diamond geometry
+// ============================================================
+// Diamond coordinates: one A site at origin, 4 B NNs at tetrahedral corners.
+// Bond length = a*sqrt(3)/4 where a = conventional cubic cell edge. We use a = 4
+// so the NN offsets are integer ±1 in each Cartesian coord.
+const NN_OFFSETS = [
+  [+1, +1, +1],
+  [+1, -1, -1],
+  [-1, +1, -1],
+  [-1, -1, +1],
+];
+
+function buildStarScene() {
+  // 1 A at origin + 4 B at NN positions, 4 bonds.
+  const atoms = [{ pos: [0, 0, 0], radius: 0.4, color: '#efa57a', strokeColor: '#7a4220' }];
+  const bonds = [];
+  NN_OFFSETS.forEach((off, i) => {
+    atoms.push({ pos: off, radius: 0.35, color: '#7db3dd', strokeColor: '#1a3c5c' });
+    bonds.push({ a: 0, b: i + 1, color: '#efa57a', width: 3 });
+  });
+  return { atoms, bonds };
+}
+
+function buildDumbbellScene() {
+  // Central A at origin, central B at NN[0] = (+1,+1,+1).
+  // A's other 3 NNs (B sublattice) at NN[1..3].
+  // B's other 3 NNs (A sublattice) at B_pos + (negatives of A-NN offsets, excluding the shared one).
+  //   B sublattice connects via offsets (−1,−1,−1),(−1,+1,+1),(+1,−1,+1),(+1,+1,−1).
+  //   The one pointing back to A origin is (−1,−1,−1). The other three give B's "other" NNs.
+  const atoms = [];
+  const bonds = [];
+
+  // Index 0: central A
+  atoms.push({ pos: [0, 0, 0], radius: 0.4, color: '#efa57a', strokeColor: '#7a4220' });
+  // Index 1: central B (shared with A via bond)
+  const Bpos = [1, 1, 1];
+  atoms.push({ pos: Bpos, radius: 0.4, color: '#e091ac', strokeColor: '#7d2d4f' });
+  // Shared bond — pink, thick
+  bonds.push({ a: 0, b: 1, color: '#e091ac', width: 5 });
+
+  // A's other 3 NNs (B sublattice)
+  for (let i = 1; i < NN_OFFSETS.length; i++) {
+    atoms.push({ pos: NN_OFFSETS[i], radius: 0.32, color: '#7db3dd', strokeColor: '#1a3c5c' });
+    bonds.push({ a: 0, b: atoms.length - 1, color: '#efa57a', width: 2.8 });
+  }
+
+  // B's NN offsets (from B site, 4 directions that are negatives of A's form):
+  const B_NN_OFFSETS = [
+    [-1, -1, -1],  // this one points back to A origin
+    [-1, +1, +1],
+    [+1, -1, +1],
+    [+1, +1, -1],
+  ];
+  // B's other 3 NNs (A sublattice). Skip index 0 which is the one pointing to the origin.
+  for (let i = 1; i < B_NN_OFFSETS.length; i++) {
+    const p = [
+      Bpos[0] + B_NN_OFFSETS[i][0],
+      Bpos[1] + B_NN_OFFSETS[i][1],
+      Bpos[2] + B_NN_OFFSETS[i][2],
+    ];
+    atoms.push({ pos: p, radius: 0.32, color: '#efa57a', strokeColor: '#7a4220' });
+    bonds.push({ a: 1, b: atoms.length - 1, color: '#efa57a', width: 2.8 });
+  }
+
+  return { atoms, bonds };
+}
+
+function runSubgraph3D(canvasId, scene, { distance = 7, autoRotateSpeed = 0.004 } = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const W = canvas.width, H = canvas.height;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const camera = makeCamera({ yaw: 0.55, pitch: -0.35, distance, focalLength: 360 });
+  attachCameraControls(canvas, camera);
+
+  // Track dragging locally so auto-rotate pauses while the user interacts.
+  let dragging = false;
+  canvas.addEventListener('mousedown', () => { dragging = true; });
+  window.addEventListener('mouseup',   () => { dragging = false; });
+  canvas.addEventListener('touchstart',() => { dragging = true; }, { passive: false });
+  window.addEventListener('touchend',  () => { dragging = false; });
+
+  let lastTs = performance.now();
+  function draw() {
+    const now = performance.now();
+    const dt = (now - lastTs) / 1000;
+    lastTs = now;
+    if (!dragging) camera.yaw += autoRotateSpeed * dt * 60;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg;
+    ctx.fillRect(0, 0, W, H);
+    renderScene(ctx, W, H, scene, camera);
+  }
+  runWhenVisible(canvas, draw);
+}
+
+runSubgraph3D('canvas-star3d', buildStarScene(), { distance: 5.8 });
+runSubgraph3D('canvas-dumb3d', buildDumbbellScene(), { distance: 9 });
 </script>
 </body>
 </html>
