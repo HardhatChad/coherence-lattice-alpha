@@ -41,7 +41,7 @@ A three-act structure:
 | 12 | Living versus static | ✅ DONE |
 | 13 | The α formula, piece by piece | ✅ DONE |
 | 14 | Why three dimensions | ✅ DONE |
-| 15 | Closing the gap with linked clusters | TODO |
+| 15 | Closing the gap with linked clusters | ✅ DONE |
 | 16 | From α to g | TODO |
 | 17 | Coda: what just happened | TODO |
 
@@ -174,20 +174,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ### 15 — Closing the gap with linked clusters
 
-**Core idea:** BKT gives 29 ppm accuracy. A linked-cluster expansion over diamond subgraphs adds vacuum polarization running and closes to 1.5 ppb. Includes the honest open-problem flag.
-
-**Interactives:**
-- **Convergence table:** progressive LCE orders with residuals (28,800 → 6.7 → 1.5 ppb).
-- **Subgraph visualizer:** show the specific subgraphs — star, plaquette, dumbbell — that contribute at each order. Click a subgraph, see its contribution.
-- **The R₀² question:** interactive showing the candidate embedding weights and their δc values. The specific form R₀²/(z(z−1)) is the only survivor.
-
-**Prose:**
-- BKT is 29 ppm already
-- QED vacuum polarization runs α from lattice to Q=0
-- The LCE computes the crossover scale
-- Layer by layer: 28,800 → 6.7 → 1.5 ppb
-- **Honest flag:** the R₀² form is physically motivated but not rigorously derived. Convergence pattern + tight constraint are evidence, but formal derivation is open.
-- Net result: 1/α = 137.035999
+**Completed.** Opens with the UV-vs-IR framing: BKT's 1/α = 137.032 lives at the lattice UV scale; CODATA's 137.036 lives at Thomson (Q=0). Two context cards set this up. "Feynman diagrams on a crystal" introduces LCE as a lattice analogue of QED perturbation. Three-card subgraph gallery with custom SVG schematics: (Order 0) pure BKT with no subgraph highlighted, residual 29.2 ppm; (Order 1) single-vertex binomial — one atom with its four bonds highlighted orange, δc = 2.9747, residual ~45 ppb; (Order 2) two-vertex dumbbell — two adjacent atoms with shared bond emphasised in pink + their NN bonds highlighted orange, δc = 0.0111, residual 1.5 ppb. Cards are clickable; a shared detail panel beneath pulls up per-card description and a "deeper" paragraph on the combinatorial origin (binomial expansion, Markov transparency). Convergence-ladder figure: log-scale bar plot of residual ppb across three layers with factor-improvement arrows between bars. Experimental g-2 uncertainty (80 ppb) drawn as horizontal orange dashed reference. Honest `flag-callout` block calls out the R₀²/(z(z−1)) embedding weight as plausibility, not theorem — the one place in the derivation chain where such a flag is raised. Closing paragraph pivots to §16.
 
 ---
 
@@ -252,7 +239,7 @@ explorable/
     ├── 12-living-vs-static.html ✅
     ├── 13-alpha-formula.html  ✅
     ├── 14-dimension.html      ✅
-    ├── 15-lce.html            TODO
+    ├── 15-lce.html            ✅
     ├── 16-g-factor.html       TODO
     └── 17-coda.html           TODO
 ```

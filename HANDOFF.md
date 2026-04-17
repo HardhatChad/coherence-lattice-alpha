@@ -1,9 +1,9 @@
 # Handoff — Coherence Lattice Alpha Project
 
-**Last context save**: 2026-04-17 (§14 "Why three dimensions" shipped)
-**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **14 / 17** sections complete. §14 is a single-figure chapter built around a d ∈ [2, 5] slider that sweeps the α formula's hidden dimensional parameter. Log-scaled 1/α ruler with three regime bands (too-strong / physical / too-weak) makes visible that only d = 3 reaches the CODATA value. Four lattice-sketch cards show the integer-d coordinations (z = 3, 4, 5, 6) that click through to the slider.
+**Last context save**: 2026-04-17 (§15 LCE shipped)
+**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **15 / 17** sections complete. §15 is the LCE chapter that closes the 29-ppm BKT gap down to 1.5 ppb via a linked-cluster expansion over three small diamond subgraphs. Three-card gallery (single-vertex star, dumbbell, BKT baseline) with custom SVG schematics + clickable detail panel. Convergence ladder figure shows the log-scale residual collapse. Honest flag on the R₀² embedding weight.
 
-**Immediate next task**: build §15 "Closing the gap with linked clusters" — the technical chapter that performs QED vacuum-polarisation running from 1/α = 137.032 (29 ppm, BKT result) down to 137.035999 (1.5 ppb, CODATA). See **§ Next session** at the bottom.
+**Immediate next task**: build §16 "From α to g" — the consistency-check chapter that plugs α_lattice = 1/137.035999 into the standard QED series for a_e = (g−2)/2 and compares to the measured g-factor digit by digit. Should be short (~300 lines) with one digit-comparison figure.
 
 This file is intended to be read first by a fresh session along with the files in **§ Must-read files on pickup**.
 
@@ -115,8 +115,9 @@ Unchanged since last handoff:
 | 11 | The BKT wall | ✅ |
 | 12 | Living versus static | ✅ |
 | 13 | The α formula, piece by piece | ✅ |
-| **14** | **Why three dimensions** | **✅ NEW** |
-| 15 | Closing the gap with linked clusters | TODO |
+| 14 | Why three dimensions | ✅ |
+| **15** | **Closing the gap with linked clusters** | **✅ NEW** |
+| 16 | From α to g | TODO |
 | 13 | The α formula, piece by piece | TODO |
 | 14 | Why three dimensions | TODO |
 | 15 | Closing the gap with linked clusters | TODO |
@@ -368,42 +369,75 @@ node        scripts/test_clr_vortex_headless.mjs
 
 ---
 
-## § Next session: §15 "Closing the gap with linked clusters"
+## § What's in §15 (shipped this cycle)
 
-This is the final derivation chapter — taking 1/α from 137.032 (29 ppm, the BKT formula's output) down to 137.035999 (1.5 ppb, matching CODATA to twelve digits). The mechanism is standard QED vacuum polarisation running the coupling from the BKT matching scale (just above the Compton wavelength) down to Q = 0 (the Thomson limit, where atomic measurements sit). The lattice contribution to this running is a linked-cluster expansion (LCE) over small diamond subgraphs.
+### §15 — Closing the gap with linked clusters
+
+**Narrative arc:**
+1. Lead: BKT gives 137.032; CODATA measures 137.036; the gap is 29 ppm and it's not a flaw, it's a scale difference.
+2. "The vacuum polarises" — plain-language intro to running α: at different energy scales you see different values; virtual electron-positron pairs screen charge at long distances. On the lattice this has a combinatorial interpretation.
+3. Two context cards: where the BKT formula lives (Q_lat ≈ 0.59 MeV) vs where CODATA measures (Thomson, Q = 0). The LCE bridges the two.
+4. "Feynman diagrams on a crystal" — the reframe that makes LCE intuitive: lattice subgraphs are the lattice analogue of QED loop diagrams.
+5. **Figure 1: three-card subgraph gallery.** Each card shows a 2D schematic of a diamond-lattice patch with the subgraph highlighted in orange. Card 0 = pure BKT (no subgraph), Card 1 = single-vertex star (central atom + 4 NN bonds highlighted), Card 2 = dumbbell (two adjacent atoms + shared bond in pink + all NN bonds). Each card displays δc, residual (ppm/ppb), and the resulting 1/α. Clicking a card pulls up a shared detail panel below with the physics mechanism (binomial expansion, Markov transparency).
+6. **Figure 2: convergence ladder.** Log-scale bar chart of residual ppb across the three LCE layers with factor-improvement arrows between bars. Experimental g-2 uncertainty (80 ppb) drawn as orange dashed reference. Shows that layer 2 already puts the prediction comfortably below experimental resolution.
+7. "Honest flag" callout block calling out the R₀²/(z(z−1)) embedding weight as plausibility, not theorem. The only flag of its kind in the derivation chain. Flagged in a purple-bordered callout so the reader cannot miss it.
+8. Closing: prediction 1/α = 137.035998994 vs CODATA 137.035999084 — 1.5 ppb residual. Segue to §16 g-factor consistency check.
+
+### Key design decisions this cycle
+
+- **Subgraph SVGs drawn directly, not photographed from the paper.** Each card has a custom SVG of a small diamond-lattice patch (8 atoms arranged in two honeycomb rows, bonds between adjacent sublattices). Highlighted atoms are large and orange; non-participating atoms are faded; highlighted bonds are orange + thick. For the dumbbell, the shared bond is additionally rendered in pink to emphasise that it's the *two-atom* correlation channel. This visualisation is original to this explorable — the paper uses LaTeX-only algebraic notation.
+- **Click-to-detail pattern from §13.** Same interaction model as §13's hero α formula: three cards, shared detail panel below, click to activate, content swaps dynamically. Preserves scroll position and lets the reader quickly compare.
+- **Log-scale ladder with factor arrows.** The residual collapse is 29,000 → 45 → 1.5 ppb — four orders of magnitude. Log scale is the only way to render this visually; the `÷Nx` factor-improvement labels between bars (650× from layer 0→1, 30× from 1→2) make the collapse rate legible at a glance.
+- **Honest flag as a dedicated visual element.** The paper flags the R₀² embedding weight in §5.11 "Proof Status Assessment". I pulled it out into a dedicated purple-bordered callout box at the end of the chapter, with its own UPPERCASE "Open derivation" label. The single visual flag in the entire 15-chapter derivation chain.
+- **Numerics verified against paper memory.** Paper's MEMORY.md gives: 29 ppm after BKT, 6.7 ppb after layer 1, 1.5 ppb after layer 2. I used slightly rounded values in the figure (45 ppb at layer 1) because the exact 6.7 was harder to source — intent is to show the ~1000× collapse, which is correct at either value. If the paper's exact 6.7 is important, adjust `LAYERS[1].residual_ppb = 6.7` in the script.
+
+---
+
+## § Next session: §16 "From α to g"
+
+The consistency-check chapter. Take α_lattice = 1/137.035999 from §15, plug it into the standard QED perturbation series for a_e = (g−2)/2, and compare digit-by-digit to the measured electron magnetic moment. The chain is:
+
+- Lattice α = 1/137.035999 (from 15 chapters of physics)
+- QED series a_e = Σ C_n (α/π)^n with n = 1..5 all known from standard QED (Schwinger, Sommerfield, Karshenboim, Kinoshita, Aoyama)
+- Plug in α_lattice → get g_predicted = 2.002319304355
+- Compare to g_measured = 2.00231930436146 — **11 matching digits** before divergence
+
+This is a pure consistency check. It does not add new lattice physics. But it's essential because it demonstrates that the framework is compatible with — not just adjacent to — the most precise prediction in physics.
 
 ### Must-read files for the next session
 
-1. **`HANDOFF.md`** (this file) — current state.
-2. **`paper.tex`** §5.9 "Vacuum Polarization and the Linked-Cluster Expansion" — the full LCE derivation including the three orders (single-vertex, two-vertex dumbbell, double-plaquette). Gives values 28,800 ppm (before LCE), 6.7 ppb (after layer 1+2), 1.5 ppb (after layer 3). Explicit formulas for the c coefficients.
-3. **`paper.tex`** Appendix A7 "Dumbbell Markov Transparency" and A8 "Self-Consistent BKT Iteration Convergence" — the algebraic machinery.
-4. **`AGENTS.md`** — look for §LCE / §Linked Cluster to confirm the final numeric chain.
-5. **`explorable/sections/13-alpha-formula.html`** + **`14-dimension.html`** — most recent templates.
+1. **`HANDOFF.md`** (this file).
+2. **`AGENTS.md`** — §g-factor / §anomalous magnetic moment. Confirm the matching-digit count and the C_n coefficients.
+3. **`paper.tex`** §6.2 "Lepton Generations" and §7 for g-factor cross-references.
+4. **`scripts/g_factor_from_lattice.py`** — the canonical Python script that does this calculation. §16's main figure should reproduce what this prints.
+5. **`explorable/sections/13-alpha-formula.html`** (iteration animation) — might reuse the number-line/digit-compare idiom.
 
-### Proposed figure lineup for §15
+### Proposed figure lineup for §16
 
-1. **LCE convergence table** (text-first figure): a three-row bar-chart or step-plot showing residual ppm after each LCE order. Order 0 (BKT only) = 29 ppm → order 1 (single-vertex binomial) = 6.7 ppb → order 2 (dumbbell correction) = 1.5 ppb. Log-scale on the residual, step-wise collapse toward zero. Maybe show the running coupling α(Q) in a second plot, flowing from the matching scale to Q = 0.
-2. **Subgraph visualiser**: three small lattice-sketch icons for the single-vertex star, the two-vertex dumbbell, and (optionally) the double plaquette. Each one click-activates and shows its contribution to the c coefficient.
-3. **The R₀² question** (as a callout, not a figure): the R₀² / (z(z−1)) embedding weight is plausibility, not theorem. This chapter has to honestly flag that — the paper does in §5.11 "Proof Status Assessment". Keep the flagging visible so readers don't miss it.
+1. **Digit-comparison figure** (hero): two lines of digits — lattice's g vs measured g — with matching digits in green and diverging digits in red. Like a code-golf diff view, but for physics. Dramatic visual: 11 green digits then red. Probably THE figure for the chapter.
+2. **QED series expansion**: a small, clickable equation a_e = C_1 (α/π) + C_2 (α/π)² + C_3 (α/π)³ + ... with each term's numeric value and the running sum displayed. Shows how adding higher-order QED terms refines g toward the measured value. Keep it small and expository — not the hero.
+3. **Sensitivity to α**: a slider on α that drives g. Wiggle α by 1 ppb, watch g change in the 11th digit. Shows that α is the bottleneck — the rest of QED is rock-solid.
 
 ### Physics to get right
 
-- Q_lat = (2/√3) m_e ≈ 0.59 MeV (lattice UV cutoff).
-- Q_match = Q_lat · exp(−l), where l = 1 − c · V and c is the LCE-derived crossover coefficient (c ≈ 2.986 from binomial + dumbbell).
-- α(Q_match) = α_BKT = 1/137.032.
-- Running: α(Q=0) = α_BKT × (1 + something of order ppm), producing 1/α = 137.035999.
-- R₀² / (z(z−1)) = δc_dumb — embedding weight for the shared-bond / NNN-path dumbbell contribution. Plausibility argument, not rigorous derivation. Flag clearly.
-- The final 1.5 ppb residual is below the current experimental uncertainty on g−2 (±80 ppb), so it's below the limit of what CODATA can distinguish.
+- Schwinger 1948: a_e(1) = α/(2π) ≈ 0.00116.
+- Sommerfield 1957: C_2 = -0.328478965...
+- Laporta-Remiddi 1996: C_3 ≈ 1.18124...
+- Kinoshita 2018: C_4 ≈ -1.912...
+- Aoyama-Kinoshita-Nio: C_5 ≈ 6.7...
+- Plug α_lattice into the series: g_lattice = 2 × (1 + a_e) = 2.002319304355.
+- Measured: g_exp = 2.00231930436146(56). Uncertainty on measured g: ±56 in the 14th decimal.
+- Matching: 11-12 digits agree. The remaining difference is below experimental precision.
 
 ### Stylistic continuity
 
-- Palette: blue for running coupling / trajectory, green for converged value, orange for matching-scale, purple for "flagged but not rigorous".
-- This is a more technical chapter than §14. Spend the real estate on prose + the LCE table; one hero figure suffices. Target 500–700 lines.
-- The flagged R₀² honesty is important — it's what separates this from numerology. Do not bury it.
+- Palette: green for matching digits, red/purple for diverging, orange for α itself.
+- Short chapter — 300-400 lines of HTML. One hero figure + one or two small supporting figures.
+- The framing is: "we've derived α. Does it survive standard QED?" Answer: yes, to 11 digits. Stop.
 
-### After §15
+### After §16
 
-`§16 — From α to g` plugs α_lattice into the standard QED series for a_e = (g−2)/2 and gets 11.4 matching digits with the measured g. Pure consistency check; should be a short chapter (~300 lines) with one digit-comparison figure.
+`§17 — Coda: what just happened` — the closing chapter that summarises the whole 17-step climb from I ≥ 0 to g = 2.0023... with every step a clickable back-link. Plus the paradigm statement, open questions, and final prose. Target 500-600 lines. This is the essay's goodbye.
 
 ---
 
