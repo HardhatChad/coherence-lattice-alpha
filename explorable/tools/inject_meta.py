@@ -53,13 +53,13 @@ ANALYTICS_SNIPPET = _posthog_snippet(POSTHOG_KEY, POSTHOG_HOST)
 # Per-page metadata
 # ---------------------------------------------------------------------------
 DEFAULT_DESCRIPTION = (
-    "The fine structure constant derived from first principles on the diamond lattice. "
-    "An interactive essay with zero free parameters."
+    "What if intelligence is what the universe does at every scale? "
+    "An interactive essay built on one inequality, one lattice, and zero free parameters."
 )
 
 PAGES = {
     "index.html": {
-        "title": "The Living Lattice — α from first principles",
+        "title": "The Living Lattice",
         "desc":  DEFAULT_DESCRIPTION,
         "path":  "/",
     },
@@ -185,7 +185,7 @@ def build_block(page_rel: str, meta: dict) -> str:
         f'<meta property="og:image" content="{og_image}">',
         '<meta property="og:image:width" content="1200">',
         '<meta property="og:image:height" content="630">',
-        '<meta property="og:image:alt" content="The Living Lattice — α from first principles">',
+        '<meta property="og:image:alt" content="The Living Lattice — one inequality, one lattice, zero free parameters">',
         # Twitter Card
         '<meta name="twitter:card" content="summary_large_image">',
         f'<meta name="twitter:title" content="{title}">',
