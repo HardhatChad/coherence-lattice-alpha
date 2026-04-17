@@ -1,11 +1,11 @@
 # Handoff — Coherence Lattice Alpha Project
 
-**Last context save**: 2026-04-15 (evening — mid-§8)
-**State at handoff**: Paper is preprint-ready and pushed to GitHub. Explorable now **7 / 16** sections complete, with §8 partially done (Figures 1 + 2 shipped, Figure 3 deferred to next session). The outline has been renumbered: a new §9 "The electron" was inserted between Diamond (§8) and BKT wall (former §9, now §10), shifting all subsequent sections by 1. Total section count is now 16.
+**Last context save**: 2026-04-16 (evening — end of §9/§10 build + split)
+**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **10 / 17** sections complete. §9 grew so large it was split into **§9 (electron identity & topology)** and **§10 (how the lattice makes it a fermion)**. All prior "TODO" sections shifted by one: former §10 (BKT wall) is now §11, and total section count is 17.
 
-**Immediate next task**: build §8 Figure 3 — a 3D vortex line on the diamond lattice — using the already-built `explorable/js/lattice3d.js` module. See the detailed pickup plan in **§ Next session: §8 Figure 3 plan** at the bottom of this file.
+**Immediate next task**: build §11 "The BKT wall" — the chapter where α lives. See **§ Next session** at the bottom.
 
-This is the document a fresh session should read first, in combination with the files listed in **§ Must-read files on pickup** below.
+This file is intended to be read first by a fresh session along with the files in **§ Must-read files on pickup**.
 
 ---
 
@@ -32,8 +32,6 @@ papers/publication/coherence_lattice_alpha/   ← SOURCE OF TRUTH. Edit here.
 papers/standalone/coherence_lattice_alpha/    ← Git repo. Pushed to GitHub. Sync from publication.
 ```
 
-The standalone copy is the git repo synced to GitHub. The publication copy is the "upstream" source of truth — edits happen there, then sync to standalone before committing.
-
 **GitHub remote**: `git@github.com:project-89/coherence-lattice-alpha.git`
 **Latest branch**: `main`
 
@@ -49,15 +47,17 @@ The standalone copy is the git repo synced to GitHub. The publication copy is th
 ├── README.md                 # repo landing page (paradigm-first framing)
 ├── LICENSE                   # CC BY-NC 4.0 (paper) + AGPL-3.0 (code)
 ├── Makefile                  # `make` compiles the paper
-├── scripts/                  # 27 Python verification scripts
+├── scripts/                  # Python verification scripts + test_clr_vortex_headless.mjs (NEW)
 ├── figures/                  # 6 paper figures (PNG)
 ├── data/                     # JSON precomputed results
-└── explorable/               # interactive essay (15 sections planned)
+└── explorable/               # interactive essay (17 sections planned)
     ├── OUTLINE.md            # section-by-section plan & status
     ├── index.html            # landing page with TOC
     ├── css/style.css         # shared styling
     ├── js/common.js          # shared utilities
-    └── sections/             # 01–15, six done so far
+    ├── js/fiedler.js         # Lanczos Fiedler eigensolver
+    ├── js/lattice3d.js       # canvas 3D renderer
+    └── sections/             # 01–17, ten done
 ```
 
 ---
@@ -66,117 +66,153 @@ The standalone copy is the git repo synced to GitHub. The publication copy is th
 
 When starting a new session, read these in order:
 
-1. **`AGENTS.md`** — paradigm, derivation chain, proven identities, first principles, all scripts with runtime, conventions, and key numbers. This is the physics spine. ✋ **This file has been manually edited outside of our sessions — treat it as authoritative.**
+1. **`AGENTS.md`** — paradigm, derivation chain, proven identities, first principles, scripts with runtime, conventions, key numbers. ✋ **Authoritative** — may have been manually edited outside sessions.
 
 2. **`HANDOFF.md`** (this file) — project state, what's done, what's next, gotchas.
 
-3. **`explorable/OUTLINE.md`** — 15-section plan for the explorable. Shows status (✅ done / TODO) and has detailed plans for remaining sections.
+3. **`explorable/OUTLINE.md`** — 17-section plan with status. §9–§10 were split this cycle; §11–§17 are all future.
 
-4. **`paper.tex`** (at least skim the abstract + Section 1 + the boxed `I ≥ 0` theorem in §1.2 + the Open Derivation paragraph in §5-9) — for context on what's in the paper.
+4. **`paper.tex`** (at least skim abstract + Section 1 + the `I ≥ 0` theorem in §1.2 + Open Derivation in §5-9).
 
-5. **`explorable/js/common.js`** — the shared JS module. Essential patterns: `setupHiDPICanvas`, `wireEquation`, `runWhenVisible`, `coherenceMetrics`, `drawMetricsStrip`, `R0` (Bessel ratio). Read this before writing any new section.
+5. **`explorable/js/common.js`** — shared JS utilities: `setupHiDPICanvas`, `wireEquation`, `runWhenVisible`, `R0`, `coherenceMetrics`, `drawMetricsStrip`.
 
-6. **`explorable/sections/06-plm-npd.html`** — the most recent and feature-complete section. Use as template for future sections. Shows the guided-tour pattern, clickable equation blocks, drive-pattern × local-coherence coloring, bonds toggle.
+6. **`explorable/js/lattice3d.js`** — 3D renderer with atoms+bonds, diamond lattice generator, camera controls, `orientCameraAlongAxis`, mesh utilities.
 
-7. **`explorable/sections/01-prelude.html`** — simplest section, shows the basic canvas + multi-figure structure.
+7. **`explorable/js/fiedler.js`** — Lanczos-based Fiedler eigensolver (used in §7 Figure 4; was intended for §10's Shannon+Fiedler but that figure ultimately became a scripted animation — see §10 notes).
 
-8. **`references.bib`** — bibliography. Notable entry: `Sharpe2026Coherence` is the unpublished companion paper on the broader Coherence Theorem (`I ≥ 0`). Labeled "In preparation" — don't imply it exists publicly.
+8. **`explorable/sections/10-fermion.html`** — the most recent complete section. Three figures using three different idioms: k-space 3D surface plot (bands), bespoke 2D interactive with panels (spin walker), scripted side-by-side animation (CLR). Good template for future 3-figure sections.
 
-### Context-wide reference docs
+9. **`explorable/sections/09-electron.html`** — template for multi-figure "hero + focused" layouts. Experiments strip (4 inline SVGs), photon/electron with B&W toggle, hero figure with mode switch, current figure with directional colour, chirality figure, assembly SVG, comparison table.
 
-- **`/Users/parzival/workspace/oneirocom/project89/wayfaring/CLAUDE.md`** — wayfaring/Project 89 codebase overview (high-level context)
-- **`/Users/parzival/workspace/oneirocom/project89/wayfaring/06_intelligence/coherence_lattice/CLAUDE.md`** — coherence_lattice project entry point (points to AGENT.md, research registry protocol)
-- **`papers/core/main.tex`** — the companion Coherence Theorem paper (unpublished, provides the broader substrate-agnostic framework from which the alpha derivation is one application)
+10. **`references.bib`** — bibliography. `Sharpe2026Coherence` is the unpublished companion paper on `I ≥ 0` — marked "In preparation", don't imply it's publicly available.
 
 ---
 
 ## § What's been completed
 
-### Paper (preprint-ready)
+### Paper (preprint-ready, GitHub live)
 
-- **Framing refactor**: Main boxed result is `1/α_BKT = 137.032` at 29 ppm with zero free parameters (rigorous). LCE correction to 137.035999 at 1.5 ppb presented as plausibility argument. Convergence pattern + candidate enumeration given as evidence; the specific R₀² embedding weight is explicitly flagged as an open derivation.
-- **`I ≥ 0` elevation**: Theorem 1.1 (Coherence Ascent) now defines `I(t) := dC/dt` and states `I(t) ≥ 0` boxed. Remark 1 cites the forthcoming companion paper while noting the derivation is self-contained.
-- **Casimir mass spectrum removed**: Section 6.2 replaced with brief "lepton generations via hexagonal DOFs are covered in a follow-up paper" note.
-- **Acknowledgments**: GPD (Get Physics Done) framework credited.
-- **Licenses**: CC BY-NC 4.0 for paper/figures, AGPL-3.0 for scripts.
-- **GitHub repo**: live at https://github.com/project-89/coherence-lattice-alpha. All changes committed and pushed.
+Unchanged since last handoff:
+- `1/α_BKT = 137.032` (29 ppm, zero free parameters, rigorous)
+- LCE correction to `137.035999` (1.5 ppb, plausibility argument with explicit open-derivation flag)
+- `I ≥ 0` theorem boxed as Theorem 1.1 with Remark citing the forthcoming companion paper
+- CC BY-NC 4.0 for paper, AGPL-3.0 for scripts
 
-### Explorable explanation (7 / 16 sections done, §8 partial)
+### Explorable — 10 / 17 sections done
 
-See `explorable/OUTLINE.md` for the full plan. Completed:
-
-| # | Title | Key interactives |
-|---|-------|------------------|
-| 01 | Prelude | One osc + waveform, two uncoupled, two coupled (K slider + frequency gap), single bond with CLR (K_eq ≈ 2.1) |
-| 02 | Oscillators on a graph | Unit-circle math (draggable phases), Kuramoto equation (clickable symbols), firefly ring, firefly grid |
-| 03 | Coherence capital | Three-regime comparison, main interactive with grid + C-contour phase portrait |
-| 04 | The CLR | Derivation, clickable CLR equation, potential V(K), live bond with bistability, death-threshold bifurcation diagram, **Coherence Theorem climax with `I ≥ 0` boxed** |
-| 05 | How a binary field emerges | Three bonds → small ring → full grid with K-histogram + I(t) + C(t) + phases/bonds/both toggle |
-| 06 | PLMs and memory | PLM detection (connected components), guided 5-step memory tour, patterns playground with drive × local-coherence coloring, coherence-capital tracking, SVG NPD hierarchy |
-| 07 | Spontaneous vortices | Two-circles winding; seeded 2D vortex with draggable loop; 20×20 nucleation + death; 32×32 Shannon-vs-Fiedler with **real Lanczos eigensolver** (`js/fiedler.js` + 17 tests). 2D annihilation → §8 segue. |
-| 08 | Why the diamond lattice *(Figures 1+2 done, Figure 3 deferred)* | Filter checklist with **3D rotatable view of all 7 candidate lattices** (SC/BCC/FCC/HCP/diamond/honeycomb/square); diamond deep-dive with A-only, B-only, one-tetrahedron, and three (111)-honeycomb-layer modes, view shortcuts + auto-rotate. |
-
-Section 6's memory tour, Section 7's Shannon-vs-Fiedler contrast, and Section 8's lattice comparison are the three pedagogical highlights so far.
-
-### New JS modules shipped this session
-
-- **`explorable/js/fiedler.js`** — Lanczos eigensolver with full reorthogonalization + null-space deflation + Jacobi eigendecomposition on the small tridiagonal. Validated by 17 checks in `fiedler.test.mjs` (path graph closed-form, 2D grid exact, two-cluster, cut-bottleneck, convergence vs m). Used by §7 Figure 4.
-- **`explorable/js/lattice3d.js`** — canvas 3D renderer: camera orbit via drag, shift+drag pan, wheel zoom, painter's algorithm depth sort, per-atom fog + outline thickness based on camera-space depth. Ships with generators for seven lattices (SC/BCC/FCC/HCP/diamond/honeycomb/square), auto-normalised to NN = 1, centroid-recentred to origin, with a convenience `orientCameraAlongAxis([1,1,1])` helper. Used by §8 Figures 1 and 2.
-
----
-
-## § What's next (sections 08 Fig 3 through 16)
-
-**Immediately next (deferred to a fresh session because of context budget):**
-
-- **08 Figure 3 — 3D vortex line on diamond.** Full spec below in § Next session.
-
-**Then:**
-
-- **09 — The electron** *(new section inserted this cycle)*. Dirac cone emergence at nodal k-points, electron-assembly SVG tying vortex + diamond + frame (deferred) → charge + Dirac equation + spin-½, clickable Dirac equation with Clifford anticommutator.
-- **10 — The BKT wall**: vortex marginality theorem, CLR urge + topology ceiling meeting at K_BKT.
-- **11 — Living vs static**: 143 → 137, PLM Freezing Lemma.
-- **12 — The α formula, piece by piece**: `α = R₀(2/π)⁴ × (π/4)^(1/√e + α/2π)`, clickable-symbol formula, sensitivity sliders.
-- **13 — Why three dimensions**: d-dial.
-- **14 — Closing the gap with linked clusters**: 28,800 → 6.7 → 1.5 ppb convergence, honest open-problem flag.
-- **15 — From α to g**: QED series, 11.4 matching digits.
-- **16 — Coda**: recap, companion papers, "I ≥ 0 — the universe climbing."
+| # | Title | Status |
+|---|-------|--------|
+| 01 | Prelude | ✅ |
+| 02 | Oscillators on a graph | ✅ |
+| 03 | Coherence capital | ✅ |
+| 04 | The Coherence Learning Rule | ✅ |
+| 05 | How a binary field emerges | ✅ |
+| 06 | Phase-locked modes: geometry and memory | ✅ |
+| 07 | Spontaneous vortices | ✅ |
+| 08 | Why the diamond lattice | ✅ |
+| **09** | **The electron (identity & topology)** | **✅ NEW** |
+| **10** | **How the lattice makes it a fermion** | **✅ NEW** |
+| 11 | The BKT wall | TODO |
+| 12 | Living versus static | TODO |
+| 13 | The α formula, piece by piece | TODO |
+| 14 | Why three dimensions | TODO |
+| 15 | Closing the gap with linked clusters | TODO |
+| 16 | From α to g | TODO |
+| 17 | Coda: what just happened | TODO |
 
 ---
 
-## § Gotchas / lessons learned
+## § What's in §9 and §10 (since last handoff)
 
-These bit us during construction — memorize them.
+### §9 — The electron (identity & topology)
 
-### HTML/JS
+**Narrative arc** — written for someone who has never met an electron:
+1. Lead + "a century of experiments tells us" with **4 inline SVG experiment cards**: Millikan oil drops (charge quantisation), Stern-Gerlach (spin-½ discovered), Dirac 1928 → positron, Schwinger g/2 (13-digit agreement)
+2. "Two questions nobody has answered" (why integer charge? where does Dirac come from?)
+3. WvdM (1997): light and matter are the same thing up to a topological twist
+4. **Figure 1: Photon vs Electron** — two side-by-side 3D diamond lattices with shared camera. Plane-wave phase on left (n=0), atan2 vortex phase on right (n=1). **B&W toggle** via `sin(θ)→brightness` so wave nature is legible without colour.
+5. WvdM-is-incomplete bridge → our lattice supplies the machinery
+6. **Figure 2 (hero): the living electron** — 3D diamond with rainbow atoms, vortex axis marker (burgundy line through the core), bond colouring by `cos(Δθ)` (green alive / **purple** dead — not red, because red mixes into the rainbow; purple stands out). Top-down default. Mode toggle: "Phase + bonds" / "Dead/alive only" (latter greys the atoms so bonds dominate).
+7. Charge equation (`q = ne`, winding integral, Z) with wireEquation block
+8. Current equation (`j = K sin(Δθ)`) with wireEquation block
+9. **Figure 3: Current** — dedicated 3D lattice with direction-coloured bonds (orange = clockwise, blue = counter-clockwise flow), faint non-participating bonds, top-down default
+10. **Figure 4: Chirality** — dedicated 3D lattice, mode toggle (A/B/both). Solid grey (not transparent) for non-selected sublattice
+11. Assembly SVG — clickable 10-property summary bridging topology to quantum mechanics
+12. WvdM-vs-lattice **comparison table** with double-line separator: 5 WvdM kernel rows above, 8 lattice-derived rows below (most say "not derived" in the WvdM column)
+13. Segue to §10
 
-- **Bare `>` and `<` in prose break module script loading.** Always use `&gt;` and `&lt;` in prose text like "cos(Δθ) &gt; 4/r" or "K &gt; 0" — otherwise the HTML parser confuses itself, the `<script type="module">` tag isn't reached, and you see silent non-loading with no console errors. Took ~two hours to diagnose the first time.
-- **Use `runWhenVisible(canvas, fn)` for every animation loop** — it does the initial sync draw + IntersectionObserver-gated RAF. `visible = true` default + initial draw inside a try/catch. Robust against observer timing.
-- **Every IIFE in a section shares one `<script type="module">`.** If one throws during top-level setup (e.g., references a missing DOM id), all later IIFEs never execute. Always add clean error handling.
-- **Consistent breadcrumb pattern** — use `<nav class="breadcrumb"><a>← contents</a><span class="sep">·</span><span class="section-num">section NN / 15</span></nav>`.
+### §10 — How the lattice makes it a fermion
 
-### Pedagogy
+**Narrative arc:**
+1. Brief recap (identity done; now behaviour)
+2. **Dirac spectrum** — 5-step chain of reasoning: wavevector → interference of 4 NN phase factors → structure factor f(k) → zeros of f(k) = Dirac points → linear V near the zeros. Bloch Hamiltonian wireEquation block.
+3. **Aside warning**: "the next figure is not a picture of the lattice — it's in momentum space, a graph of how waves behave."
+4. **Figure 1: Dirac bands as 3D surfaces** — plots E = ±|f(kx,ky,0)| as two meshes in the lattice3d renderer. Blue upper band, burgundy lower band. They meet along the nodal lines kx=1 and ky=1 (marked orange). Axis labels `kx`, `ky`, `+E`, `−E`. View presets: Oblique, Side, Top. Prominent on-canvas reminder: "← this is MOMENTUM space (kx, ky, E) — how waves behave, NOT where atoms sit".
+5. Connection-to-vortex prose: "Vortex alone gives charge. Lattice alone gives Dirac spectrum. Together: electron."
+6. **Dirac equation** prose + wireEquation block (`iℏγ^μ ∂_μ ψ = m ψ` with 7 clickable symbols)
+7. **Spin section** with **Figure 2: Spin walker** — loop around a vortex marker with draggable walker + two arrow panels (vector SO(3) rotates at walker rate, spinor SU(2) rotates at HALF rate). Play button auto-animates through two full loops so the 720° point lands viscerally.
+8. **"How the CLR keeps the electron alive"** with **Figure 3: Shannon vs Shannon+Fiedler scripted animation** — see design story below.
+9. **The punchline aside**: "α is not a property of the electron. It is a property of the vacuum."
+10. Segue to §11 (BKT wall)
 
-- **The "click" of learning is visible in the K-field (bonds), not the cell colors alone.** Coloring cells by phase or by drive is ambiguous. The cleanest approach is **drive-signature × local-coherence** — cells fade to neutral cream when unlocked, bloom into pattern colors when locked.
-- **Guided tours beat free controls** when the goal is "make a specific point land." Section 6's memory tour is a 5-step Next/Prev walk that beats free knobs.
-- **Browser extensions (especially MetaMask's SES lockdown) can break ES module loading.** If a user reports nothing rendering, first ask them to test in incognito.
-- **Always explain what each axis is** in plots (Section 4 potential V(K) needed a prose block explicitly naming X = K, Y = cost).
+### Key design decision: Figure 3 of §10 is a scripted animation, not live physics
 
-### Physics
+We tried to run the co-evolutionary CLR (Kuramoto phases + Shannon + Fiedler) on a 3D diamond lattice in browser. A **standalone Node test** (`scripts/test_clr_vortex_headless.mjs`) revealed the problem: with a static atan2 phase seed on nCells ∈ {3,4,5}, only 3–5 bonds have cos(Δθ) < 0. Shannon kills them; Fiedler has no bottleneck threat to respond to; the two panels look identical. The paper's 68% core-dead result requires the full co-evolutionary protocol (K_init=0.01, dt_K=0.01, 30,000+ steps), which is impractical in browser.
 
-- **K is dynamical.** Every computation using fixed K is a quenched approximation — always label it. This is in AGENTS.md and `.gpd/AGENT_BOOTSTRAP.md`.
-- **`r = 5.9` is determined self-consistently** by `⟨K⟩_bulk = 16/π²` on the chiral vortex phase profile. In standalone demos where we expose it as a slider, say so in prose.
-- **Bistability** — at moderate frequency gaps, whether a bond lives or dies depends on initial K (cold vs warm start). This IS the physics; it models memory.
-- **Single-bond CLR overshoots K_bulk**. A single bond in isolation goes to K_eq ≈ 2.1, not 16/π² ≈ 1.62. The lower value emerges only when vortex topology is present and pushes back. This is the key insight for Chapter 9.
+**Solution**: a physics-informed scripted animation. Bonds classified by transverse radial distance r from the vortex axis:
+- Core (r < 0.9 NN): dies in both panels (~4% of bonds)
+- Ring (0.9 < r < 2.2): dies in Shannon panel, stays alive in Fiedler panel (~16%)
+- Bulk (r > 2.2): stays alive in both (~80%)
 
-### Open derivation (critical — don't paper over)
+K trajectories are smooth exponentials: 8-second ramp + 6-second hold, auto-looping. **"Damage only"** toggle fades healthy bulk and leaves only dying bonds visible. **The figure is clearly labelled** as a replay of the paper's §4.1 result, with a pointer to `scripts/da1_spontaneous_vortex.py` for the rigorous dynamics.
 
-The LCE embedding weight **R₀²/(z(z−1))** is physically motivated but not rigorously derived. The paper flags this in §5-9 ("Open derivation" paragraph) and in the Open Questions list. It's defended with three pieces of evidence:
-1. Progressive convergence across LCE orders (28,800 → 6.7 → 1.5 ppb with oscillation around CODATA)
-2. Magnitude consistent with geometric suppression R₀²/(z(z−1)) ≈ 0.008 per layer
-3. Candidate enumeration in `scripts/two_vertex_lce.py` rules out a dozen plausible alternatives
+### Other key decisions from this cycle
 
-Do not quietly strengthen the claim. Until someone writes a rigorous LCE derivation producing R₀² as the unique shared-bond coherence factor, it stays flagged.
+- **Bond colour palette**: green = alive, **purple** (#a855f7) = dead. Red was tried first and got lost in the rainbow (red atoms near phase 0 absorbed red bonds).
+- **Steep sigmoid** on health→colour mapping: middle values snap clearly one way or the other, no muddy brown.
+- **Global zoom constant** `ZOOM_MULT = 3.4` applied consistently across figures.
+- **Axis labels on the Dirac cone** via invisible atoms with `label` fields — `renderScene()` draws them. Clean way to label 3D plots without modifying the renderer.
+
+---
+
+## § New artefacts this cycle
+
+### `scripts/test_clr_vortex_headless.mjs`
+
+Standalone Node script that replicates the browser CLR dynamics headless and reports:
+- Distribution of cos(Δθ) across bonds
+- K evolution at various step counts
+- Final bond status correlated with cos(Δθ)
+- Radial distribution of dead bonds
+
+Usage: `node scripts/test_clr_vortex_headless.mjs`
+
+This is the script that revealed why the naive browser sim couldn't show Fiedler rescuing bonds. Keep it for any future physics-sim iteration.
+
+---
+
+## § Gotchas / lessons (new this cycle)
+
+- **Red bonds get lost in a rainbow-atom scene.** Use purple (or any colour not adjacent to rainbow endpoints) for "dead" signalling.
+- **renderScene overrides the alpha of bond colours** with a depth-based value. Don't rely on alpha to convey health — use R/G/B and width instead.
+- **Scripted animations clearly labelled as such are an honest pedagogical tool.** Don't claim live simulation when you're replaying pre-computed/scripted behaviour. Label it as "replaying the qualitative outcome of the paper's simulation" with a pointer.
+- **If a figure is "not doing much," the reader is right.** Don't try to make dynamics ramp fast enough to be convincing — if the effect is subtle (e.g., 3 dead bonds in a 333-bond lattice), the visualisation needs to either amplify that visually (wider scripted dead zone) or cut the figure.
+- **Standalone Node tests catch bugs invisibly faster than browser iteration.** The `test_clr_vortex_headless.mjs` run told us in 5 seconds what the browser would have taken an hour of prodding to reveal.
+- **Top-down default views** for 3D figures with cylindrical vortex symmetry — users want to see the pinwheel face-on.
+
+---
+
+## § Breadcrumb inconsistency (housekeeping)
+
+Sections 1–7 have breadcrumbs saying `section NN / 15` or `section NN / 16` — inconsistent and out-of-date now that total is 17. §8 says `/16`. §9 updated to `/17`. §10 (new) says `/17`. **Task for a future cleanup pass**: bump all section breadcrumbs to `/17` via a simple edit. Not blocking anything.
+
+---
+
+## § Outstanding / unresolved (from prior handoff, still applicable)
+
+- The `R₀²` embedding weight remains a plausibility argument, not a theorem (flagged everywhere appropriate).
+- Frequency-learning demo removed from §6 (didn't cleanly demonstrate the intended concept). Revisit if useful.
+- Mobile scroll performance generally OK thanks to `runWhenVisible`, but §9/§10 have many figures and should be eyeballed on small screens.
 
 ---
 
@@ -186,7 +222,7 @@ Do not quietly strengthen the claim. Until someone writes a rigorous LCE derivat
 
 ```
 cd papers/publication/coherence_lattice_alpha
-make    # or: pdflatex paper && bibtex paper && pdflatex paper && pdflatex paper
+make
 ```
 
 ### Start the explorable dev server
@@ -196,21 +232,22 @@ cd papers/standalone/coherence_lattice_alpha/explorable
 python3 -m http.server 8089 --bind 0.0.0.0
 ```
 
-Then desktop: http://localhost:8089/  · LAN: http://192.168.1.81:8089/
+Then http://localhost:8089/ (or your LAN IP).
 
 ### Sync changes from publication → standalone
+
+Only sync what you've actually edited:
 
 ```
 SRC=papers/publication/coherence_lattice_alpha
 DST=papers/standalone/coherence_lattice_alpha
-cp "$SRC/paper.tex" "$DST/"
+cp "$SRC/paper.tex" "$DST/"        # if paper changed
 cp "$SRC/paper.pdf" "$DST/"
 cp "$SRC/paper.bbl" "$DST/"
-cp "$SRC/references.bib" "$DST/"
-cp -r "$SRC/explorable/" "$DST/"
+cp -r "$SRC/explorable/." "$DST/explorable/"
+cp "$SRC/HANDOFF.md" "$DST/"
+cp "$SRC/scripts/test_clr_vortex_headless.mjs" "$DST/scripts/"   # if new scripts
 ```
-
-(Sync only the files actually edited — don't nuke directory contents unnecessarily.)
 
 ### Commit and push
 
@@ -221,153 +258,50 @@ git commit -m "..."
 git push origin main
 ```
 
-### Verify scripts still work
+### Verify physics scripts still work
 
 ```
 cd papers/standalone/coherence_lattice_alpha
 python3 scripts/alpha_137_verification.py      # → 1/α = 137.032051
 python3 scripts/g_factor_from_lattice.py       # → g = 2.002319371
 python3 scripts/living_vs_static_alpha.py      # → static 143, living 137
+node        scripts/test_clr_vortex_headless.mjs
 ```
 
-(Python environment: pyenv 3.11 under `.venv/` in the `coherence_lattice/` root — or any venv with numpy+scipy+matplotlib.)
+(Python env: `.venv/` in `coherence_lattice/` root. Node 18+ for the `.mjs` test.)
 
 ---
 
-## § Outstanding / unresolved
+## § Next session: §11 "The BKT wall"
 
-- **Frequency-learning demo removed from Section 6.** The corner/perimeter-driver + uniform interior physics didn't cleanly demonstrate the user's token-coupling use case. Revisit if a meaningful temporal-drive demo is needed — probably requires spatial drive-pattern + temporal-frequency together.
-- **Inline SVG in section 06 NPD diagram** uses no xmlns attribute; works in Chrome/Safari/Firefox but verify on Edge before final publication.
-- **Mobile scroll performance** is now acceptable thanks to IntersectionObserver, but section 6 (four figures) may still be heavy on older phones.
+This is the chapter where α lives. Everything in §9 and §10 built toward this: the electron is a vortex whose topology forces K ≤ K_BKT, and the CLR drives K up against that wall. The equilibrium is exactly at K_BKT = 2/π, and that's where the fine structure constant is computed.
 
----
+### Must-read files for the next session
 
-## § Quick-start template for a new section
+1. **`HANDOFF.md`** (this file) — current state.
+2. **`AGENTS.md`** — physics spine. §The Derivation Chain is especially relevant: steps 2–3 (CLR → binary K-field, CLR + vortex → K_eff = K_BKT) and step 4 (K_BKT = 2/π).
+3. **`paper.tex`** §5.5 "Vortex Marginality" (Theorem 5.5) — the key theorem for §11. Also §5.8 for the BKT correlator derivation and how the power-law exponent is evaluated at the fixed point (living vs static, deferred to §12).
+4. **`explorable/sections/10-fermion.html`** — layout template for side-by-side panels, view-mode toggles, wireEquation patterns.
 
-```
-explorable/sections/XX-slug.html  (new file)
+### Proposed figure lineup for §11
 
-Structure:
-1. <!DOCTYPE html> boilerplate, link to ../css/style.css
-2. <nav class="breadcrumb"> with section NN / 15
-3. <h1>Title<span class="subtitle">subtitle</span></h1>
-4. <p class="lead">Opening paragraph.</p>
-5. Prose + <figure id="fig-X"> blocks with <canvas> + <div class="controls">
-6. Interactive equation blocks where applicable:
-   <div class="equation-block" id="eq-X">
-     <div class="eq-display"> ...clickable <span class="eq-symbol"> spans... </div>
-     <p class="eq-prompt">Click any symbol...</p>
-     <div class="eq-detail"></div>
-     <div class="eq-howitworks"><span class="label">In words</span>...</div>
-   </div>
-7. <nav class="nav-links"> prev/next at bottom
-8. <script type="module">
-     import { setupHiDPICanvas, wireEquation, R0, runWhenVisible, coherenceMetrics, drawMetricsStrip } from '../js/common.js';
-     wireEquation('eq-X', { symbolA: {name, pronounce, description}, ... });
-     (() => { /* IIFE for Figure X */ ... runWhenVisible(canvas, () => { step(); draw(); }); })();
-   </script>
-```
+1. **Vortex free energy** (2D plot): F(R) vs R for three K values — K > K_BKT (confined, F → +∞), K = K_BKT (marginal, F = 0), K < K_BKT (unbound, F → −∞). K slider so the user sees the curve cross over as K passes 2/π.
+2. **K dial + vortex state indicator**: slider from K = 0.3 to K = 1.0, showing a single vortex that confines (green), goes marginal (orange, at K_BKT = 0.6366), or unbinds (purple) as K varies.
+3. **"The wall" hero figure**: CLR urge arrow pushing K upward; BKT wall at K_BKT as a vertical line; equilibrium dot sits exactly at the wall. Annotate with K_bulk = 16/π² as the derived consequence. Maybe show the paper's 3-regime table visually (subcritical, BKT window, supercritical).
 
-Key: **USE `&gt;` AND `&lt;` IN PROSE INSTEAD OF `>` AND `<`** if they appear outside tags.
+### Physics to get right
 
----
+- `K_BKT = 2/π = 0.6366...` is the per-bond critical coupling (not K_bulk).
+- `K_bulk = 16/π² = z·K_BKT²` where z=4 for diamond.
+- Vortex free energy: `F(R) = (πK − 2) ln(R/a)` (in natural units, with the thermal fluctuation contribution and bond-energy gain combining to this form at criticality).
+- The "urge" of the CLR comes from Shannon wanting K high; the "wall" comes from the vortex's topological constraint. Theorem 5.5 formalises this.
 
-## § Next session: §8 Figure 3 — 3D vortex line on diamond
+### Stylistic continuity
 
-This is what's deferred to a fresh context. The goal: demonstrate — visually and rigorously — that **in 3D, a vortex is a line, not a point**. You watched §7 conclude with point vortices annihilating on a 2D torus at step 40k; §8 Figures 1 and 2 built up why the lattice must be 3D diamond; now Figure 3 shows the vortex *on* that lattice and confirms the topology survives.
+- Palette: green alive, purple dead, orange = state/process, blue = band/sublattice.
+- Top-down default for any 3D figures, side view as secondary.
+- Keep it focused — §11 is about *where* the CLR places the system and *why* that location gives α. Don't drift back into Dirac/spin.
 
-### Must-read files (in order) for the next session
+### After §11
 
-1. **`HANDOFF.md` (this file)** — complete context (you're reading it).
-2. **`AGENTS.md`** — physics spine. Read §4 "The Phase Vortex" especially, since Figure 3 is the 3D analogue of §4.1 "Vortex Formation" and §4.2 "Chiral Downfold".
-3. **`paper.tex`**, specifically:
-   - §3.1 "Why Diamond: The Selection Theorem" (lines 280–332) — filters 1–5, enumeration table, already covered by Figures 1+2 but relevant context for the vortex-line claim (filter 5).
-   - §3.3 "Dirac Equation Emergence" (lines 385–431) — bipartite chiral Bloch Hamiltonian, nodal lines — relevant for §9 (electron) but useful context for the vortex's bound state.
-   - §4.1 "Vortex Formation" (lines 449–489) — paper's description of spontaneous vortex generation on diamond, the ~70% core-bond death statistic, the 3-regime r-window, CLR co-evolution protocol.
-4. **`explorable/js/lattice3d.js`** — the 3D renderer you'll use for Figure 3. Key exports to use:
-   - `diamondLattice({ nCells = 2, a = 1 })` → `{ atoms, bonds, bondLength }`
-   - `makeCamera`, `attachCameraControls`, `renderScene` — same as Figure 2
-   - `orientCameraAlongAxis(camera, axis)` — snaps camera to look down a given axis
-   - `centralTetrahedron(scene)` — useful if you want to isolate one atom's coordination for close-up views
-5. **`explorable/sections/08-diamond.html`** — Figures 1+2 live here. Figure 3 can either append to the same file as a new `<figure>` block (consistent with how §6 and §7 are organised) or be a new file; appending is simpler.
-6. **`explorable/sections/07-vortices.html`**, specifically Figure 4 — the 32×32 atan2-seeded vortex on a 2D torus. Figure 3 is essentially the *3D analogue* of the seeding logic there, just on diamond. Reuse the `atan2(y−y_c, x−x_c)` phase seed idea. Since our vortex on diamond will be a line along the z-axis, the seed is *independent of z*.
-7. **`scripts/da1_spontaneous_vortex.py`** (relevant Python reference, don't need to read in full, but worth knowing it exists) — the paper's canonical spontaneous-vortex-on-3D-diamond script. Uses Kuramoto + Shannon+Fiedler CLR co-evolution. For the Figure 3 demo we are *not* running CLR — we're showing the static vortex-line seed.
-
-### The physics to show
-
-**Target visualization:**
-
-- Use `diamondLattice({ nCells: 3, a: 1 })` (or 2, depending on atom count you want) — maybe ~100 atoms.
-- Colour each atom by a seeded vortex phase: `θ(x, y, z) = atan2(y − y_c, x − x_c)`. **Note**: the phase is independent of *z*. That's what makes this a vortex *line* (along the z-axis) rather than a point.
-- Use the same HSL phase-to-hue mapping we've used throughout (red = 0, green = π/2, cyan = π, magenta = −π/2).
-- Keep the bipartite A/B sublattice structure visible too — maybe as an atom outline colour or a subtle ring around each atom. The reader should see **both** the sublattice alternation *and* the phase colouring simultaneously — that's the setup for §9's chiral downfold (the vortex bound state localises on *one* sublattice).
-
-**What the reader should see on rotation:**
-
-1. **Looking down the z-axis (default or from a preset button):** a rainbow pinwheel — exactly Figure 2 of §7 — but now on the diamond sublattice colour instead of a flat grid. 4-fold or 3-fold symmetry visible.
-2. **Looking from the side:** the same pinwheel *repeats at every z-slice*, forming a **stack of rainbow disks** threaded by the vortex line.
-3. **Oblique view:** a visible line of phase singularity passing vertically through the crystal.
-
-### Proposed controls for Figure 3
-
-- **Camera shortcuts** (inherited from `attachCameraControls`): drag rotate, shift+drag pan, wheel zoom.
-- **Preset buttons:**
-  - `View down [001]` — camera along z-axis → see the pinwheel face-on (head-on view of the vortex line).
-  - `View from side` — camera along x-axis → see the vortex line as a literal line, with rainbow repeating in every z-slice.
-  - `Oblique view` (default) — see the 3D extent.
-- **Optional: "Let them oscillate"** toggle — advance all phases by a common ω·dt per frame. Same as in §7 Figure 1. The whole rainbow pattern rigidly rotates but the vortex line stays fixed. Demonstrates that the winding is preserved under common rotation.
-- **Optional: "Highlight core plaquettes"** — mark the 4 plaquettes immediately surrounding the vortex line (at each z-slice) with a burgundy halo. Those are the "core" bonds whose Shannon-vs-Fiedler fate we explored in §7 Figure 4. They form a *tube* of core bonds along the line.
-
-### Prose to add around Figure 3
-
-Before the figure, you already have (in `08-diamond.html`):
-
-> With the lattice picked out, the last thing to see is the object that lives on it. In Chapter 7 we watched a vortex sit at a single point on a 2D grid. In three dimensions, a vortex is no longer a point: it is a *line* threading through the crystal, with phases winding 2π around any circle transverse to it. …
-
-After the figure, write roughly:
-
-> Rotate the lattice and look at the vortex from every angle. Down the z-axis: a rainbow pinwheel, just like §7 Figure 2. From the side: that pinwheel repeats in every horizontal slice of the crystal, stacked into a tube. The vortex is a line, and every plane perpendicular to that line carries the same 2π winding. Annihilation — which took out our 2D vortex pair at step 40k — would require this whole line to collapse into its antipartner along *every* slice simultaneously. The free energy cost is now proportional to the line's length; long lines are effectively immortal on CLR timescales.
->
-> Notice also how the rainbow is painted on top of the diamond's bipartite A/B structure. The vortex doesn't care about sublattice — phases wind equally around A and B atoms — but **the bound state will.** In §9, we'll see that the quantum state localised *at* this vortex line has its amplitude concentrated on just one of the two sublattices. That is the chiral downfold; it's what turns a U(1) phase defect on a bipartite lattice into a spin-½ fermion. In other words, it is what makes this line an electron.
-
-### Scope for the session
-
-Minimum scope to call Figure 3 shipped:
-- atan2-seeded phase colouring on `diamondLattice(nCells=3)` using `lattice3d.js`
-- Drag/pan/zoom inherited
-- One preset to view from the side (see the line)
-- Prose above and below in place
-
-Stretch goals (do only if there's time):
-- Let-them-oscillate toggle
-- Core-plaquette highlight
-- Animated camera transition between preset views
-
-### After Figure 3, before starting §9
-
-- Tick `OUTLINE.md` §8 status to ✅ DONE.
-- Remove `coming soon` from §8 in `explorable/index.html`.
-- Commit as `Section 8 (Why the diamond lattice) complete` with a similar style to the §7 commit.
-- Push to GitHub.
-- Then start §9 (The electron) — see its OUTLINE stanza.
-
-### Referenced paper pieces for §9 (after Figure 3)
-
-Just so the §9 session doesn't have to rediscover these:
-
-- `paper.tex` §3.3 "Dirac Equation Emergence" — the chiral Bloch Hamiltonian H(k) = [[0, f(k)], [f*(k), 0]] and its linear spectrum at nodal points.
-- `paper.tex` §3.4 "The Two Sectors" — explicit split of phase sector (U(1), this paper) vs frame sector (SO(3), deferred).
-- `paper.tex` §4.2 "The Chiral Downfold" — bound state localises on one sublattice.
-- `paper.tex` §4.3 "Topological Protection: a_{1, frozen} = 0" — why α is a property of the *vacuum*, not the bound state.
-- `paper.tex` §4.5 "Confined-Photon Bridge" — Table 2, the one-line formula *Electron = Vortex(n=1) + frame(j=1/2)*.
-- `AGENTS.md` §Two Sectors and §Chiral downfold.
-- `scripts/d9_frame_gfactor.py`, `scripts/koide_d9_protocol.py` — frame-sector scripts (we don't use them in §9, but they exist for context).
-
-### Verifying §8 Figure 3 works
-
-No node test — this is a pure visual figure. Sanity checks in the browser:
-- 100–200 atoms, renders at 60 fps.
-- Rainbow pinwheel is visible from [001] view.
-- Side view shows stacked rainbow disks with a clear central line.
-- Drag / shift-drag / wheel all work as in Figures 1+2.
-- If you add the let-them-oscillate toggle, the winding-invariance is obvious — cells cycle hue but the pinwheel pattern doesn't unwind.
+`§12 — Living versus static` is the natural follow-up: the Debye-Waller power-law exponent is evaluated at the CLR attractor (giving `1/α = 137`) rather than integrated along the trajectory (which gives `1/α = 143`). That's one of the deepest claims of the paper and a clean visualisation opportunity.

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the lattice makes it a fermion — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.side-by-side {
+  display: flex; gap: 10px; align-items: stretch;
+}
+.side-by-side .panel {
+  flex: 1; min-width: 0; text-align: center;
+}
+.side-by-side .panel-label {
+  font: 600 14px "Charter", serif;
+  margin-top: 6px;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 10 / 17</span>
+</nav>
+
+<h1>How the lattice makes it a fermion<span class="subtitle">Dirac dispersion, spin-&frac12;, and the vacuum's response</span></h1>
+
+<p class="lead">In Chapter 9 the electron assembled itself from topology. A phase vortex on the diamond lattice carries quantised charge, produces a circulating current, and picks a sublattice. Those are its <em>topological</em> properties &mdash; its identity. But an electron is also a <em>quantum particle</em>: it obeys a specific equation of motion (the Dirac equation), has spin-&frac12;, and has a magnetic moment with a tiny anomaly that measures the fine structure constant &alpha;. This chapter shows how each of those properties &mdash; Dirac, spin, anomaly &mdash; emerges from the lattice too.</p>
+
+<h2>The Dirac spectrum: why the electron travels like light</h2>
+
+<p>Most waves slow down and spread out over time. Drop a stone in a pond; the ripples broaden and flatten. The equation governing this behaviour (the Schr&ouml;dinger equation) says energy is proportional to the <em>square</em> of momentum: <em>E</em> &prop; <em>k</em>&sup2;. Slower waves carry less energy, faster waves carry more, and wave packets disperse because different wavelengths travel at different speeds.</p>
+
+<p>Electrons are different. They obey the <strong>Dirac equation</strong>, where energy is proportional to momentum itself: <em>E</em> &prop; |<em>k</em>|. All wavelengths travel at the same speed &mdash; the speed of light. This is what makes the electron a <em>relativistic</em> particle, even though nobody put relativity into the lattice.</p>
+
+<p>The diamond lattice produces this spectrum automatically. Here is the chain of reasoning, slowed down so it can land:</p>
+
+<ol style="margin: 0.4em 0 1em 1.6em; line-height: 1.6;">
+  <li>A wave on the lattice is described by its <strong>wavelength</strong> and <strong>direction</strong>, together packaged as a wavevector <strong>k</strong>. The <em>set of all possible wavevectors</em> is called <em>k-space</em> &mdash; it is not a physical place, just a bookkeeping device for "which wave are we talking about."</li>
+  <li>For each <strong>k</strong>, the wave's behaviour on the lattice depends on the <em>interference</em> of four little phase factors &mdash; one per tetrahedral nearest-neighbour direction on diamond (the four &delta;<sub>&mu;</sub> vectors). Their sum is called the <strong>structure factor</strong>: <em>f</em>(<strong>k</strong>)&nbsp;=&nbsp;&Sigma;&nbsp;exp(i&nbsp;<strong>k</strong>&middot;<strong>&delta;</strong><sub>&mu;</sub>).</li>
+  <li>For most <strong>k</strong>, the four phase factors don't perfectly cancel &mdash; their sum has some size |<em>f</em>|. This size is the energy gap between the upper and lower bands at that <strong>k</strong>.</li>
+  <li>But at <em>special</em> wavevectors, the four phase factors conspire to sum exactly to zero &mdash; perfect destructive interference. At those points |<em>f</em>|&nbsp;=&nbsp;0, the gap closes, and the two bands touch.</li>
+  <li>Near those touching points, |<em>f</em>| grows <em>linearly</em> with distance from the touch &mdash; not quadratically. That linear growth IS the Dirac cone.</li>
+</ol>
+
+<p>So the Dirac cone is not an exotic object &mdash; it's just the dispersion relation of waves on a bipartite lattice, at the particular wavevectors where the four NN-bond phase factors cancel. Remove the bipartite structure (Filter 2 of Chapter 8) and you lose the off-diagonal form of the Hamiltonian &mdash; and the cones along with it.</p>
+
+<p>Because every bond connects an A-site to a B-site, the Bloch Hamiltonian &mdash; the matrix describing wave propagation &mdash; takes a special off-diagonal form:</p>
+
+<div class="equation-block" id="eq-bloch">
+  <div class="eq-display">
+    <span class="eq-symbol op" data-symbol="H">H(<strong>k</strong>)</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol struct" data-symbol="matrix">[ 0, f(<strong>k</strong>) ; f*(<strong>k</strong>), 0 ]</span>
+    &nbsp;&nbsp;&rArr;&nbsp;&nbsp;
+    <span class="eq-symbol state" data-symbol="E">E</span>
+    &nbsp;=&nbsp;
+    &plusmn;|<span class="eq-symbol param" data-symbol="f">f(<strong>k</strong>)</span>|
+  </div>
+  <p class="eq-prompt">Click any symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    The Hamiltonian is a 2&times;2 matrix &mdash; two rows for two sublattices. The zeros on the diagonal say: A and B sites have equal energy (they must, by symmetry). The off-diagonal entry <em>f</em>(<strong>k</strong>) is the <strong>structure factor</strong> &mdash; a sum of four phase factors, one per nearest-neighbour bond. The energy bands are &plusmn;|<em>f</em>|. At most wavelengths, |<em>f</em>| &gt; 0 and the bands are separated (a gap). But along certain special lines in momentum space, <em>f</em> = 0 exactly &mdash; the bands touch, and the touching is linear. That linear touching is the <strong>Dirac cone</strong>.
+  </div>
+</div>
+
+<p class="aside"><span class="label">A note before the figure</span>The next figure is <em>not</em> another picture of the diamond lattice. It lives in a completely different space. The lattice from Chapter 8 is in <strong>real space</strong> &mdash; atoms at positions (<em>x</em>, <em>y</em>, <em>z</em>). The figure below is in <strong>momentum space</strong>: each point (<em>k<sub>x</sub></em>, <em>k<sub>y</sub></em>) labels a particular <em>wave</em> that could propagate on the lattice, and the vertical axis <em>E</em> tells you the energy of that wave. Think of it as a graph &mdash; pick a wavelength and direction, and the height of the surface tells you the wave's energy. The lattice produces this graph; the graph is not the lattice.</p>
+
+<figure id="fig-bands">
+  <canvas id="canvas-bands" width="680" height="440"></canvas>
+  <div class="controls">
+    <button id="bands-view-iso" class="primary">Oblique</button>
+    <button id="bands-view-side">Side</button>
+    <button id="bands-view-top">Top</button>
+  </div>
+  <figcaption>
+    The two energy bands of the diamond lattice, plotted as 3D surfaces over the (<em>k<sub>x</sub></em>, <em>k<sub>y</sub></em>) plane at <em>k<sub>z</sub></em>&nbsp;=&nbsp;0. The upper band <em>E</em>&nbsp;=&nbsp;+|<em>f</em>(<strong>k</strong>)| is <span style="color: #2a5f8f;">blue</span>; the lower band <em>E</em>&nbsp;=&nbsp;&minus;|<em>f</em>(<strong>k</strong>)| is <span style="color: #7d2d4f;">burgundy</span>. They meet along the <span style="color: #d97236; font-weight: 600;">orange</span> <strong>nodal lines</strong> where <em>f</em>&nbsp;=&nbsp;0 &mdash; at <em>k<sub>x</sub></em>&nbsp;=&nbsp;1 and <em>k<sub>y</sub></em>&nbsp;=&nbsp;1 (in units of 2&pi;/<em>a</em>). Crucially, the bands approach each other <em>linearly</em> near these lines &mdash; a perfect V-shape, not a smooth U. That linear crossing IS the Dirac cone. The dispersion <em>E</em>&nbsp;&prop;&nbsp;|<strong>q</strong>| falls directly out of the lattice's bipartite structure factor. <strong>Drag</strong> to rotate the bands in 3D; try the side view to see the V shape cleanly.
+  </figcaption>
+</figure>
+
+<p>The Dirac cones are not a coincidence. They are pinned to specific points in momentum space by the octahedral symmetry of the diamond lattice (Filter 3 from Chapter 8). Remove that symmetry &mdash; try BCC, try HCP &mdash; and the cones gap out. The diamond lattice is the only structure where the Dirac spectrum is <em>protected</em>.</p>
+
+<p><strong>And how does this connect to the vortex?</strong> The Dirac cone is a property of the <em>lattice</em>, not the vortex &mdash; it's a background feature of how any wave propagates on diamond, regardless of whether a vortex is present. What the vortex does is <em>localise a state</em> onto this dispersion. The bound state trapped at the vortex core carries the Dirac cone's linear dispersion as its equation of motion, because that's what the lattice around it provides. Vortex alone gives charge and topology. Lattice alone gives the Dirac spectrum. Put them together and you have a charged particle obeying the Dirac equation &mdash; an electron.</p>
+
+<h2>The Dirac equation: what emerges</h2>
+
+<p>Put all of this together. Near the Dirac points, the linearised Bloch Hamiltonian on the diamond lattice produces four gamma matrices satisfying the Clifford algebra &mdash; the algebraic structure that <em>encodes</em> spin-&frac12; and <em>requires</em> a four-component wavefunction. The effective equation of motion is:</p>
+
+<div class="equation-block" id="eq-dirac">
+  <div class="eq-display">
+    <span class="eq-symbol param" data-symbol="i">i</span><span class="eq-symbol param" data-symbol="hbar">&#x210F;</span>
+    <span class="eq-symbol op" data-symbol="gamma">&gamma;<sup>&mu;</sup></span>
+    <span class="eq-symbol struct" data-symbol="partial">&part;<sub>&mu;</sub></span>
+    <span class="eq-symbol state" data-symbol="psi">&psi;</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol param" data-symbol="m">m</span>
+    <span class="eq-symbol state" data-symbol="psi2">&psi;</span>
+  </div>
+  <p class="eq-prompt">Click any coloured symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    This is the Dirac equation &mdash; the master equation of relativistic quantum mechanics. It was written down by Paul Dirac in 1928 as a postulate. On our lattice, it is not a postulate. It is a <em>consequence</em> of the bipartite diamond structure: the four gamma matrices emerge from the valley-paired Bloch Hamiltonian at the nodal lines, the spinor &psi; is the vortex bound state living on one sublattice, and the mass <em>m</em> comes from the frame sector. The lattice produces exact (3+1)-dimensional Clifford structure &mdash; {&gamma;<sup>&mu;</sup>, &gamma;<sup>&nu;</sup>} = 2g<sup>&mu;&nu;</sup> &mdash; despite being fundamentally a three-dimensional crystal.
+  </div>
+</div>
+
+<p>The tree-level <em>g</em>-factor &mdash; the ratio of the electron's magnetic moment to its angular momentum &mdash; is exactly 2. This is the Dirac value, the same number Dirac's equation predicted in 1928. The small correction to <em>g</em> = 2, the anomalous magnetic moment, is precisely what measures the fine structure constant &alpha;. We will return to that anomaly at the end of this chapter.</p>
+
+<h2>Spin: why the electron needs two full turns</h2>
+
+<p>Rotate any ordinary object 360&deg; and it comes back to where it started. An electron doesn't. Rotate it 360&deg; and it has picked up a minus sign &mdash; its wavefunction has flipped. You need <em>two</em> full rotations, 720&deg;, to bring it back. This bizarre property is called <strong>spin-&frac12;</strong>, and it is the defining feature of a <em>fermion</em>.</p>
+
+<p>On our lattice, spin does not come from the phase sector. It comes from the <strong>frame sector</strong>: an independent SO(3) rotation frame on each site, coupled to its neighbours through SU(2) gauge links. When you transport a frame around the vortex core, it picks up a sign flip: <em>R</em> &rarr; &minus;<em>R</em>. That sign is the topological fingerprint of spin-&frac12; (&pi;<sub>1</sub>(SO(3)) = &#x2124;<sub>2</sub>). The full treatment is deferred to a companion paper, but the key point is structural: the <em>combination</em> of a phase vortex and a frame holonomy forces the bound state to be a spinor.</p>
+
+<p>Here is a preview of why that combination produces spin-&frac12;. The frame sector lives in the group SU(2), which is a <em>double cover</em> of the group SO(3) of ordinary rotations &mdash; two different SU(2) elements correspond to the same physical 3D rotation. Vectors rotate in SO(3); spinors rotate in SU(2). That factor of two is all you need to know:</p>
+
+<figure id="fig-spin">
+  <canvas id="canvas-spin" width="680" height="430"></canvas>
+  <div class="controls">
+    <button id="spin-play" class="primary">&#9654; Play</button>
+    <button id="spin-reset">Reset</button>
+  </div>
+  <figcaption>
+    <strong>Drag the orange walker</strong> around the vortex (or hit Play). Watch two arrows &mdash; both driven by how far the walker has travelled. The <span style="color: #2a5f8f;">vector arrow</span> (SO(3)) rotates at the same rate as the walker: one loop around the vortex sends it through exactly 360&deg; and it returns to its start. The <span style="color: #d97236;">spinor arrow</span> (SU(2)) rotates at <em>half</em> that rate. One full loop rotates it only 180&deg; &mdash; it ends up <em>pointing the other way</em>, with a persistent minus sign. Only after <em>two</em> full loops does the spinor return to its original state.
+    <br><br>
+    This &frac12;-rate is the definition of spin-&frac12;. The frame sector's holonomy around the vortex is exactly the walk you are doing with the walker, and the electron's wavefunction is the spinor arrow. The electron needs 720&deg; of rotation to return &mdash; and now you have seen why.
+  </figcaption>
+</figure>
+
+<p>The full frame-sector dynamics &mdash; the SU(2) gauge links, the Skyrmion topology of the strong force, the proton mass &mdash; is a separate paper. What you have just seen is the fact that the single principle "the frame lives in a double cover of SO(3)" is enough to force the electron's wavefunction into a half-integer representation. Spin-&frac12; is a <em>consequence of geometry</em>, not an independent axiom.</p>
+
+<h2>How the CLR keeps the electron alive</h2>
+
+<p>There is a tension the electron has to solve. Near the vortex core, phases disagree: neighbouring atoms want different things. The Coherence Learning Rule's Shannon channel (Chapter 4) sees those disagreements and <em>kills</em> the bonds &mdash; their coupling <em>K</em> drops to zero. But if the Shannon channel were the only rule, it would kill too many bonds: the entire region around the core would become disconnected from the rest of the lattice, and the electron would fragment.</p>
+
+<p>The lattice solves this with a second channel. The Fiedler channel (Chapter 7) monitors the graph's algebraic connectivity and pushes coupling back into any bonds whose death would sever the graph. The result is a <strong>protective ring</strong> of barely-alive bonds around the dead core &mdash; just enough to keep the electron connected, not enough to destroy the vortex topology. Watch what happens when we run both rules side-by-side:</p>
+
+<figure id="fig-clr">
+  <div class="side-by-side">
+    <div class="panel">
+      <canvas id="canvas-shannon" width="340" height="340"></canvas>
+      <div class="panel-label" style="color: var(--text-soft);">Shannon alone</div>
+    </div>
+    <div class="panel">
+      <canvas id="canvas-full-clr" width="340" height="340"></canvas>
+      <div class="panel-label" style="color: var(--accent);">Shannon + Fiedler</div>
+    </div>
+  </div>
+  <div class="controls">
+    <button id="clr-play" class="primary">&#9654; Play</button>
+    <button id="clr-reset">Reset</button>
+    <button id="clr-fast">Fast-forward</button>
+    <span style="flex: 1;"></span>
+    <button id="clr-view-normal" class="primary">Bond view</button>
+    <button id="clr-view-damage">Damage only</button>
+  </div>
+  <figcaption>
+    Two identical diamond lattices, both seeded with the electron vortex. <strong>Left</strong>: Shannon channel only &mdash; the dead-core tube plus a wider ring of bonds turn purple and die; the electron fragments. <strong>Right</strong>: Shannon + Fiedler &mdash; the Fiedler channel injects coupling into the boundary ring, so only the innermost core bonds die; the electron stays connected. <strong>Drag either canvas</strong> to rotate; both views move together. <strong>Green</strong> = alive bond, <strong>purple</strong> = dying bond. Phases oscillate to show the electron is a living object. The animation plays and loops automatically. Toggle <strong>Damage only</strong> to fade the healthy bulk into the background and let just the dying bonds render &mdash; the dead-core tube and (on the Shannon side) its destabilised ring become the only visible structure.
+    <br><br>
+    <em style="color: var(--text-faint); font-size: 0.9em;">Note: this is a physics-informed animation replaying the qualitative outcome of the co-evolutionary simulation (Kuramoto phases + Shannon + Fiedler CLR) reported in the paper, &sect;4.1. The full numerical simulation takes 30,000+ steps and is not run in-browser; see the paper and <code>scripts/da1_spontaneous_vortex.py</code> for the rigorous dynamics.</em>
+  </figcaption>
+</figure>
+
+<p>This is the lattice actively <em>maintaining</em> the electron. The vortex itself is topological &mdash; the winding number cannot change under smooth dynamics. But the electron's <em>connectivity</em> to the rest of the lattice would be destroyed by the Shannon channel acting alone. The Fiedler channel, which has no direct interest in the electron, turns out to be exactly what the electron needs to survive. This is the CLR's self-sustaining architecture: two channels that, together, produce and maintain the topology we call a particle.</p>
+
+<h2>The punchline: &alpha; is not about the electron</h2>
+
+<p class="aside"><span class="label">The deepest result of this chapter</span><strong>&alpha; is not a property of the electron. It is a property of the vacuum.</strong> When the coupling field <em>K</em> is held frozen (no CLR dynamics), the electron's response to a magnetic field is exactly <em>g</em> = 2 &mdash; zero anomaly. The anomalous moment arises <em>entirely</em> from the <em>K</em>-field's self-optimising response to the perturbation. The vacuum rearranges its bonds, and that rearrangement is &alpha;. The next chapter derives where in parameter space the CLR places the system &mdash; and that location determines the value of &alpha;.</p>
+
+<h2>Where this leaves us</h2>
+
+<p>We have now seen the full electron: topology (Chapter 9) + quantum mechanics (this chapter). Charge is winding. Current is circulation. Chirality is sublattice localisation. The Dirac spectrum comes from the bipartite Bloch Hamiltonian. The Dirac equation emerges exactly from the lattice geometry. Spin-&frac12; comes from the frame sector's double cover. The <em>g</em>-factor is 2 at tree level; the anomaly is the vacuum's response.</p>
+
+<p>Everything about the electron is structural &mdash; it follows from the CLR + diamond + vortex. There are no tuned parameters. What remains is to ask: <em>where</em> does the CLR place the system in parameter space? The CLR wants <em>K</em> as high as possible. The vortex requires <em>K</em> &le; <em>K</em><sub>BKT</sub>. The equilibrium sits exactly at that wall, and the wall's position is where &alpha; lives. That is the next chapter.</p>
+
+<nav class="nav-links">
+  <a href="09-electron.html" class="prev">The electron</a>
+  <a href="../index.html" class="up">contents</a>
+  <a href="11-bkt-wall.html" class="next">The BKT wall</a>
+</nav>
+
+</div>
+<script type="module">
+import { setupHiDPICanvas, wireEquation, runWhenVisible } from '../js/common.js';
+import {
+  makeCamera, attachCameraControls, renderScene,
+  diamondLattice, orientCameraAlongAxis,
+} from '../js/lattice3d.js';
+import { computeFiedler } from '../js/fiedler.js';
+
+// ============================================================
+// Shared helpers (duplicated from §9 so §10 is self-contained)
+// ============================================================
+function buildVortexLattice(nCells) {
+  const lat = diamondLattice({ nCells, a: 1, centered: true });
+  const scale = 1 / lat.bondLength;
+  let cmx = 0, cmy = 0, cmz = 0;
+  for (const at of lat.atoms) {
+    at.pos[0] *= scale; at.pos[1] *= scale; at.pos[2] *= scale;
+  }
+  for (const at of lat.atoms) {
+    cmx += at.pos[0]; cmy += at.pos[1]; cmz += at.pos[2];
+  }
+  cmx /= lat.atoms.length; cmy /= lat.atoms.length; cmz /= lat.atoms.length;
+  for (const at of lat.atoms) {
+    at.pos[0] -= cmx; at.pos[1] -= cmy; at.pos[2] -= cmz;
+  }
+  for (const at of lat.atoms) {
+    at.theta0 = Math.atan2(at.pos[1], at.pos[0]);
+  }
+  let extent = 0;
+  for (const at of lat.atoms) {
+    const r = Math.max(Math.abs(at.pos[0]), Math.abs(at.pos[1]), Math.abs(at.pos[2]));
+    if (r > extent) extent = r;
+  }
+  return { atoms: lat.atoms, bonds: lat.bonds, extent };
+}
+
+function phaseToColor(th, s = 75, l = 55) {
+  const deg = ((th * 180 / Math.PI) % 360 + 360) % 360;
+  return `hsl(${deg.toFixed(1)}, ${s}%, ${l}%)`;
+}
+
+// ============================================================
+// Bond-health colour utilities
+// ============================================================
+const BOND_ALIVE = [45, 154, 78];
+const BOND_DEAD  = [168, 85, 247];
+function healthCurve(h) {
+  const x = (Math.max(0, Math.min(1, h)) - 0.5) * 6;
+  return 1 / (1 + Math.exp(-x));
+}
+function bondHealthColor(health) {
+  const t = healthCurve(health);
+  const r = Math.round(BOND_DEAD[0] + t * (BOND_ALIVE[0] - BOND_DEAD[0]));
+  const g = Math.round(BOND_DEAD[1] + t * (BOND_ALIVE[1] - BOND_DEAD[1]));
+  const b = Math.round(BOND_DEAD[2] + t * (BOND_ALIVE[2] - BOND_DEAD[2]));
+  return `rgba(${r},${g},${b},1)`;
+}
+function bondHealthWidth(health) {
+  const t = healthCurve(health);
+  return 0.4 + t * 3.2;
+}
+
+// ============================================================
+// Equation blocks
+// ============================================================
+wireEquation('eq-bloch', {
+  H: { name: 'H(<strong>k</strong>) — the Bloch Hamiltonian', pronounce: '"H of k"',
+    description: 'A 2&times;2 matrix that describes how waves propagate through the crystal at wavelength 2&pi;/|<strong>k</strong>|. Its eigenvalues are the allowed energies. On a bipartite lattice, the off-diagonal form is forced by the A&harr;B symmetry.' },
+  matrix: { name: '[ 0, f ; f*, 0 ] — the bipartite structure', pronounce: '&mdash;',
+    description: 'Zeros on the diagonal: A and B sites have equal energy. The off-diagonal <em>f</em>(<strong>k</strong>) = &Sigma; exp(i<strong>k</strong>&middot;<strong>&delta;</strong><sub>&mu;</sub>) is the structure factor &mdash; a sum of four phases, one per tetrahedral bond direction. Where <em>f</em> = 0, the bands touch. The touching is always linear (a V, not a U).' },
+  E: { name: 'E — energy', pronounce: '"E"',
+    description: 'The two energy bands of the diamond lattice. The upper band (+|<em>f</em>|) and lower band (&minus;|<em>f</em>|) are mirror images. Where they touch (|<em>f</em>| = 0), you have a Dirac point.' },
+  f: { name: 'f(<strong>k</strong>) — the structure factor', pronounce: '"f of k"',
+    description: 'f(<strong>k</strong>) = &Sigma;<sub>&mu;</sub> exp(i<strong>k</strong>&middot;<strong>&delta;</strong><sub>&mu;</sub>). Four terms, one per nearest-neighbour direction on diamond. When all four phases conspire to cancel, f = 0 and the gap closes. This happens along the X&ndash;W edges of the Brillouin zone, pinned there by O<sub>h</sub> symmetry (Chapter 8, Filter 3).' },
+});
+
+wireEquation('eq-dirac', {
+  i: { name: 'i — imaginary unit', pronounce: '"i"',
+    description: '&radic;&minus;1. It encodes the 90&deg; phase shift between real and imaginary parts of the wavefunction. Without it, the equation would describe diffusion (spreading out) rather than propagation (moving forward).' },
+  hbar: { name: '&#x210F; — reduced Planck constant', pronounce: '"h-bar"',
+    description: 'The fundamental quantum of action: 1.055 &times; 10<sup>&minus;34</sup> J&middot;s. It sets the scale below which classical physics breaks down and quantum effects dominate.' },
+  gamma: { name: '&gamma;<sup>&mu;</sup> — gamma matrices', pronounce: '"gamma mu"',
+    description: 'Four 4&times;4 matrices satisfying {&gamma;<sup>&mu;</sup>, &gamma;<sup>&nu;</sup>} = 2g<sup>&mu;&nu;</sup> &mdash; the <strong>Clifford algebra</strong>. This anti-commutation relation is what forces the wavefunction to have four components and the particle to have spin-&frac12;. On diamond, these matrices emerge from the valley-paired Bloch Hamiltonian. They are <em>computed</em>, not assumed.' },
+  partial: { name: '&part;<sub>&mu;</sub> — spacetime derivative', pronounce: '"del mu"',
+    description: 'The rate of change in direction &mu; (time, or one of three spatial directions). On the lattice, this becomes a finite difference along the four tetrahedral bond directions.' },
+  psi: { name: '&psi; — the Dirac spinor', pronounce: '"psi"',
+    description: 'The electron\'s wavefunction. Four components: two for sublattice (A/B, which becomes particle/antiparticle), two for valley (which becomes spin). This is the bound state of the vortex, localised on one sublattice by the chiral downfold.' },
+  m: { name: 'm — electron mass', pronounce: '"m"',
+    description: 'The mass of the electron: 9.109 &times; 10<sup>&minus;31</sup> kg. On the lattice, it arises from the frame sector &mdash; the SU(2) Casimir eigenvalue j(j+1) = 3/4 of the spin-&frac12; representation. Deferred to a companion paper.' },
+  psi2: { name: '&psi; — (same spinor)', pronounce: '"psi"',
+    description: 'Same object as on the left. The equation says: how &psi; changes in spacetime (left side) is determined by what &psi; is (right side). This self-consistency is what makes the Dirac equation a wave equation &mdash; and what Dirac postulated in 1928. Our lattice derives it.' },
+});
+
+// ============================================================
+// FIGURE: Dirac bands as 3D surfaces
+// Plots E = ±|f(kx, ky, 0)| over a (kx, ky) window, with kz fixed.
+// For diamond at kz=0:  f(kx, ky, 0) = 4 · cos(π kx / 2) · cos(π ky / 2)
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-bands');
+  if (!canvas) return;
+  const W = 680, H = 440;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  function absF(kx, ky) {
+    return 4 * Math.abs(Math.cos(Math.PI * kx / 2) * Math.cos(Math.PI * ky / 2));
+  }
+
+  const KX_MIN = 0.2, KX_MAX = 1.8;
+  const KY_MIN = 0.2, KY_MAX = 1.8;
+  const GRID   = 19;
+  const E_SCALE = 0.28;
+  const KX_SHIFT = (KX_MIN + KX_MAX) / 2;
+  const KY_SHIFT = (KY_MIN + KY_MAX) / 2;
+
+  function kToScene(kx, ky, E) {
+    return [kx - KX_SHIFT, ky - KY_SHIFT, E * E_SCALE];
+  }
+
+  const atoms = [];
+  const upIdx = [];
+  const lowIdx = [];
+
+  for (let band = 0; band < 2; band++) {
+    const sign = band === 0 ? +1 : -1;
+    const col  = band === 0 ? '#2a5f8f' : '#7d2d4f';
+    for (let i = 0; i < GRID; i++) {
+      for (let j = 0; j < GRID; j++) {
+        const kx = KX_MIN + (i / (GRID - 1)) * (KX_MAX - KX_MIN);
+        const ky = KY_MIN + (j / (GRID - 1)) * (KY_MAX - KY_MIN);
+        const E  = sign * absF(kx, ky);
+        atoms.push({
+          pos: kToScene(kx, ky, E),
+          radius: 0.018,
+          color: col,
+          strokeColor: null,
+          _kx: kx, _ky: ky,
+        });
+        const idx = atoms.length - 1;
+        if (band === 0) upIdx.push(idx); else lowIdx.push(idx);
+      }
+    }
+  }
+
+  for (let i = 0; i < atoms.length; i++) {
+    if (absF(atoms[i]._kx, atoms[i]._ky) < 0.25) {
+      atoms[i].color = '#d97236';
+      atoms[i].radius = 0.04;
+    }
+  }
+
+  const bonds = [];
+  function meshBonds(idxList, color) {
+    for (let i = 0; i < GRID; i++) {
+      for (let j = 0; j < GRID; j++) {
+        const a = idxList[i * GRID + j];
+        if (i < GRID - 1) bonds.push({ a, b: idxList[(i + 1) * GRID + j], color, width: 0.9 });
+        if (j < GRID - 1) bonds.push({ a, b: idxList[i * GRID + (j + 1)], color, width: 0.9 });
+      }
+    }
+  }
+  meshBonds(upIdx,  'rgba(42, 95, 143, 0.75)');
+  meshBonds(lowIdx, 'rgba(125, 45, 79, 0.75)');
+
+  const floorA = atoms.length;
+  atoms.push({ pos: kToScene(KX_MIN, (KY_MIN+KY_MAX)/2, 0), radius: 0.015, color: '#c8c0ad', strokeColor: null });
+  atoms.push({ pos: kToScene(KX_MAX, (KY_MIN+KY_MAX)/2, 0), radius: 0.015, color: '#c8c0ad', strokeColor: null });
+  atoms.push({ pos: kToScene((KX_MIN+KX_MAX)/2, KY_MIN, 0), radius: 0.015, color: '#c8c0ad', strokeColor: null });
+  atoms.push({ pos: kToScene((KX_MIN+KX_MAX)/2, KY_MAX, 0), radius: 0.015, color: '#c8c0ad', strokeColor: null });
+  bonds.push({ a: floorA,     b: floorA + 1, color: 'rgba(180,175,160,0.6)', width: 0.8 });
+  bonds.push({ a: floorA + 2, b: floorA + 3, color: 'rgba(180,175,160,0.6)', width: 0.8 });
+
+  atoms.push({ pos: kToScene(KX_MAX + 0.12, (KY_MIN+KY_MAX)/2, 0), radius: 0.001, color: 'rgba(0,0,0,0)', strokeColor: null, label: 'kx' });
+  atoms.push({ pos: kToScene((KX_MIN+KX_MAX)/2, KY_MAX + 0.12, 0), radius: 0.001, color: 'rgba(0,0,0,0)', strokeColor: null, label: 'ky' });
+  atoms.push({ pos: kToScene((KX_MIN+KX_MAX)/2, (KY_MIN+KY_MAX)/2, 4.5), radius: 0.001, color: 'rgba(0,0,0,0)', strokeColor: null, label: '+E' });
+  atoms.push({ pos: kToScene((KX_MIN+KX_MAX)/2, (KY_MIN+KY_MAX)/2, -4.5), radius: 0.001, color: 'rgba(0,0,0,0)', strokeColor: null, label: '−E' });
+
+  const camera = makeCamera({ yaw: 0.7, pitch: -0.4, distance: 2.8, focalLength: 520 });
+  attachCameraControls(canvas, camera);
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+    renderScene(ctx, W, H, { atoms, bonds }, camera);
+    ctx.fillStyle = '#2a2a2a';
+    ctx.font = '600 12px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('E = \u00B1|f(k)|  \u2014  band structure (momentum space, kz=0 slice)', 20, 24);
+    ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = '#7d2d4f';
+    ctx.fillText('\u2190 this is MOMENTUM space (kx, ky, E) \u2014 how waves behave, NOT where atoms sit', 20, 40);
+    ctx.textAlign = 'right'; ctx.fillStyle = '#888';
+    ctx.fillText('drag to rotate; try the Side view to see the V crossing', W - 20, 40);
+    ctx.fillStyle = '#888'; ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('blue = upper band E = +|f|  \u00B7  burgundy = lower band E = −|f|  \u00B7  orange = nodal line where bands touch', 20, H - 10);
+  }
+  function loop() { draw(); requestAnimationFrame(loop); }
+  loop();
+
+  const vIso = document.getElementById('bands-view-iso');
+  const vSide = document.getElementById('bands-view-side');
+  const vTop  = document.getElementById('bands-view-top');
+  function clearView() { vIso.classList.remove('primary'); vSide.classList.remove('primary'); vTop.classList.remove('primary'); }
+  if (vIso) vIso.addEventListener('click', () => { camera.yaw = 0.7; camera.pitch = -0.4; clearView(); vIso.classList.add('primary'); });
+  if (vSide) vSide.addEventListener('click', () => {
+    orientCameraAlongAxis(camera, [0, 1, 0]);
+    camera.pitch = Math.min(Math.PI / 2 - 0.01, camera.pitch);
+    clearView(); vSide.classList.add('primary');
+  });
+  if (vTop) vTop.addEventListener('click', () => { orientCameraAlongAxis(camera, [0, 0, 1]); clearView(); vTop.classList.add('primary'); });
+})();
+
+// ============================================================
+// FIGURE: Spin-½ preview — walker around vortex drives vector + spinor arrows
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-spin');
+  if (!canvas) return;
+  const W = 680, H = 430;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const vortexCx = 340, vortexCy = 115, loopR = 70;
+  const leftCx = 170, rightCx = 510, panelCy = 340, panelR = 48;
+
+  let walkerAngle = 0;
+  let dragging = false;
+  let playing = true;
+  const MAX_ANGLE = 4 * Math.PI;
+
+  function currentInLap() {
+    return ((walkerAngle % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+  }
+  function walkerPos() {
+    const a = -Math.PI/2 + currentInLap();
+    return [vortexCx + loopR * Math.cos(a), vortexCy + loopR * Math.sin(a)];
+  }
+
+  function drawTopSection() {
+    ctx.fillStyle = '#2a2a2a'; ctx.font = '600 12.5px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Transport a rotational frame around the vortex', vortexCx, 22);
+    ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.fillStyle = '#888';
+    ctx.fillText('drag the orange walker, or press play', vortexCx, 38);
+
+    ctx.strokeStyle = '#c8c0ad'; ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.arc(vortexCx, vortexCy, loopR, 0, 2*Math.PI); ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#7d2d4f';
+    ctx.beginPath(); ctx.arc(vortexCx, vortexCy, 13, 0, 2*Math.PI); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = '600 11px "SF Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('e\u207B', vortexCx, vortexCy);
+
+    const [wx, wy] = walkerPos();
+    ctx.fillStyle = 'rgba(217, 114, 54, 0.25)';
+    ctx.beginPath(); ctx.arc(wx, wy, 14, 0, 2*Math.PI); ctx.fill();
+    ctx.fillStyle = '#d97236';
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(wx, wy, 9, 0, 2*Math.PI); ctx.fill(); ctx.stroke();
+
+    ctx.textBaseline = 'alphabetic';
+    const loops = walkerAngle / (2*Math.PI);
+    const vectorRestored = Math.abs(walkerAngle % (2*Math.PI)) < 0.08 && walkerAngle > 0.5;
+    const spinorRestored = Math.abs(walkerAngle % (4*Math.PI)) < 0.08 && walkerAngle > 0.5;
+    ctx.fillStyle = '#555'; ctx.font = '600 12px "SF Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(`walker: ${loops.toFixed(2)} loops  (${(walkerAngle * 180/Math.PI).toFixed(0)}°)`, W/2, 210);
+
+    const status = walkerAngle >= MAX_ANGLE - 0.1
+      ? 'spinor fully restored \u2014 two loops completed'
+      : (vectorRestored
+          ? 'vector restored, but spinor still half-rotated'
+          : 'both still in transit');
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.fillStyle = spinorRestored ? '#2d9a4e' : (vectorRestored ? '#7d2d4f' : '#888');
+    ctx.fillText(status, W/2, 228);
+  }
+
+  function drawArrowPanel(cx, cy, r, label, angle, color, subtitle) {
+    ctx.fillStyle = '#2a2a2a'; ctx.font = '600 13px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(label, cx, cy - r - 28);
+    ctx.fillStyle = '#888'; ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.fillText(subtitle, cx, cy - r - 12);
+
+    ctx.strokeStyle = '#c8c0ad'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2*Math.PI); ctx.stroke();
+
+    ctx.strokeStyle = '#e0dbcb'; ctx.lineWidth = 0.8;
+    ctx.setLineDash([2, 3]);
+    ctx.beginPath(); ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy);
+    ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r); ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - (r - 6)); ctx.stroke();
+
+    const a = -Math.PI/2 + angle;
+    const ax = cx + (r - 8) * Math.cos(a);
+    const ay = cy + (r - 8) * Math.sin(a);
+    ctx.strokeStyle = color; ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ax, ay); ctx.stroke();
+    const ha = 0.45, hl = 10;
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(ax - hl*Math.cos(a - ha), ay - hl*Math.sin(a - ha));
+    ctx.lineTo(ax - hl*Math.cos(a + ha), ay - hl*Math.sin(a + ha));
+    ctx.closePath();
+    ctx.fillStyle = color; ctx.fill();
+    ctx.lineCap = 'butt';
+
+    const deg = ((angle * 180 / Math.PI) % 360 + 360) % 360;
+    ctx.font = '600 13px "SF Mono", monospace';
+    ctx.fillStyle = color;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(`${deg.toFixed(0)}°`, cx, cy + r + 18);
+    ctx.fillStyle = '#888'; ctx.font = 'italic 10px "Charter", serif';
+    ctx.fillText(`total: ${(angle * 180 / Math.PI).toFixed(0)}°`, cx, cy + r + 32);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+    drawTopSection();
+    drawArrowPanel(leftCx, panelCy, panelR, 'Vector (SO(3))', walkerAngle, '#2a5f8f', 'rotates at walker\u2019s rate');
+    drawArrowPanel(rightCx, panelCy, panelR, 'Spinor (SU(2))', walkerAngle / 2, '#d97236', 'rotates at HALF the walker\u2019s rate');
+    ctx.fillStyle = '#888'; ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('SU(2) =', W/2, panelCy - 12);
+    ctx.fillText('double cover', W/2, panelCy);
+    ctx.fillText('of SO(3)', W/2, panelCy + 12);
+  }
+
+  function eventPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const sx = W / rect.width, sy = H / rect.height;
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    return [cx * sx, cy * sy];
+  }
+  function angleFromMouse(mx, my) {
+    const dx = mx - vortexCx, dy = my - vortexCy;
+    let a = Math.atan2(dy, dx) + Math.PI/2;
+    if (a < 0) a += 2*Math.PI;
+    return a;
+  }
+  function onDown(e) {
+    const [mx, my] = eventPos(e);
+    const dx = mx - vortexCx, dy = my - vortexCy;
+    const r = Math.hypot(dx, dy);
+    if (Math.abs(r - loopR) < 30) {
+      dragging = true;
+      playing = false;
+      if (playBtn) { playBtn.textContent = '\u25B6 Play'; playBtn.classList.remove('primary'); }
+      e.preventDefault();
+    }
+  }
+  function onMove(e) {
+    if (!dragging) return;
+    const [mx, my] = eventPos(e);
+    const mouseAngle = angleFromMouse(mx, my);
+    const curr = currentInLap();
+    let delta = mouseAngle - curr;
+    if (delta > Math.PI) delta -= 2*Math.PI;
+    if (delta < -Math.PI) delta += 2*Math.PI;
+    walkerAngle += delta;
+    walkerAngle = Math.max(0, Math.min(MAX_ANGLE, walkerAngle));
+    e.preventDefault();
+  }
+  function onUp() { dragging = false; }
+
+  canvas.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+
+  const playBtn = document.getElementById('spin-play');
+  const resetBtn = document.getElementById('spin-reset');
+  if (playBtn) {
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      if (playing && walkerAngle >= MAX_ANGLE - 0.01) walkerAngle = 0;
+      playBtn.textContent = playing ? '\u25A0 Pause' : '\u25B6 Play';
+      playBtn.classList.toggle('primary', playing);
+    });
+  }
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      walkerAngle = 0;
+      playing = true;
+      if (playBtn) {
+        playBtn.textContent = '\u25A0 Pause';
+        playBtn.classList.add('primary');
+      }
+    });
+  }
+
+  function loop() {
+    if (playing && !dragging) {
+      walkerAngle += 0.018;
+      if (walkerAngle >= MAX_ANGLE) {
+        walkerAngle = MAX_ANGLE;
+        playing = false;
+        if (playBtn) { playBtn.textContent = '\u25B6 Play'; playBtn.classList.remove('primary'); }
+      }
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ============================================================
+// FIGURE: Shannon vs Shannon + Fiedler — physics-informed animation
+// Scripted K(t) trajectories classified by radial distance from vortex axis.
+// ============================================================
+(() => {
+  const cS = document.getElementById('canvas-shannon');
+  const cF = document.getElementById('canvas-full-clr');
+  if (!cS || !cF) return;
+  const W = 340, H = 340;
+  const ctxS = setupHiDPICanvas(cS, W, H);
+  const ctxF = setupHiDPICanvas(cF, W, H);
+
+  const lat = buildVortexLattice(4);
+  const N = lat.atoms.length;
+  const bonds0 = lat.bonds;
+  const numB = bonds0.length;
+
+  const R_CORE = 0.9;
+  const R_RING = 2.2;
+  const bondClass = new Int8Array(numB);
+  for (let b = 0; b < numB; b++) {
+    const aPos = lat.atoms[bonds0[b].a].pos;
+    const bPos = lat.atoms[bonds0[b].b].pos;
+    const r = Math.hypot((aPos[0]+bPos[0])/2, (aPos[1]+bPos[1])/2);
+    bondClass[b] = (r < R_CORE) ? 0 : (r < R_RING) ? 1 : 2;
+  }
+
+  const K_INIT       = 1.9;
+  const K_DEAD       = 0.05;
+  const K_BULK_ALIVE = 2.4;
+  const RATE         = 2.5;
+
+  function approach(t) { return 1 - Math.exp(-RATE * t); }
+
+  function K_shannon(cls, t) {
+    const a = approach(t);
+    if (cls === 0) return K_INIT + (K_DEAD - K_INIT) * a;
+    if (cls === 1) return K_INIT + (K_DEAD - K_INIT) * a;
+    return K_INIT + (K_BULK_ALIVE - K_INIT) * a;
+  }
+  function K_fiedler(cls, t) {
+    const a = approach(t);
+    if (cls === 0) return K_INIT + (K_DEAD - K_INIT) * a;
+    return K_INIT + (K_BULK_ALIVE - K_INIT) * a;
+  }
+
+  const camera = makeCamera({
+    yaw: 0, pitch: 0,
+    distance: Math.max(12, lat.extent * 3.6),
+    focalLength: 360,
+  });
+  orientCameraAlongAxis(camera, [0, 0, 1]);
+  attachCameraControls(cS, camera);
+  attachCameraControls(cF, camera);
+
+  const atoms = lat.atoms.map(at => ({
+    pos: at.pos, radius: 0.09,
+    theta0: at.theta0,
+    strokeColor: at.sublattice === 'A' ? '#7a4220' : '#1a3c5c',
+  }));
+  const axisLen = lat.extent * 1.25;
+  const axisIdx = atoms.length;
+  atoms.push({ pos: [0, 0, -axisLen], radius: 0.10, color: '#7d2d4f', strokeColor: '#4a1a30' });
+  atoms.push({ pos: [0, 0,  axisLen], radius: 0.10, color: '#7d2d4f', strokeColor: '#4a1a30' });
+
+  let tNorm = 0;
+  let playing = true;
+  const speedPerFrame = 1 / (8 * 60);
+  const loopPause     = 6.0;
+  let pauseTimer = 0;
+  let viewMode = 'normal';
+  const omega = 0.03;
+
+  function renderPanel(ctx, K_fn, label) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+
+    const phaseTime = performance.now() * 0.001 * omega * 3;
+    for (let i = 0; i < axisIdx; i++) {
+      atoms[i].color = phaseToColor(atoms[i].theta0 + phaseTime);
+    }
+
+    const bonds = bonds0.map((b, bi) => {
+      const k = K_fn(bondClass[bi], tNorm);
+      const health = Math.min(1, Math.max(0, k / K_BULK_ALIVE));
+      if (viewMode === 'damage') {
+        const t = healthCurve(health);
+        const r = Math.round(168 + t * (230 - 168));
+        const g = Math.round(85  + t * (222 - 85));
+        const bl = Math.round(247 + t * (200 - 247));
+        const w = (1 - t) * 3.2 + t * 0.2;
+        return { a: b.a, b: b.b, color: `rgba(${r},${g},${bl},1)`, width: w };
+      }
+      return {
+        a: b.a, b: b.b,
+        color: bondHealthColor(health),
+        width: bondHealthWidth(health) * 1.05,
+      };
+    });
+    bonds.push({ a: axisIdx, b: axisIdx + 1, color: 'rgba(125, 45, 79, 1)', width: 3 });
+
+    renderScene(ctx, W, H, { atoms, bonds }, camera);
+
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    const phase = (tNorm >= 1 && pauseTimer > 0)
+                ? 'converged (hold)'
+                : `CLR evolving: ${(tNorm * 100).toFixed(0)}%`;
+    ctx.fillText(label + ' · ' + phase, W / 2, H - 10);
+  }
+
+  function draw() {
+    renderPanel(ctxS, K_shannon, 'Shannon only');
+    renderPanel(ctxF, K_fiedler, 'Shannon + Fiedler');
+  }
+
+  function loop() {
+    if (playing) {
+      if (pauseTimer > 0) {
+        pauseTimer -= 1/60;
+        if (pauseTimer <= 0) tNorm = 0;
+      } else if (tNorm < 1) {
+        tNorm += speedPerFrame;
+        if (tNorm >= 1) { tNorm = 1; pauseTimer = loopPause; }
+      }
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  const playBtn = document.getElementById('clr-play');
+  playBtn.textContent = '\u25A0 Pause';
+  playBtn.classList.add('primary');
+  playBtn.addEventListener('click', () => {
+    playing = !playing;
+    playBtn.textContent = playing ? '\u25A0 Pause' : '\u25B6 Play';
+    playBtn.classList.toggle('primary', playing);
+  });
+  document.getElementById('clr-reset').addEventListener('click', () => {
+    tNorm = 0;
+    pauseTimer = 0;
+    playing = true;
+    playBtn.textContent = '\u25A0 Pause';
+    playBtn.classList.add('primary');
+  });
+  document.getElementById('clr-fast').addEventListener('click', () => {
+    tNorm = Math.min(1, tNorm + 0.33);
+  });
+  const vNormalBtn = document.getElementById('clr-view-normal');
+  const vDamageBtn = document.getElementById('clr-view-damage');
+  vNormalBtn.addEventListener('click', () => {
+    viewMode = 'normal';
+    vNormalBtn.classList.add('primary'); vDamageBtn.classList.remove('primary');
+  });
+  vDamageBtn.addEventListener('click', () => {
+    viewMode = 'damage';
+    vDamageBtn.classList.add('primary'); vNormalBtn.classList.remove('primary');
+  });
+})();
+</script>
+</body>
+</html>

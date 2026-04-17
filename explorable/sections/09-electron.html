@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The electron — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.side-by-side {
+  display: flex; gap: 10px; align-items: stretch;
+}
+.side-by-side .panel {
+  flex: 1; min-width: 0; text-align: center;
+}
+.side-by-side .panel-label {
+  font: 600 14px "Charter", serif;
+  margin-top: 6px;
+}
+.assembly-explain {
+  margin-top: 0.5em;
+  padding: 14px 18px;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 3px;
+  font-size: 0.96em;
+  color: var(--text);
+  min-height: 2.5em;
+}
+.assembly-explain .name {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+#svg-assembly g.node { cursor: pointer; }
+#svg-assembly g.node:hover rect { filter: brightness(0.96); }
+
+.property-list {
+  margin: 0.8em 0 1.2em 0;
+  padding: 0 0 0 1.4em;
+  line-height: 1.65;
+}
+.property-list li {
+  margin-bottom: 0.8em;
+}
+
+.compare-table {
+  margin: 1em 0 1.3em;
+  border-collapse: collapse;
+  width: 100%;
+  font-family: "Charter", serif;
+  font-size: 0.94em;
+}
+.compare-table th,
+.compare-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+.compare-table th {
+  font-weight: 600;
+  font-size: 0.86em;
+  color: var(--text-soft);
+  border-bottom: 2px solid var(--panel-border);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.compare-table td:first-child {
+  font-weight: 600;
+  color: var(--text);
+}
+.compare-table td.notaddressed {
+  color: var(--text-faint);
+  font-style: italic;
+}
+.compare-table td.derived {
+  color: #2d5e3d;
+}
+.compare-table tbody tr:hover td {
+  background: rgba(217, 114, 54, 0.04);
+}
+.compare-table caption {
+  caption-side: bottom;
+  font-style: italic;
+  color: var(--text-soft);
+  font-size: 0.88em;
+  margin-top: 0.6em;
+  text-align: left;
+}
+
+.experiments-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 1em 0 1.4em;
+}
+.experiments-strip .exp-card {
+  margin: 0;
+  padding: 10px 10px 8px;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.experiments-strip .exp-card svg {
+  width: 100%;
+  max-width: 160px;
+  height: auto;
+  background: #fdfaf3;
+  border-radius: 3px;
+}
+.experiments-strip .exp-card figcaption {
+  margin-top: 8px;
+  font-size: 0.82em;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--text-soft);
+}
+.experiments-strip .exp-card figcaption strong {
+  color: var(--text);
+  display: block;
+  margin-bottom: 2px;
+}
+@media (max-width: 640px) {
+  .experiments-strip { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 09 / 17</span>
+</nav>
+
+<h1>The electron<span class="subtitle">What it is, what it does, and why the lattice had no choice but to make one</span></h1>
+
+<p class="lead">Everything in the universe is made of a small number of particles. The most familiar is the <strong>electron</strong> &mdash; the particle that orbits every atom, flows through every wire, and carries the force we call electricity. It was discovered in 1897, and a century of increasingly precise experiments has pinned down its properties. It is, in many ways, the best-understood particle in physics.</p>
+
+<p>This chapter is about the fact that all of its properties &mdash; every single one &mdash; fall out of the living lattice we have been building. We did not put them in. We put in oscillators, couplings, and the Coherence Learning Rule. What came out was a vortex on a diamond lattice, and that vortex, without any further instruction, behaves exactly like an electron. The identification is not an analogy; it is a structural match, property by property, to measured values.</p>
+
+<h2>What a century of experiments tells us</h2>
+
+<p>Before showing what the lattice produces, we need to know what the answer is supposed to look like. Here are the hard experimental facts about the electron, accumulated over 130 years. Any theory of the electron &mdash; any theory &mdash; has to reproduce all of them.</p>
+
+<div class="experiments-strip">
+  <!-- Millikan's oil drop -->
+  <figure class="exp-card">
+    <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+      <!-- plates -->
+      <rect x="15" y="15" width="130" height="5" fill="#2a2a2a"/>
+      <rect x="15" y="80" width="130" height="5" fill="#2a2a2a"/>
+      <!-- field arrows -->
+      <g stroke="#c8c0ad" stroke-width="1" fill="none">
+        <line x1="30" y1="25" x2="30" y2="76" marker-end="url(#arr-exp)"/>
+        <line x1="130" y1="25" x2="130" y2="76" marker-end="url(#arr-exp)"/>
+      </g>
+      <!-- drops with labelled charge -->
+      <circle cx="55" cy="45" r="6" fill="#d97236" stroke="#7a4220" stroke-width="1.2"/>
+      <text x="55" y="48" text-anchor="middle" font-size="8" font-family="SF Mono" fill="#fff">1e</text>
+      <circle cx="80" cy="55" r="7" fill="#d97236" stroke="#7a4220" stroke-width="1.2"/>
+      <text x="80" y="58" text-anchor="middle" font-size="8" font-family="SF Mono" fill="#fff">2e</text>
+      <circle cx="108" cy="48" r="6" fill="#d97236" stroke="#7a4220" stroke-width="1.2"/>
+      <text x="108" y="51" text-anchor="middle" font-size="8" font-family="SF Mono" fill="#fff">3e</text>
+      <text x="80" y="98" text-anchor="middle" font-size="8" font-style="italic" fill="#888">never 1.5e</text>
+      <defs>
+        <marker id="arr-exp" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+          <path d="M0,0 L6,2.5 L0,5" fill="#c8c0ad"/>
+        </marker>
+      </defs>
+    </svg>
+    <figcaption><strong>Millikan, 1909</strong><br>Oil drops. Charge is always <em>n&nbsp;&times;&nbsp;e</em>, never a fraction.</figcaption>
+  </figure>
+
+  <!-- Stern-Gerlach -->
+  <figure class="exp-card">
+    <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+      <!-- source -->
+      <rect x="8" y="45" width="18" height="14" rx="2" fill="#2a2a2a"/>
+      <text x="17" y="68" text-anchor="middle" font-size="7" fill="#888">source</text>
+      <!-- beam incoming -->
+      <line x1="26" y1="52" x2="60" y2="52" stroke="#d97236" stroke-width="1.5"/>
+      <!-- magnet poles -->
+      <rect x="60" y="25" width="30" height="15" fill="#7d2d4f" opacity="0.8"/>
+      <text x="75" y="36" text-anchor="middle" font-size="8" fill="#fff" font-weight="700">N</text>
+      <rect x="60" y="62" width="30" height="15" fill="#2a5f8f" opacity="0.8"/>
+      <text x="75" y="74" text-anchor="middle" font-size="8" fill="#fff" font-weight="700">S</text>
+      <!-- beam split -->
+      <path d="M 90 52 Q 110 52 130 42" stroke="#d97236" stroke-width="1.5" fill="none"/>
+      <path d="M 90 52 Q 110 52 130 62" stroke="#d97236" stroke-width="1.5" fill="none"/>
+      <!-- detector -->
+      <line x1="135" y1="20" x2="135" y2="84" stroke="#2a2a2a" stroke-width="1"/>
+      <circle cx="135" cy="42" r="3" fill="#d97236"/>
+      <circle cx="135" cy="62" r="3" fill="#d97236"/>
+      <text x="148" y="52" text-anchor="middle" font-size="7" font-style="italic" fill="#888">two spots</text>
+    </svg>
+    <figcaption><strong>Stern&ndash;Gerlach, 1922</strong><br>Magnetic beam splits into <em>two</em> spots &mdash; spin-&frac12;.</figcaption>
+  </figure>
+
+  <!-- Dirac equation + positron -->
+  <figure class="exp-card">
+    <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+      <!-- equation -->
+      <text x="80" y="30" text-anchor="middle" font-size="13" font-style="italic" font-family="Georgia, serif">
+        i&#x210F;&gamma;<tspan font-size="9">&#x3BC;</tspan>&part;<tspan font-size="9">&#x3BC;</tspan>&psi; = m&psi;
+      </text>
+      <!-- arrow -->
+      <line x1="80" y1="40" x2="80" y2="56" stroke="#c8c0ad" stroke-width="1.2" marker-end="url(#arr-exp2)"/>
+      <!-- pair creation -->
+      <g>
+        <path d="M 50 75 Q 62 62 75 75" stroke="#2a5f8f" stroke-width="1.5" fill="none"/>
+        <text x="47" y="88" font-size="8" fill="#2a5f8f">e&#x207B;</text>
+        <path d="M 110 75 Q 98 62 85 75" stroke="#7d2d4f" stroke-width="1.5" fill="none"/>
+        <text x="112" y="88" font-size="8" fill="#7d2d4f">e&#x207A;</text>
+      </g>
+      <defs>
+        <marker id="arr-exp2" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+          <path d="M0,0 L6,2.5 L0,5" fill="#c8c0ad"/>
+        </marker>
+      </defs>
+    </svg>
+    <figcaption><strong>Dirac, 1928</strong><br>His equation predicted antimatter. Positron found 1932.</figcaption>
+  </figure>
+
+  <!-- Schwinger / g-factor -->
+  <figure class="exp-card">
+    <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+      <text x="80" y="25" text-anchor="middle" font-size="11" font-family="SF Mono, monospace" fill="#2a2a2a">g / 2 =</text>
+      <text x="80" y="50" text-anchor="middle" font-size="13" font-family="SF Mono, monospace" font-weight="600" fill="#2a2a2a">
+        <tspan fill="#2d9a4e">1.00115965218</tspan><tspan fill="#888">0&hellip;</tspan>
+      </text>
+      <text x="80" y="68" text-anchor="middle" font-size="7" font-style="italic" fill="#888">theory and experiment</text>
+      <text x="80" y="78" text-anchor="middle" font-size="7" font-style="italic" fill="#888">agree to 13 digits</text>
+      <rect x="15" y="86" width="130" height="5" fill="none" stroke="#c8c0ad" stroke-width="0.5"/>
+      <rect x="15" y="86" width="115" height="5" fill="#2d9a4e" opacity="0.7"/>
+    </svg>
+    <figcaption><strong>Schwinger, 1948</strong><br>Computed <em>g</em>&nbsp;&minus;&nbsp;2 = &alpha;/&pi;. Matches experiment to part-per-trillion.</figcaption>
+  </figure>
+</div>
+
+<ul class="property-list">
+  <li><strong>Electric charge is always &minus;<em>e</em>.</strong> Robert Millikan (1909) measured charges by timing oil droplets falling in an electric field. Across thousands of drops, the charge on any object was always an integer multiple of one fundamental value <em>e</em>. Never half. Never a third. This is <strong>charge quantisation</strong>, and it is genuinely mysterious in the standard picture: why whole units?</li>
+
+  <li><strong>Spin is always &frac12;.</strong> Stern and Gerlach (1922) fired silver atoms through a non-uniform magnetic field. Instead of a continuous smear on the detector, they saw exactly <em>two</em> sharp spots. Each electron had only two possible orientations, labelled "up" and "down." And even weirder: rotating the electron by 360&deg; does not bring it back to its original quantum state &mdash; you need a full 720&deg;. This bizarre property is what <strong>spin-&frac12;</strong> means.</li>
+
+  <li><strong>It obeys the Dirac equation.</strong> Paul Dirac wrote down <em>i</em>&#x210F;&gamma;<sup>&mu;</sup>&part;<sub>&mu;</sub>&psi; = <em>m</em>&psi; in 1928 to reconcile quantum mechanics with special relativity. The equation made an outrageous prediction: there must exist a particle identical to the electron but with opposite charge. Carl Anderson found the <em>positron</em> four years later. Every electron in the universe obeys Dirac's equation. Nobody, until this paper, has said <em>why</em> nature chose this equation.</li>
+
+  <li><strong>Its magnetic moment is <em>g</em> &asymp; 2, with a tiny correction.</strong> The <em>g</em>-factor is the ratio of the electron's magnetic moment to its angular momentum. Dirac's equation predicted exactly 2. Measurements show 2.002&thinsp;319&thinsp;304&thinsp;36... &mdash; very close to 2 but not exactly. Julian Schwinger (1948) computed the excess over 2 and showed it measures the <strong>fine structure constant &alpha;</strong>. Today the electron <em>g</em>-factor is the most precisely measured quantity in all of science: theory and experiment agree to thirteen decimal places.</li>
+
+  <li><strong>It is stable.</strong> A free electron, left alone, lives forever. No decay has ever been observed. In a universe where most composite things fall apart, the electron does not.</li>
+</ul>
+
+<p>These are the targets. The standard theory &mdash; Quantum Electrodynamics (QED) &mdash; reproduces them spectacularly well, but it <em>postulates</em> most of them: spin-&frac12;, the Dirac equation, the gamma matrices, the mass, the charge. They are <em>inputs</em> to QED, not outputs. Our lattice aims higher: produce the entire list from a smaller starting point, without tuning.</p>
+
+<h2>Two questions nobody has answered</h2>
+
+<p>Two specific puzzles haunt the standard picture:</p>
+
+<ol style="margin: 0.5em 0 1em 1.6em; line-height: 1.7;">
+  <li><strong>Why is charge always an integer multiple of <em>e</em>?</strong> Millikan's experiment has been repeated countless times at ever-increasing precision. No one has ever seen a particle with charge 1.5<em>e</em> or 2.7<em>e</em>. The standard picture treats charge quantisation as an observed fact, not as something that follows from a principle.</li>
+
+  <li><strong>Where does the Dirac equation come from?</strong> Dirac did not derive his equation from deeper principles. He wrote down the simplest thing that worked: linear in the time-derivative (like Schr&ouml;dinger) and consistent with special relativity. The gamma matrices fell out. The equation matched experiment. But why <em>this</em> equation? Dirac did not know, and nobody has given a satisfactory answer in ninety-seven years.</li>
+</ol>
+
+<p>The lattice answers both in one stroke. It took a radical reframing of the electron &mdash; proposed in 1997 but never fully worked out &mdash; and a specific choice of substrate. Let us build up to the answer.</p>
+
+<h2>Light and matter: the same thing, different topology</h2>
+
+<p>In 1997, physicists John Williamson and Martin van der Mark proposed a startling reframe. What if an electron is not a <em>separate kind of thing</em> from light &mdash; what if it is a <strong>confined photon</strong>? Light, propagating freely, is what you get when the electromagnetic field has no topological twist. Take the same field, wind it into a loop &mdash; a permanent circulation &mdash; and you get matter.</p>
+
+<p>Our lattice makes this concrete. Look at the two views below. On the left, phases sweep across the diamond lattice in a smooth wave &mdash; a colour gradient that slides from left to right. This is a <strong>photon</strong>: a phase excitation with winding number <em>n</em> = 0. It propagates freely and eventually disperses.</p>
+
+<p>On the right, phases wind around a central line. Walk a loop around the core and the colour passes through the entire rainbow &mdash; a full 2&pi; of phase. This is an <strong>electron</strong>: a phase excitation with winding number <em>n</em> = 1. The twist is permanent. It cannot unwind without tearing the field.</p>
+
+<figure id="fig-photon-electron">
+  <div class="side-by-side">
+    <div class="panel">
+      <canvas id="canvas-photon" width="330" height="340"></canvas>
+      <div class="panel-label" style="color: var(--text-soft);">Photon &mdash; <em>n</em> = 0</div>
+    </div>
+    <div class="panel">
+      <canvas id="canvas-electron" width="330" height="340"></canvas>
+      <div class="panel-label" style="color: var(--accent);">Electron &mdash; <em>n</em> = 1</div>
+    </div>
+  </div>
+  <div class="controls">
+    <button id="pe-colour" class="primary">Colour</button>
+    <button id="pe-mono">Black &amp; white</button>
+  </div>
+  <figcaption>
+    The same diamond lattice, the same dynamics, the same phase field. <strong>Left</strong>: phases vary smoothly across the lattice &mdash; a plane wave, winding number zero. <strong>Right</strong>: phases wind 2&pi; around a line through the centre &mdash; a vortex, winding number one. Both lattices oscillate; the photon's bands slide uniformly while the electron's pinwheel <em>rotates</em> but stays anchored around its invisible central axis. Switch to <strong>Black &amp; white</strong> to read the wave as brightness (dark = trough, bright = crest) &mdash; the photon is a moving bright band, the electron is a bright/dark swirl. <strong>Drag either canvas</strong> to rotate; both views move together.
+  </figcaption>
+</figure>
+
+<p>The same lattice. The same dynamics. The only difference between light and matter is a twist in the phase field &mdash; a topological integer that cannot be changed by any smooth deformation. This is not a metaphor. It is the mathematics.</p>
+
+<p>WvdM's proposal was elegant but incomplete. They named the identification &mdash; <em>electron = confined photon</em>, <em>charge = winding</em>, <em>pair creation = vortex nucleation</em> &mdash; but they did not answer the mechanism questions: <em>how</em> does a phase vortex end up satisfying the Dirac equation? Where do the gamma matrices come from? How does it acquire spin-&frac12;? What determines its mass? WvdM pointed at the right picture. They did not supply the machinery.</p>
+
+<p>Our lattice supplies the machinery by doing something WvdM did not: specifying the <em>substrate</em>. If the confined photon lives on a particular lattice &mdash; and Chapter 8 showed that diamond is the unique lattice where it <em>can</em> live &mdash; then we can compute exactly what happens around the vortex core. We find that every property on the experimental list above falls out as a direct consequence of the lattice geometry and the CLR dynamics. Nothing else is needed.</p>
+
+<h2>What the electron does to the lattice</h2>
+
+<p>The twist has consequences. Near the vortex core &mdash; the line where the phase is undefined &mdash; neighbouring atoms disagree violently about what the phase should be. The CLR's Shannon channel (Chapter 4) sees those misaligned bonds and kills them: their coupling <em>K</em> decays to zero. A tube of <strong>dead bonds</strong> forms around the vortex line, surrounded by a bulk of <strong>alive bonds</strong> where phases agree. The electron has carved a scar into the lattice's connectivity.</p>
+
+<p>But the vortex does more than scar. On every surviving bond, there is a <strong>current</strong> &mdash; a flow of phase, <em>j</em> = <em>K</em> &middot; sin(&Delta;&theta;). Because the phase winds around the core, this current <em>circulates</em>. The electron is not a static object sitting in a hole. It is a persistent circulation of phase current around a topological defect.</p>
+
+<figure id="fig-hero">
+  <canvas id="canvas-hero" width="680" height="480"></canvas>
+  <div class="controls">
+    <button id="hero-mode-phase" class="primary">Phase + bonds</button>
+    <button id="hero-mode-bonds">Dead / alive only</button>
+    <span style="flex: 1;"></span>
+    <button id="hero-view-top" class="primary">Top [001]</button>
+    <button id="hero-view-iso">Oblique</button>
+    <button id="hero-view-side">Side</button>
+  </div>
+  <figcaption>
+    The living electron on the diamond lattice, viewed face-on down the vortex line by default. Atom colour = phase &theta; (winding 2&pi; around the core, marked by the <strong>burgundy line</strong> threading through the centre). <span style="color: #2d9a4e;">Green bonds</span> = alive (bulk, well-aligned pairs). <span style="color: #a855f7;">Purple bonds</span> = dying (core, phase-misaligned pairs). Phases oscillate in time (&theta; &rarr; &theta; + &omega;<em>t</em>), but the winding is fixed &mdash; the rainbow pinwheel rotates, and the dead-core tube stays exactly where it is. Switch to <strong>Dead / alive only</strong> to strip away the phase colour and see the K-field structure unambiguously. <strong>Drag</strong> to rotate, <strong>shift</strong>+drag to pan, <strong>scroll</strong> to zoom.
+  </figcaption>
+</figure>
+
+<h2>Electric charge: why it is quantised and conserved</h2>
+
+<p>Physicists have known since Millikan's oil-drop experiment (1909) that electric charge comes in indivisible units. You can have one electron's worth of charge, or two, or minus three &mdash; but never one and a half. This is called <strong>charge quantisation</strong>. They also know that charge is never created or destroyed &mdash; only moved around. Positive and negative charges can appear together (pair creation) and disappear together (annihilation), but the total never changes. This is <strong>charge conservation</strong>.</p>
+
+<p>Both facts are mysterious in the standard approach. Why integers? Why conserved? The lattice answers both in one sentence: <em>charge is the winding number</em>.</p>
+
+<p>The winding number (Chapter 7) is an integer because a closed loop on a circle must complete a whole number of turns. It is conserved because topology cannot be changed by smooth deformation. It comes in &plusmn; pairs because a vortex and antivortex must nucleate together. Every property of electric charge is a property of winding.</p>
+
+<div class="equation-block" id="eq-charge">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="q">q</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol param" data-symbol="n">n</span><span class="eq-symbol param" data-symbol="e">e</span>
+    &nbsp;,&nbsp;&nbsp;
+    <span class="eq-symbol param" data-symbol="n2">n</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol op" data-symbol="integral">&#x222E; d&theta; / 2&pi;</span>
+    &nbsp;&isin;&nbsp;
+    <span class="eq-symbol struct" data-symbol="Z">&#x2124;</span>
+  </div>
+  <p class="eq-prompt">Click any symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    The charge <em>q</em> of any excitation on the lattice is its winding number <em>n</em> times the elementary charge <em>e</em>. The winding number is the total phase change around any loop enclosing the excitation, divided by 2&pi;. Because phase lives on a circle, this number is always an integer. No fractional charges. No charge violation. Topology enforces both.
+  </div>
+</div>
+
+<h2>The current around the core</h2>
+
+<p>On every bond of the lattice, there is a conserved current:</p>
+
+<div class="equation-block" id="eq-current">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="j">j<sub>ij</sub></span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol param" data-symbol="K">K<sub>ij</sub></span>
+    &nbsp;&middot;&nbsp;
+    <span class="eq-symbol op" data-symbol="sin">sin(&Delta;&theta;<sub>ij</sub>)</span>
+  </div>
+  <p class="eq-prompt">Click any symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    The current on bond (<em>i</em>, <em>j</em>) is the coupling strength <em>K</em> times the sine of the phase difference. Where phases agree (&Delta;&theta; &approx; 0), no current flows. Where phases differ, current flows along the bond. Around a vortex, the phases <em>always</em> differ along the angular direction, so current circulates permanently. This is the lattice analog of the persistent orbital current that gives the electron its magnetic moment.
+  </div>
+</div>
+
+<figure id="fig-current">
+  <canvas id="canvas-current" width="680" height="400"></canvas>
+  <div class="controls">
+    <button id="curr-view-top" class="primary">View down [001]</button>
+    <button id="curr-view-iso">Oblique</button>
+  </div>
+  <figcaption>
+    Phase current <em>j</em><sub>ij</sub> = <em>K</em>&nbsp;sin(&Delta;&theta;<sub>ij</sub>) on every bond of the diamond lattice, around the vortex core. Bonds are drawn with <strong>line thickness proportional to |<em>j</em>|</strong> and coloured by <strong>direction of flow</strong>: <span style="color: #d97236;">orange</span> = clockwise (positive winding), <span style="color: #2a5f8f;">blue</span> = counter-clockwise, neutral = little or no flow. Near the vortex core, phase differences are large and current runs strong in a circulating ring. Far from the core, bonds agree (&Delta;&theta; &approx; 0) and no current flows. <strong>View down [001]</strong> to see the circulation face-on.
+  </figcaption>
+</figure>
+
+<p>This is not an imposed pattern &mdash; it follows directly from the vortex's phase winding and the Kuramoto coupling law. The electron is, at its core, a permanent whirlpool of phase current, and the magnetic moment of a physical electron is precisely the magnetic field produced by this circulating current.</p>
+
+<h2>The electron picks a side: chirality</h2>
+
+<p>The vortex winds equally around A and B atoms. It doesn't know about sublattice. But the <strong>bound state</strong> &mdash; the quantum-mechanical wavefunction trapped at the vortex core &mdash; does know. It concentrates its amplitude on one sublattice, not both.</p>
+
+<figure id="fig-chirality">
+  <canvas id="canvas-chirality" width="680" height="400"></canvas>
+  <div class="controls">
+    <button id="chi-a" class="primary">Bound state on A</button>
+    <button id="chi-b">Bound state on B</button>
+    <button id="chi-both">Both sublattices</button>
+  </div>
+  <figcaption>
+    The vortex is the same everywhere &mdash; phases wind equally around both sublattices. But the <em>bound state</em> chooses one. In <strong>A</strong> mode, A-sublattice atoms carry the full phase colouring; B-sublattice atoms are rendered in grey (no phase information). In <strong>B</strong> mode, the choice is reversed. In <strong>both</strong>, the symmetric vortex is restored. The electron has a definite handedness &mdash; it is either "left-handed" (bound state on A) or "right-handed" (bound state on B) &mdash; and this is what <em>chirality</em> means.
+  </figcaption>
+</figure>
+
+<p>A different electron might choose B. The choice is made at formation and is permanent. This asymmetry is called <strong>chirality</strong>, and it is what determines how the electron interacts with the weak nuclear force. In the standard picture, chirality is postulated. On our lattice, it is a direct consequence of the chiral downfold on the bipartite diamond lattice &mdash; exactly the sublattice structure we saw get selected by the five filters in Chapter 8.</p>
+
+<h2>WvdM gave the picture; the lattice supplies the machinery</h2>
+
+<p>We can now state precisely what this chapter has accomplished, and locate it in the intellectual lineage it belongs to. WvdM reframed the electron as a confined photon and, in doing so, answered some long-standing mysteries through topology alone. But they did not derive the machinery of QED &mdash; the Dirac equation, the gamma matrices, the spectrum, spin-&frac12;, the mass, the <em>g</em>-factor. Our lattice derives all of it. The framework <em>contains</em> WvdM as its topological kernel and unifies it with essentially all of relativistic quantum electrodynamics.</p>
+
+<table class="compare-table">
+  <caption>The rows above the line are what WvdM proposed; the rows below the line are what no previous framework has produced from first principles. The lattice derives everything in both.</caption>
+  <thead>
+    <tr>
+      <th style="width: 26%;">What we observe</th>
+      <th style="width: 37%;">What WvdM proposed (1997)</th>
+      <th style="width: 37%;">What the lattice derives</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Electron identity</td>
+      <td>"Confined photon"</td>
+      <td class="derived">Phase vortex (<em>n</em> = 1) on diamond</td>
+    </tr>
+    <tr>
+      <td>Charge quantisation</td>
+      <td>Winding = integer</td>
+      <td class="derived">&#x03C0;<sub>1</sub>(S&#xB9;) = &#x2124;, automatic</td>
+    </tr>
+    <tr>
+      <td>Charge conservation</td>
+      <td>Topological invariant</td>
+      <td class="derived">Sum of windings preserved under smooth dynamics</td>
+    </tr>
+    <tr>
+      <td>Pair creation</td>
+      <td>"Topological creation"</td>
+      <td class="derived">Vortex&ndash;antivortex nucleation, Chapter 7</td>
+    </tr>
+    <tr>
+      <td>Self-confinement</td>
+      <td>Loop traps the photon</td>
+      <td class="derived">BKT logarithmic potential V(r) = 2&pi;K<em>n</em>&sup2; ln(r/a)</td>
+    </tr>
+    <tr style="border-top: 3px double var(--panel-border);">
+      <td>Dirac equation</td>
+      <td class="notaddressed">&mdash; not derived</td>
+      <td class="derived">Off-diagonal Bloch H, &gamma; matrices from valley pairing</td>
+    </tr>
+    <tr>
+      <td>Clifford algebra</td>
+      <td class="notaddressed">&mdash; not derived</td>
+      <td class="derived">Cliff(4,0) emerges exactly: {&gamma;<sup>&mu;</sup>, &gamma;<sup>&nu;</sup>} = 2g<sup>&mu;&nu;</sup></td>
+    </tr>
+    <tr>
+      <td>Spin-&frac12;</td>
+      <td class="notaddressed">&mdash; not derived</td>
+      <td class="derived">Frame holonomy <em>R</em> &rarr; &minus;<em>R</em>; SU(2) <em>j</em>=&frac12;</td>
+    </tr>
+    <tr>
+      <td>Chirality</td>
+      <td class="notaddressed">&mdash; not addressed</td>
+      <td class="derived">Chiral downfold localises bound state on one sublattice</td>
+    </tr>
+    <tr>
+      <td>Mass <em>m</em></td>
+      <td>Posited: <em>m</em> = <em>h</em>/(<em>cR</em>)</td>
+      <td class="derived">SU(2) Casimir <em>j</em>(<em>j</em>+1) = 3/4, frame sector</td>
+    </tr>
+    <tr>
+      <td>g-factor = 2 at tree level</td>
+      <td class="notaddressed">&mdash; not derived</td>
+      <td class="derived">Orbital current <em>j</em> = <em>K</em>&nbsp;sin(&Delta;&theta;), bipartite current loop</td>
+    </tr>
+    <tr>
+      <td>Anomalous moment <em>g</em> &minus; 2</td>
+      <td class="notaddressed">&mdash; not derived</td>
+      <td class="derived"><em>K</em>-field vacuum response; measures &alpha; (Chapter 10)</td>
+    </tr>
+    <tr>
+      <td>Furry obstruction</td>
+      <td class="notaddressed">&mdash; not derived</td>
+      <td class="derived">Cross-sector coupling is even&times;even; odd-photon vertices forbidden</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The five rows above the double line are the WvdM kernel &mdash; the topological identifications that are elegantly captured by "electron = confined photon." The eight rows below the line are what the lattice adds: the full machinery of the Dirac equation and QED, derived from the geometry of diamond and the dynamics of the CLR. This is what it means for the lattice to <em>unify</em> WvdM with QED. The topological framing and the relativistic-quantum machinery turn out to be two views of the same object, and the lattice makes them the same.</p>
+
+<h2>What we have built</h2>
+
+<p>Ten properties of the electron, all emergent from the lattice. Not one was put in by hand.</p>
+
+<div style="text-align: center; margin: 1.4em 0;">
+  <svg id="svg-assembly" width="620" height="340" viewBox="0 0 620 340" style="max-width: 100%;">
+    <defs>
+      <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L8,3 L0,6" fill="none" stroke="#c8c0ad" stroke-width="1.2"/>
+      </marker>
+    </defs>
+
+    <!-- Properties list — two columns -->
+    <g class="node" data-node="charge">
+      <rect x="10" y="10" width="280" height="28" rx="4" fill="#fdfaf3" stroke="#d97236" stroke-width="1.5"/>
+      <text x="24" y="29" fill="#2a2a2a" style="font: 13px 'Charter', serif;"><tspan style="font-weight:600;">Charge</tspan> &mdash; quantised, conserved, paired</text>
+    </g>
+    <g class="node" data-node="dirac">
+      <rect x="10" y="46" width="280" height="28" rx="4" fill="#fdfaf3" stroke="#2a5f8f" stroke-width="1.5"/>
+      <text x="24" y="65" fill="#2a2a2a" style="font: 13px 'Charter', serif;"><tspan style="font-weight:600;">Dirac spectrum</tspan> &mdash; E &#x221D; |k|, like light</text>
+    </g>
+    <g class="node" data-node="binary">
+      <rect x="10" y="82" width="280" height="28" rx="4" fill="#fdfaf3" stroke="#d97236" stroke-width="1.5"/>
+      <text x="24" y="101" fill="#2a2a2a" style="font: 13px 'Charter', serif;"><tspan style="font-weight:600;">Binary K-field</tspan> &mdash; dead core, alive bulk</text>
+    </g>
+    <g class="node" data-node="current">
+      <rect x="10" y="118" width="280" height="28" rx="4" fill="#fdfaf3" stroke="#d97236" stroke-width="1.5"/>
+      <text x="24" y="137" fill="#2a2a2a" style="font: 13px 'Charter', serif;"><tspan style="font-weight:600;">Orbital current</tspan> &mdash; persistent circulation</text>
+    </g>
+    <g class="node" data-node="chirality">
+      <rect x="10" y="154" width="280" height="28" rx="4" fill="#fdfaf3" stroke="#2a5f8f" stroke-width="1.5"/>
+      <text x="24" y="173" fill="#2a2a2a" style="font: 13px 'Charter', serif;"><tspan style="font-weight:600;">Chirality</tspan> &mdash; lives on one sublattice</text>
+    </g>
+    <g class="node" data-node="spin">
+      <rect x="320" y="10" width="290" height="28" rx="4" fill="#fdfaf3" stroke="#a8a39a" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="334" y="29" fill="#2a2a2a" style="font: 13px 'Charter', serif;"><tspan style="font-weight:600;">Spin-&#xBD;</tspan> &mdash; frame holonomy (companion paper)</text>
+    </g>
+    <g class="node" data-node="stability">
+      <rect x="320" y="46" width="290" height="28" rx="4" fill="#fdfaf3" stroke="#d97236" stroke-width="1.5"/>
+      <text x="334" y="65" fill="#2a2a2a" style="font: 13px 'Charter', serif;"><tspan style="font-weight:600;">Stability</tspan> &mdash; topologically protected</text>
+    </g>
+    <g class="node" data-node="confinement">
+      <rect x="320" y="82" width="290" height="28" rx="4" fill="#fdfaf3" stroke="#d97236" stroke-width="1.5"/>
+      <text x="334" y="101" fill="#2a2a2a" style="font: 13px 'Charter', serif;"><tspan style="font-weight:600;">Confinement</tspan> &mdash; V(r) = 2&#x3C0;Kn&#xB2; ln(r/a)</text>
+    </g>
+    <g class="node" data-node="gfactor">
+      <rect x="320" y="118" width="290" height="28" rx="4" fill="#fdfaf3" stroke="#2a5f8f" stroke-width="1.5"/>
+      <text x="334" y="137" fill="#2a2a2a" style="font: 13px 'Charter', serif;"><tspan style="font-weight:600;">g-factor &#x2248; 2</tspan> &mdash; Dirac value at tree level</text>
+    </g>
+    <g class="node" data-node="furry">
+      <rect x="320" y="154" width="290" height="28" rx="4" fill="#fdfaf3" stroke="#2a5f8f" stroke-width="1.5"/>
+      <text x="334" y="173" fill="#2a2a2a" style="font: 13px 'Charter', serif;"><tspan style="font-weight:600;">Furry obstruction</tspan> &mdash; no odd-photon vertices</text>
+    </g>
+
+    <!-- Converging to electron -->
+    <line x1="160" y1="186" x2="260" y2="220" stroke="#c8c0ad" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="460" y1="186" x2="360" y2="220" stroke="#c8c0ad" stroke-width="1" stroke-dasharray="3,3"/>
+
+    <!-- The electron -->
+    <g class="node" data-node="electron">
+      <rect x="210" y="210" width="200" height="44" rx="8" fill="#d97236" stroke="#7a4220" stroke-width="2"/>
+      <text x="310" y="228" text-anchor="middle" fill="#fff" style="font: 700 13px 'SF Mono', monospace;">Electron</text>
+      <text x="310" y="245" text-anchor="middle" fill="rgba(255,255,255,0.8)" style="font: italic 11px 'Charter', serif;">Vortex(n=1) + frame(j=&#xBD;)</text>
+    </g>
+
+    <!-- Origin labels -->
+    <text x="310" y="286" text-anchor="middle" fill="#888" style="font: italic 12px 'Charter', serif;">Every property emergent. Zero put in by hand.</text>
+    <line x1="90" y1="296" x2="530" y2="296" stroke="#e0dbcb" stroke-width="1"/>
+    <text x="310" y="316" text-anchor="middle" fill="#555" style="font: 600 12px 'Charter', serif;">Inputs: oscillators + CLR + diamond lattice</text>
+    <text x="310" y="334" text-anchor="middle" fill="#555" style="font: 600 12px 'Charter', serif;">Output: everything above</text>
+  </svg>
+</div>
+<div class="assembly-explain" id="assembly-explain">
+  <em>Click any property above to see how it emerges from the lattice.</em>
+</div>
+
+<h2>Where this leaves us</h2>
+
+<p>We have the electron's <em>identity</em>: a phase vortex on the diamond lattice, carrying quantised charge, orbital current, and a definite chirality. Those are the electron's topological properties, and the ten rows above summarise them.</p>
+
+<p>But an electron is also a <em>quantum particle</em>. It obeys a specific equation of motion (the Dirac equation). It has spin-&frac12;. Its magnetic moment has a tiny anomaly that measures the fine structure constant &alpha;. How does all of <em>that</em> fall out of the same lattice? The next chapter shows how &mdash; Dirac dispersion from the bipartite structure, spin-&frac12; from the frame sector's double cover, and a punchline worth sitting with: &alpha; is not a property of the electron at all. It is a property of the vacuum.</p>
+
+<nav class="nav-links">
+  <a href="08-diamond.html" class="prev">Why the diamond lattice</a>
+  <a href="../index.html" class="up">contents</a>
+  <a href="10-fermion.html" class="next">How the lattice makes it a fermion</a>
+</nav>
+
+</div>
+<script type="module">
+import { setupHiDPICanvas, wireEquation, runWhenVisible } from '../js/common.js';
+import {
+  makeCamera, attachCameraControls, renderScene,
+  diamondLattice, orientCameraAlongAxis,
+} from '../js/lattice3d.js';
+import { computeFiedler } from '../js/fiedler.js';
+
+// ============================================================
+// Equation blocks
+// ============================================================
+
+wireEquation('eq-charge', {
+  q: { name: 'q — electric charge', pronounce: '"q"',
+    description: 'The electric charge of the excitation. Measured in units of the elementary charge <em>e</em>. On the lattice, charge = winding number &times; <em>e</em>.' },
+  n: { name: 'n — winding number', pronounce: '"n"',
+    description: 'The integer count of how many times the phase field winds around 2&pi; on a loop encircling the excitation. n = +1 for an electron, n = &minus;1 for a positron, n = 0 for a photon.' },
+  e: { name: 'e — the elementary charge', pronounce: '"e"',
+    description: 'The smallest unit of electric charge: 1.602 &times; 10<sup>&minus;19</sup> coulombs. On the lattice, it is the charge associated with one unit of winding.' },
+  n2: { name: 'n — (same winding number)', pronounce: '"n"',
+    description: 'Defined by the integral on the right: walk a closed loop, sum the phase increments, divide by 2&pi;. The result is always an integer.' },
+  integral: { name: '&#x222E; d&theta; / 2&pi; — the winding integral', pronounce: '"the loop integral of d-theta over two pi"',
+    description: 'Walk any closed loop encircling the excitation. At each step, measure the tiny phase change d&theta;. Sum them all up and divide by 2&pi;. Because the phase lives on a circle, the total is always a whole number of turns. This is the same integral from Chapter 7.' },
+  Z: { name: '&#x2124; — the integers', pronounce: '"the integers" or "zed"',
+    description: 'The set {..., &minus;2, &minus;1, 0, +1, +2, ...}. The winding number is always one of these. No fractions, no irrationals. This is why charge is quantised.' },
+});
+
+wireEquation('eq-current', {
+  j: { name: 'j<sub>ij</sub> — bond current', pronounce: '"j sub i j"',
+    description: 'The phase current flowing along the bond between oscillators <em>i</em> and <em>j</em>. Positive means flow from <em>i</em> to <em>j</em>; negative means the reverse. At every site, the total current in equals the total current out (Kirchhoff\'s law) &mdash; current is conserved.' },
+  K: { name: 'K<sub>ij</sub> — coupling strength', pronounce: '"K sub i j"',
+    description: 'The CLR-determined coupling on this bond. Dead bonds (K &approx; 0) carry no current. Alive bonds (K &approx; K<sub>bulk</sub>) carry current proportional to the phase mismatch. The K-field acts as a conductor: only alive bonds transmit.' },
+  sin: { name: 'sin(&Delta;&theta;<sub>ij</sub>) — the phase drive', pronounce: '"sine of delta theta"',
+    description: 'The sine of the phase difference between the two atoms. When they are in phase (&Delta;&theta; = 0), sin = 0 &mdash; no current. When the phases differ, current flows. Around a vortex core, the phase difference is always nonzero in the angular direction, so current circulates permanently.' },
+});
+// ============================================================
+// SVG assembly — click to explain
+// ============================================================
+(() => {
+  const svg = document.getElementById('svg-assembly');
+  const box = document.getElementById('assembly-explain');
+  if (!svg || !box) return;
+
+  const info = {
+    charge:      { name: 'Charge', text: 'Winding number <em>n</em> = &plusmn;1. Quantised because topology counts in integers. Conserved because winding cannot be smoothly undone. Paired because vortex&ndash;antivortex nucleate together (Chapter 7). This IS electric charge.' },
+    dirac:       { name: 'Dirac spectrum', text: 'The bipartite Bloch Hamiltonian has linear band crossings (Dirac cones) at the X&ndash;W edges, pinned by O<sub>h</sub> symmetry. Energy proportional to momentum: E &prop; |k|. The lattice produces a relativistic spectrum without any input about relativity.' },
+    binary:      { name: 'Binary K-field', text: 'The CLR kills bonds near the vortex core (cos&Delta;&theta; &lt; threshold &rarr; K &rarr; 0) and strengthens bonds in the bulk. The electron carves a tube of dead bonds along the vortex line, surrounded by alive bulk. Visible in Bond Health mode above.' },
+    current:     { name: 'Orbital current', text: 'j<sub>ij</sub> = K sin(&Delta;&theta;). Because phase winds around the core, current circulates permanently. This persistent orbital current is what gives the electron its magnetic moment &mdash; and a tree-level g-factor of exactly 2.' },
+    chirality:   { name: 'Chirality', text: 'The vortex winds equally around both sublattices, but the bound state localises on one. Left-handed (lives on A) or right-handed (lives on B). This broken symmetry is what makes electrons and positrons distinguishable beyond their charge.' },
+    spin:        { name: 'Spin-&frac12; (companion paper)', text: 'Transporting an SO(3) frame around the vortex returns it sign-flipped: R &rarr; &minus;R. This holonomy (&pi;<sub>1</sub>(SO(3)) = &#x2124;<sub>2</sub>) forces the bound state into a spinor representation. Two full rotations to return to the original state. Full treatment in the frame-sector companion paper.' },
+    stability:   { name: 'Stability', text: 'The winding number is topologically protected. In 3D, the vortex is a line &mdash; it cannot be removed without collapsing the entire line (Chapter 8). In the BKT window (Chapter 10), vortex pairs are bound by a logarithmic potential. The electron is stable.' },
+    confinement: { name: 'Confinement', text: 'The vortex&ndash;antivortex potential is V(r) = 2&pi;Kn&sup2; ln(r/a) &mdash; logarithmic, like a 2D Coulomb force. At the BKT critical coupling, this potential is marginally confining: strong enough to bind pairs, weak enough to allow free excitations at finite temperature.' },
+    gfactor:     { name: 'g-factor &asymp; 2', text: 'The orbital current around the vortex gives a magnetic moment. At tree level (frozen K), the ratio of magnetic moment to angular momentum is exactly g = 2 &mdash; the Dirac value. The tiny correction g &minus; 2 &ne; 0 comes from the vacuum\'s K-field response and IS the fine structure constant &alpha;.' },
+    furry:       { name: 'Furry obstruction', text: 'The cross-sector coupling cos(&Delta;&theta;)&middot;tr(R<sup>T</sup>R\')/3 is a product of two <em>even</em> functions. The trilinear vertex j<sub>&mu;</sub>A<sup>&mu;</sup> is therefore structurally impossible at all orders. All odd-photon processes are forbidden. This is the lattice analog of Furry\'s theorem in QED.' },
+    electron:    { name: 'Electron = Vortex(n=1) + frame(j=&frac12;)', text: 'Not one of these properties was put in. We put in oscillators, a learning rule, and a lattice. What came out carries quantised conserved charge, obeys the Dirac equation, has spin-&frac12;, chirality, a g-factor of 2, and logarithmic confinement. It is, in every measurable sense, an electron.' },
+  };
+
+  svg.addEventListener('click', (e) => {
+    const node = e.target.closest('g.node');
+    if (!node) return;
+    const d = info[node.dataset.node];
+    if (d) box.innerHTML = `<div class="name">${d.name}</div><div>${d.text}</div>`;
+  });
+})();
+
+// ============================================================
+// Shared lattice helpers
+// ============================================================
+
+function buildVortexLattice(nCells) {
+  const lat = diamondLattice({ nCells, a: 1, centered: true });
+  const scale = 1 / lat.bondLength;
+  let cmx = 0, cmy = 0, cmz = 0;
+  for (const at of lat.atoms) {
+    at.pos[0] *= scale; at.pos[1] *= scale; at.pos[2] *= scale;
+  }
+  for (const at of lat.atoms) {
+    cmx += at.pos[0]; cmy += at.pos[1]; cmz += at.pos[2];
+  }
+  cmx /= lat.atoms.length; cmy /= lat.atoms.length; cmz /= lat.atoms.length;
+  for (const at of lat.atoms) {
+    at.pos[0] -= cmx; at.pos[1] -= cmy; at.pos[2] -= cmz;
+  }
+  // Seed vortex phase (independent of z).
+  for (const at of lat.atoms) {
+    at.theta0 = Math.atan2(at.pos[1], at.pos[0]);
+  }
+  let extent = 0;
+  for (const at of lat.atoms) {
+    const r = Math.max(Math.abs(at.pos[0]), Math.abs(at.pos[1]), Math.abs(at.pos[2]));
+    if (r > extent) extent = r;
+  }
+  return { atoms: lat.atoms, bonds: lat.bonds, extent };
+}
+
+function phaseToColor(th, s = 75, l = 55) {
+  const deg = ((th * 180 / Math.PI) % 360 + 360) % 360;
+  return `hsl(${deg.toFixed(1)}, ${s}%, ${l}%)`;
+}
+
+// ============================================================
+// FIGURE 1: Photon vs Electron (side-by-side)
+// ============================================================
+(() => {
+  const cPhot = document.getElementById('canvas-photon');
+  const cElec = document.getElementById('canvas-electron');
+  if (!cPhot || !cElec) return;
+  const W = 330, H = 340;
+  const ctxP = setupHiDPICanvas(cPhot, W, H);
+  const ctxE = setupHiDPICanvas(cElec, W, H);
+
+  const lat = buildVortexLattice(2);
+
+  // Plane-wave phase for photon: θ = k·r + ωt.
+  const kVec = [1.2, 0.8, 0];
+
+  const camera = makeCamera({
+    yaw: 0, pitch: 0,
+    distance: Math.max(9, lat.extent * 3.6),
+    focalLength: 360,
+  });
+  orientCameraAlongAxis(camera, [0, 0, 1]);  // top-down: photon wave sweeps clearly, electron pinwheel face-on
+  // Attach drag to BOTH canvases, both modify the same camera.
+  attachCameraControls(cPhot, camera);
+  attachCameraControls(cElec, camera);
+
+  // Build render atoms for photon and electron.
+  const photonAtoms = lat.atoms.map(at => ({
+    pos: at.pos, radius: 0.24,
+    strokeColor: at.sublattice === 'A' ? '#7a4220' : '#1a3c5c',
+    kDot: kVec[0] * at.pos[0] + kVec[1] * at.pos[1] + kVec[2] * at.pos[2],
+  }));
+  const electronAtoms = lat.atoms.map(at => ({
+    pos: at.pos, radius: 0.24,
+    strokeColor: at.sublattice === 'A' ? '#7a4220' : '#1a3c5c',
+    theta0: at.theta0,
+  }));
+  const bonds = lat.bonds.map(b => ({
+    a: b.a, b: b.b,
+    color: 'rgba(30, 30, 30, 0.3)',
+    width: 1.0,
+  }));
+
+  let t = 0;
+  const omega = 0.015;
+  let mode = 'colour';  // 'colour' | 'mono'
+
+  // B&W mode: phase maps to brightness via sin(θ).
+  // Dark = phase near -π/2 (trough), bright = phase near π/2 (crest).
+  function phaseToMono(phase) {
+    const b = (Math.sin(phase) + 1) / 2;   // 0 = trough (dark), 1 = crest (bright)
+    const g = Math.round(30 + b * 220);     // near-black → near-white
+    return `rgb(${g},${g},${g})`;
+  }
+
+  function colorFor(phase) {
+    return mode === 'colour' ? phaseToColor(phase) : phaseToMono(phase);
+  }
+
+  function draw() {
+    t += omega;
+
+    // Photon
+    ctxP.clearRect(0, 0, W, H);
+    ctxP.fillStyle = '#f5f0e4'; ctxP.fillRect(0, 0, W, H);
+    for (const at of photonAtoms) at.color = colorFor(at.kDot + t);
+    renderScene(ctxP, W, H, { atoms: photonAtoms, bonds }, camera);
+    ctxP.fillStyle = '#888'; ctxP.font = 'italic 10.5px "Charter", serif';
+    ctxP.textAlign = 'center';
+    ctxP.fillText(mode === 'colour'
+      ? 'n = 0 · colours sweep uniformly'
+      : 'n = 0 · bright band sweeps through', W / 2, H - 10);
+
+    // Electron
+    ctxE.clearRect(0, 0, W, H);
+    ctxE.fillStyle = '#f5f0e4'; ctxE.fillRect(0, 0, W, H);
+    for (const at of electronAtoms) at.color = colorFor(at.theta0 + t);
+    renderScene(ctxE, W, H, { atoms: electronAtoms, bonds }, camera);
+    ctxE.fillStyle = '#888'; ctxE.font = 'italic 10.5px "Charter", serif';
+    ctxE.textAlign = 'center';
+    ctxE.fillText(mode === 'colour'
+      ? 'n = 1 · pinwheel rotates, winding stays'
+      : 'n = 1 · bright & dark bands swirl around core', W / 2, H - 10);
+  }
+
+  runWhenVisible(cPhot, draw);
+
+  const colourBtn = document.getElementById('pe-colour');
+  const monoBtn = document.getElementById('pe-mono');
+  if (colourBtn && monoBtn) {
+    colourBtn.addEventListener('click', () => {
+      mode = 'colour';
+      colourBtn.classList.add('primary'); monoBtn.classList.remove('primary');
+    });
+    monoBtn.addEventListener('click', () => {
+      mode = 'mono';
+      monoBtn.classList.add('primary'); colourBtn.classList.remove('primary');
+    });
+  }
+})();
+
+// ============================================================
+// Helper: pre-compute bond (cosΔθ, sinΔθ) for a vortex-seeded lattice
+// ============================================================
+function computeBondInfo(lat) {
+  return lat.bonds.map(b => {
+    const dth = lat.atoms[b.b].theta0 - lat.atoms[b.a].theta0;
+    const w = ((dth + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+    return {
+      a: b.a, b: b.b,
+      cosDth: Math.cos(w), sinDth: Math.sin(w), absSin: Math.abs(Math.sin(w)),
+    };
+  });
+}
+
+// ============================================================
+// Global zoom / colour constants used across figures
+// ============================================================
+const ZOOM_MULT = 3.4;                    // zoom-out multiplier applied to extent
+const BOND_ALIVE = [45, 154, 78];         // bright green
+const BOND_DEAD  = [168, 85, 247];        // vivid purple — stands out against rainbow
+
+// Steep sigmoid so middle values snap clearly toward dead or alive
+function healthCurve(h) {
+  // h in [0, 1]. Applies a sigmoid-ish steepening around 0.5.
+  const x = (Math.max(0, Math.min(1, h)) - 0.5) * 6;
+  return 1 / (1 + Math.exp(-x));
+}
+
+function bondHealthColor(health) {
+  const t = healthCurve(health);
+  const r = Math.round(BOND_DEAD[0] + t * (BOND_ALIVE[0] - BOND_DEAD[0]));
+  const g = Math.round(BOND_DEAD[1] + t * (BOND_ALIVE[1] - BOND_DEAD[1]));
+  const b = Math.round(BOND_DEAD[2] + t * (BOND_ALIVE[2] - BOND_DEAD[2]));
+  // renderScene() will override alpha with a depth-based value, so the
+  // alpha we return here doesn't actually affect final opacity — what
+  // matters is the R/G/B channels.  Keep alpha at 1 for clarity.
+  return `rgba(${r},${g},${b},1)`;
+}
+
+function bondHealthWidth(health) {
+  const t = healthCurve(health);
+  return 0.4 + t * 3.2;  // very thin when dead, thick when alive
+}
+
+// ============================================================
+// FIGURE 2 (hero): The living electron
+// Top-down default, green/red bonds, vortex-axis arrow, dead/alive mode
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-hero');
+  if (!canvas) return;
+  const W = 680, H = 480;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const lat = buildVortexLattice(3);
+  const bondInfo = computeBondInfo(lat);
+
+  const camera = makeCamera({
+    yaw: 0, pitch: 0,
+    distance: Math.max(10, lat.extent * ZOOM_MULT),
+    focalLength: 460,
+  });
+  orientCameraAlongAxis(camera, [0, 0, 1]);  // top-down default
+  attachCameraControls(canvas, camera);
+
+  let t = 0;
+  const omega = 0.012;
+  let mode = 'phase';  // 'phase' | 'bonds'
+
+  // Pre-compute health per bond (cosΔθ → [0,1])
+  const bondHealth = bondInfo.map(b => (b.cosDth + 1) / 2);
+
+  // The vortex axis — two synthetic "marker" atoms above/below the lattice
+  // with a thick dark bond between them, depth-sorted with the real atoms.
+  const axisLen = lat.extent * 1.25;
+
+  // Scene atoms updated per-frame for phase colouring
+  const atoms = lat.atoms.map(at => ({
+    pos: at.pos, radius: 0.22,
+    theta0: at.theta0,
+    strokeColor: at.sublattice === 'A' ? '#7a4220' : '#1a3c5c',
+  }));
+
+  // Append axis marker atoms at the end (indices N, N+1)
+  const N = atoms.length;
+  atoms.push({
+    pos: [0, 0, -axisLen], radius: 0.12,
+    color: '#7d2d4f', strokeColor: '#4a1a30',
+  });
+  atoms.push({
+    pos: [0, 0,  axisLen], radius: 0.12,
+    color: '#7d2d4f', strokeColor: '#4a1a30',
+  });
+
+  function buildBonds() {
+    const bonds = bondInfo.map((b, bi) => {
+      const w = mode === 'phase' ? bondHealthWidth(bondHealth[bi])
+                                 : bondHealthWidth(bondHealth[bi]) * 1.3;
+      return {
+        a: b.a, b: b.b,
+        color: bondHealthColor(bondHealth[bi]),
+        width: w,
+      };
+    });
+    // Vortex axis bond (dark, thick, threaded through the core)
+    bonds.push({
+      a: N, b: N + 1,
+      color: 'rgba(125, 45, 79, 1)',
+      width: 4,
+    });
+    return bonds;
+  }
+
+  function buildAtoms() {
+    if (mode === 'phase') {
+      for (let i = 0; i < N; i++) {
+        atoms[i].color = phaseToColor(atoms[i].theta0 + t);
+        atoms[i].radius = 0.22;
+      }
+    } else {
+      // 'bonds' mode: grey out the atoms so bond colours dominate
+      for (let i = 0; i < N; i++) {
+        atoms[i].color = '#c8c0ad';
+        atoms[i].radius = 0.13;
+      }
+    }
+    return atoms;
+  }
+
+  function draw() {
+    t += omega;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+
+    renderScene(ctx, W, H, { atoms: buildAtoms(), bonds: buildBonds() }, camera);
+
+    ctx.fillStyle = '#555'; ctx.font = '12px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    const label = mode === 'phase'
+      ? 'Electron: phase (rainbow) + bond health (green alive / purple dead)'
+      : 'Electron: bond K-field only — green alive, purple dead, vortex axis in burgundy';
+    ctx.fillText(label, 24, 22);
+    ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = '#888';
+    ctx.fillText('phases oscillate; winding and dead-core stay fixed · drag to rotate', 24, 38);
+  }
+  function loop() { draw(); requestAnimationFrame(loop); }
+  loop();
+
+  // Mode buttons
+  const mPhase = document.getElementById('hero-mode-phase');
+  const mBonds = document.getElementById('hero-mode-bonds');
+  mPhase.addEventListener('click', () => {
+    mode = 'phase';
+    mPhase.classList.add('primary'); mBonds.classList.remove('primary');
+  });
+  mBonds.addEventListener('click', () => {
+    mode = 'bonds';
+    mBonds.classList.add('primary'); mPhase.classList.remove('primary');
+  });
+
+  // View buttons
+  const vTop = document.getElementById('hero-view-top');
+  const vIso = document.getElementById('hero-view-iso');
+  const vSide = document.getElementById('hero-view-side');
+  function clearView() {
+    vTop.classList.remove('primary');
+    vIso.classList.remove('primary');
+    vSide.classList.remove('primary');
+  }
+  vTop.addEventListener('click', () => {
+    orientCameraAlongAxis(camera, [0, 0, 1]);
+    clearView(); vTop.classList.add('primary');
+  });
+  vIso.addEventListener('click', () => {
+    camera.yaw = 0.6; camera.pitch = -0.35;
+    clearView(); vIso.classList.add('primary');
+  });
+  vSide.addEventListener('click', () => {
+    orientCameraAlongAxis(camera, [0, 1, 0]);
+    camera.pitch = Math.min(Math.PI / 2 - 0.01, camera.pitch);
+    clearView(); vSide.classList.add('primary');
+  });
+})();
+
+// ============================================================
+// FIGURE 3: Current — orbital circulation around the vortex core
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-current');
+  if (!canvas) return;
+  const W = 680, H = 400;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const lat = buildVortexLattice(3);
+  const bondInfo = computeBondInfo(lat);
+
+  const camera = makeCamera({
+    yaw: 0, pitch: 0,  // Default to [001] top-down
+    distance: Math.max(10, lat.extent * ZOOM_MULT), focalLength: 420,
+  });
+  orientCameraAlongAxis(camera, [0, 0, 1]);
+  attachCameraControls(canvas, camera);
+
+  // Atoms: very faint grey dots, just enough to anchor the bond pattern
+  const atoms = lat.atoms.map(at => ({
+    pos: at.pos, radius: 0.08,
+    color: 'rgba(200, 195, 180, 0.5)',
+    strokeColor: null,
+  }));
+
+  // Bonds: colour by current direction (orange vs blue), width by magnitude.
+  // Low-current bonds nearly vanish so only the circulation ring reads.
+  // Alpha handled by renderScene via depth — what matters is R/G/B + width.
+  const bonds = bondInfo.map(b => {
+    const s = b.sinDth;     // in [-1, 1]; sign = direction
+    const mag = Math.abs(s);
+    if (mag < 0.1) {
+      // Nearly-dead bonds — faint and thin
+      return { a: b.a, b: b.b, color: 'rgba(220, 215, 200, 0.18)', width: 0.3 };
+    }
+    if (s > 0) {
+      // Clockwise flow: orange, stronger saturation at high magnitude
+      return {
+        a: b.a, b: b.b,
+        color: `rgba(217, 114, 54, 1)`,
+        width: 1.0 + mag * 4.5,
+      };
+    } else {
+      // Counter-clockwise flow: blue
+      return {
+        a: b.a, b: b.b,
+        color: `rgba(42, 95, 143, 1)`,
+        width: 1.0 + mag * 4.5,
+      };
+    }
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+
+    renderScene(ctx, W, H, { atoms, bonds }, camera);
+
+    ctx.fillStyle = '#555'; ctx.font = '12px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Phase current j = K·sin(Δθ)  ·  orange = +  ·  blue = −', 24, 22);
+    ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = '#888';
+    ctx.fillText('the ring of bright bonds around the centre is the orbital current', 24, 38);
+  }
+  function loop() { draw(); requestAnimationFrame(loop); }
+  loop();
+
+  document.getElementById('curr-view-top').addEventListener('click', () => {
+    orientCameraAlongAxis(camera, [0, 0, 1]);
+  });
+  document.getElementById('curr-view-iso').addEventListener('click', () => {
+    camera.yaw = 0.6; camera.pitch = -0.35;
+  });
+})();
+
+// ============================================================
+// FIGURE 4: Chirality — bound state localises on one sublattice
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-chirality');
+  if (!canvas) return;
+  const W = 680, H = 400;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const lat = buildVortexLattice(3);
+  const camera = makeCamera({
+    yaw: 0.6, pitch: -0.35,
+    distance: Math.max(10, lat.extent * ZOOM_MULT), focalLength: 440,
+  });
+  attachCameraControls(canvas, camera);
+
+  let mode = 'A';  // 'A' | 'B' | 'both'
+
+  const bonds = lat.bonds.map(b => ({
+    a: b.a, b: b.b,
+    color: 'rgba(30, 30, 30, 0.18)', width: 0.8,
+  }));
+
+  function scene() {
+    const atoms = lat.atoms.map(at => {
+      const isA = at.sublattice === 'A';
+      if (mode === 'both') {
+        return {
+          pos: at.pos, radius: 0.22,
+          color: phaseToColor(at.theta0),
+          strokeColor: isA ? '#7a4220' : '#1a3c5c',
+        };
+      }
+      const on = (mode === 'A' && isA) || (mode === 'B' && !isA);
+      if (on) {
+        return {
+          pos: at.pos, radius: 0.26,
+          color: phaseToColor(at.theta0, 80, 55),
+          strokeColor: isA ? '#7a4220' : '#1a3c5c',
+        };
+      } else {
+        return {
+          pos: at.pos, radius: 0.14,
+          color: '#cfcabe',
+          strokeColor: '#a8a39a',
+        };
+      }
+    });
+    return { atoms, bonds };
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4'; ctx.fillRect(0, 0, W, H);
+    renderScene(ctx, W, H, scene(), camera);
+    ctx.fillStyle = '#555'; ctx.font = '12px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    const label = mode === 'A' ? 'Bound state on A: A atoms in phase colour, B atoms grey'
+                : mode === 'B' ? 'Bound state on B: B atoms in phase colour, A atoms grey'
+                : 'Both sublattices in full phase colour';
+    ctx.fillText(label, 24, 22);
+    ctx.font = 'italic 10.5px "Charter", serif'; ctx.fillStyle = '#888';
+    ctx.fillText('drag to rotate', 24, 38);
+  }
+  function loop() { draw(); requestAnimationFrame(loop); }
+  loop();
+
+  const btns = {
+    A: document.getElementById('chi-a'),
+    B: document.getElementById('chi-b'),
+    both: document.getElementById('chi-both'),
+  };
+  function setMode(m) {
+    mode = m;
+    for (const k of Object.keys(btns)) btns[k].classList.toggle('primary', k === m);
+  }
+  btns.A.addEventListener('click', () => setMode('A'));
+  btns.B.addEventListener('click', () => setMode('B'));
+  btns.both.addEventListener('click', () => setMode('both'));
+})();
+
+</script>
+</body>
+</html>

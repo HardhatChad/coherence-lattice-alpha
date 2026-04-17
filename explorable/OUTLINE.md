@@ -35,14 +35,15 @@ A three-act structure:
 | 06 | Phase-locked modes: geometry and memory | ✅ DONE |
 | 07 | Spontaneous vortices | ✅ DONE |
 | 08 | Why the diamond lattice | ✅ DONE |
-| 09 | The electron | TODO |
-| 10 | The BKT wall | TODO |
-| 11 | Living versus static | TODO |
-| 12 | The α formula, piece by piece | TODO |
-| 13 | Why three dimensions | TODO |
-| 14 | Closing the gap with linked clusters | TODO |
-| 15 | From α to g | TODO |
-| 16 | Coda: what just happened | TODO |
+| 09 | The electron (identity & topology) | ✅ DONE |
+| 10 | How the lattice makes it a fermion | ✅ DONE |
+| 11 | The BKT wall | TODO |
+| 12 | Living versus static | TODO |
+| 13 | The α formula, piece by piece | TODO |
+| 14 | Why three dimensions | TODO |
+| 15 | Closing the gap with linked clusters | TODO |
+| 16 | From α to g | TODO |
+| 17 | Coda: what just happened | TODO |
 
 ---
 
