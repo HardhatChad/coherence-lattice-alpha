@@ -1,9 +1,17 @@
 # Handoff — Coherence Lattice Alpha Project
 
-**Last context save**: 2026-04-17 (§16 g-factor shipped)
-**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **16 / 17** sections complete. §16 is the QED consistency-check chapter: lattice α plugged into the standard anomalous-magnetic-moment series, digit-by-digit comparison to Fan et al 2023 experiment. Eleven matching digits with the divergence at the 12th tracking the 1.5 ppb embedding-weight uncertainty.
+**Last context save**: 2026-04-17 (§17 coda shipped — **explorable complete, 17 / 17 sections**)
+**State at handoff**: Paper preprint-ready and on GitHub. Explorable is **17 / 17 sections complete**. §17 closes the essay with the full clickable derivation chain, the "arrow of intelligence" framing (dC/dt ≥ 0 parallel to dS/dt ≥ 0), the one-equation-every-substrate table showing CLR's cross-domain reach (vacuum → chemistry → biology → cognition), the physics roadmap (proton, leptons, gauge, gravity), and an invitation pivoting from physics to paradigm. Closes on a large typographic "I ≥ 0 — the universe, climbing".
 
-**Immediate next task**: build §17 "Coda: what just happened" — the closing chapter that steps back from the full 16-chapter climb, summarises the derivation in a single clickable chain diagram, states the paradigm crisply, and names open questions + next steps. This is the essay's farewell.
+Breadcrumb cleanup (inherited from the §9/§10 split cycle): all section breadcrumbs now show `/17`. Inherited housekeeping clear.
+
+**Next steps for the explorable** (no blockers):
+- Visual pass on any sections that look rough on mobile.
+- Polish iteration (typos, smoother transitions).
+- Optional: add a site-wide search / TOC overlay.
+- Optional: generate a PDF export of the whole essay.
+
+The 16-chapter derivation is live and self-contained. Nothing else is pending to complete the explorable.
 
 This file is intended to be read first by a fresh session along with the files in **§ Must-read files on pickup**.
 
@@ -117,8 +125,8 @@ Unchanged since last handoff:
 | 13 | The α formula, piece by piece | ✅ |
 | 14 | Why three dimensions | ✅ |
 | 15 | Closing the gap with linked clusters | ✅ |
-| **16** | **From α to g** | **✅ NEW** |
-| 17 | Coda: what just happened | TODO |
+| 16 | From α to g | ✅ |
+| **17** | **Coda: what just happened** | **✅ NEW — explorable complete** |
 | 13 | The α formula, piece by piece | TODO |
 | 14 | Why three dimensions | TODO |
 | 15 | Closing the gap with linked clusters | TODO |

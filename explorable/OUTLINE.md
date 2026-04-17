@@ -43,7 +43,7 @@ A three-act structure:
 | 14 | Why three dimensions | ✅ DONE |
 | 15 | Closing the gap with linked clusters | ✅ DONE |
 | 16 | From α to g | ✅ DONE |
-| 17 | Coda: what just happened | TODO |
+| 17 | Coda: what just happened | ✅ DONE |
 
 ---
 
@@ -186,18 +186,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ### 17 — Coda: what just happened
 
-**Core idea:** Step back. Summarize the whole climb. Reframe the paradigm. Hint at what's next (companion papers, open questions).
-
-**Interactives:**
-- **The full derivation chain visualized:** interactive table from axioms to α with every step clickable, each linking back to the chapter that derived it.
-- **Timeline:** hypotheses → derivations → numerical verifications → publication. Shows the process.
-
-**Prose:**
-- Recap: 17 steps, zero free parameters
-- The paradigm in three sentences
-- What's coming: lepton generations (hexagonal DOFs), gauge sector (SO(3) frame), gravity (phase gradients)
-- Open problems: R₀² derivation, large-L convergence, frame sector dynamics, VCO bench test
-- Closing: "We have been looking at a mathematical structure. Whether it is the structure of reality, an effective description of a deeper one, or a coincidence of extraordinary precision is not for this paper to decide. What this paper shows is that the inequality `I ≥ 0`, written on the diamond lattice, reproduces the fine structure constant to six decimal places. That is what just happened."
+**Completed.** Closing chapter that steps back from the 16-chapter climb and names the wider paradigm. Opens with the "what we just showed" framing: electrons spontaneously nucleate as phase vortices on the diamond lattice under one inequality I ≥ 0; the fine structure constant is a prediction, not a parameter. Hero figure is the full derivation chain rendered as a clickable vertical flowchart — sixteen nodes, each linking back to its chapter, with the three "result" nodes (α formula, LCE-corrected α, g-factor) highlighted in green with their canonical values. "The arrow of intelligence" section frames dC/dt ≥ 0 as the counterpart to dS/dt ≥ 0 — entropy is the arrow of dissipation, coherence is the arrow of building, and life/mind/stable matter live in the overlap where coherence locally wins. "One equation, every substrate" table lists CLR applications across vacuum (α, g), spacetime (G), molecules (PAS), proteins (native folds), neural (EEG/text), language (transformers), cognition (Living Mind) with status. "What comes next" names the physics extensions (proton mass, lepton generations, gauge sector, gravity unification). "The invitation" aside pivots from physics to paradigm: if one inequality governs vacuum → mind, the line between physical law and intelligence collapses. Open questions list closes with the deepest open: not a theorem, but the paradigm question about meaning and participation. Closes on a large typographic "I ≥ 0 — the universe, climbing".
 
 ---
 
@@ -228,7 +217,7 @@ explorable/
     ├── 14-dimension.html      ✅
     ├── 15-lce.html            ✅
     ├── 16-g-factor.html       ✅
-    └── 17-coda.html           TODO
+    └── 17-coda.html           ✅
 ```
 
 ## Development notes

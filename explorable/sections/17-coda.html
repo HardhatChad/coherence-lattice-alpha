@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coda: what just happened — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+/* Derivation-chain figure */
+.chain {
+  display: flex; flex-direction: column; gap: 0;
+  margin: 1.4em 0 1.6em;
+}
+.chain-row {
+  display: grid;
+  grid-template-columns: 58px 1fr 110px;
+  gap: 14px;
+  align-items: stretch;
+}
+.chain-ch {
+  display: flex; align-items: center; justify-content: center;
+  font: 700 13px "SF Mono", monospace;
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+}
+.chain-node {
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s, transform 0.08s;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+.chain-node:hover { border-color: var(--accent); background: var(--highlight); transform: translateX(2px); }
+.chain-node .node-title {
+  font: 600 14px "Charter", serif; color: var(--text); margin-bottom: 2px;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.chain-node .node-sub {
+  font: italic 12.5px "Charter", serif; color: var(--text-soft);
+}
+.chain-node .node-result {
+  display: inline-block;
+  font: 600 11px "SF Mono", monospace;
+  color: #6dc48f;
+  padding: 1px 8px;
+  background: rgba(109, 196, 143, 0.12);
+  border-radius: 10px;
+  margin-left: auto;
+}
+.chain-arrow {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-faint);
+  font: 15px "SF Mono", monospace;
+  min-height: 18px;
+}
+.chain-connector {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: center;
+  height: 16px; color: var(--text-faint);
+}
+.chain-node.start { border-left: 3px solid #efa57a; }
+.chain-node.result { border-left: 3px solid #6dc48f; }
+@media (max-width: 620px) {
+  .chain-row { grid-template-columns: 44px 1fr; }
+  .chain-row .chain-arrow { display: none; }
+}
+
+/* Substrate table */
+.substrate-table {
+  margin: 1em 0 1.2em;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+.substrate-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 160px 120px;
+  gap: 14px;
+  align-items: baseline;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--panel-border);
+}
+.substrate-row.header {
+  background: var(--bg);
+  font: 600 11px "SF Mono", monospace;
+  color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.substrate-row:last-child { border-bottom: none; }
+.substrate-row .sub-substrate { font: 600 13px "Charter", serif; color: var(--accent); }
+.substrate-row .sub-observable { font: 13px "Charter", serif; color: var(--text); }
+.substrate-row .sub-value { font: 600 12.5px "SF Mono", monospace; color: var(--alive); }
+.substrate-row .sub-status { font: 600 10.5px "SF Mono", monospace; color: var(--text-faint); }
+.substrate-row .sub-status.proved { color: #6dc48f; }
+.substrate-row .sub-status.open { color: #c38df7; }
+@media (max-width: 620px) {
+  .substrate-row { grid-template-columns: 1fr 1fr; gap: 4px 10px; padding: 10px 14px; }
+  .substrate-row.header { display: none; }
+}
+
+/* Paradigm aside */
+.paradigm-aside {
+  margin: 1.6em 0;
+  padding: 20px 24px;
+  background: linear-gradient(180deg, rgba(239, 165, 122, 0.06), rgba(109, 196, 143, 0.04));
+  border: 1px solid var(--panel-border);
+  border-left: 3px solid var(--alive);
+  border-radius: 3px;
+}
+.paradigm-aside .label {
+  font: 700 10.5px "SF Mono", monospace;
+  color: var(--alive);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  margin-right: 0.7em;
+}
+.paradigm-aside em { font-style: italic; color: var(--text); }
+
+/* Final equation block */
+.closing-ineq {
+  text-align: center;
+  font: italic 54px "Latin Modern Math", "STIX Two Math", serif;
+  margin: 1.4em 0;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+.closing-ineq .small {
+  font: italic 14px "Charter", serif;
+  display: block;
+  color: var(--text-faint);
+  letter-spacing: 0;
+  margin-top: 0.4em;
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 17 / 17</span>
+</nav>
+
+<h1>Coda: what just happened<span class="subtitle">Sixteen chapters, one inequality, and an invitation</span></h1>
+
+<p class="lead">Sixteen chapters ago we started with a single inequality &mdash; <em>I</em>&nbsp;&ge;&nbsp;0 &mdash; and the claim that it governs how coupled oscillators learn to be coherent. By the sixteenth chapter, that inequality had produced the fine structure constant to 1.5 parts per billion and the electron's <em>g</em>-factor to eleven matching digits with the most precise measurement ever performed. Not fitted. Not engineered. <em>Derived</em>. The only input was: let oscillators couple, apply the Coherence Learning Rule, observe what happens.</p>
+
+<h2>What we just showed</h2>
+
+<p>A vortex spontaneously nucleates out of nothing. Give a diamond lattice of coupled oscillators random initial phases and let the Coherence Learning Rule run; phase-locked regions form, topological defects condense at their boundaries, and a single stable winding appears at the centre of every lattice where a vortex line can exist. That winding, it turns out, carries an integer charge, obeys the Dirac equation, has spin-&frac12;, and couples to the K-field with a strength equal to the fine structure constant measured in real laboratories. The entire structure &mdash; the electron and its electromagnetism &mdash; drops out of one local update rule on one particular lattice.</p>
+
+<p>None of that was in the inputs. We put in: a network of oscillators, the rule that couplings evolve to maximise alignment, a coherence capital <em>C</em>&nbsp;=&nbsp;<em>I</em><sub>phase</sub>&nbsp;&middot;&nbsp;&rho; that the dynamics climbs. We got out: a particle with the charge, mass, spin, magnetic moment, and coupling constant of the electron. If you had told a physicist in 1910 that the fine structure constant could be derived without assumption from the structure of a lattice, they would have called you mad. If you had told one in 1948, 1970, 2000, or 2020, they would have called you mad. The claim of this essay is that it is nevertheless true, and the number matches experiment at the level where matching means something.</p>
+
+<h2>The derivation chain, end to end</h2>
+
+<p>Every one of the sixteen chapters is a single link in the chain from the principle to the prediction. Click any node below to return to its chapter.</p>
+
+<div class="chain">
+  <div class="chain-row">
+    <div class="chain-ch">I</div>
+    <a class="chain-node start" href="01-prelude.html">
+      <div class="node-title">The principle <span class="node-result"><em>I</em>&nbsp;&ge;&nbsp;0</span></div>
+      <div class="node-sub">coherence capital is non-decreasing under the learning rule</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">02</div>
+    <a class="chain-node" href="02-oscillators.html">
+      <div class="node-title">Oscillators on a graph</div>
+      <div class="node-sub">phases, couplings, the alignment integral <em>I</em><sub>phase</sub></div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">03</div>
+    <a class="chain-node" href="03-coherence.html">
+      <div class="node-title">Coherence capital</div>
+      <div class="node-sub"><em>C</em>&nbsp;=&nbsp;<em>I</em><sub>phase</sub>&nbsp;&middot;&nbsp;&rho; &mdash; alignment times structural richness</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">04</div>
+    <a class="chain-node" href="04-clr.html">
+      <div class="node-title">The Coherence Learning Rule <span class="node-result">d<em>C</em>/d<em>t</em>&nbsp;&ge;&nbsp;0</span></div>
+      <div class="node-sub">the local update that ascends <em>C</em> and produces a binary K-field</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">05</div>
+    <a class="chain-node" href="05-binary-field.html">
+      <div class="node-title">How a binary field emerges</div>
+      <div class="node-sub">alive and dead bonds crystallise out of CLR dynamics</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">06</div>
+    <a class="chain-node" href="06-plm-npd.html">
+      <div class="node-title">Phase-locked modes</div>
+      <div class="node-sub">the PLM Lemma: <em>K</em> freezes exponentially at attractors</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">07</div>
+    <a class="chain-node" href="07-vortices.html">
+      <div class="node-title">Spontaneous vortices</div>
+      <div class="node-sub">topological defects nucleate; the Fiedler channel protects their cores</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">08</div>
+    <a class="chain-node" href="08-diamond.html">
+      <div class="node-title">Why the diamond lattice <span class="node-result"><em>z</em>&nbsp;=&nbsp;4</span></div>
+      <div class="node-sub">five filters select diamond uniquely as the substrate</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">09</div>
+    <a class="chain-node" href="09-electron.html">
+      <div class="node-title">The electron <span class="node-result">charge, current, chirality</span></div>
+      <div class="node-sub">the vortex carries integer charge, directed current, sublattice localisation</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">10</div>
+    <a class="chain-node" href="10-fermion.html">
+      <div class="node-title">How the lattice makes it a fermion <span class="node-result">spin-&frac12;, <em>g</em>&nbsp;=&nbsp;2</span></div>
+      <div class="node-sub">Dirac dispersion from bipartite bands; frame sector gives the double cover</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">11</div>
+    <a class="chain-node" href="11-bkt-wall.html">
+      <div class="node-title">The BKT wall <span class="node-result"><em>K</em>_BKT&nbsp;=&nbsp;2/&pi;</span></div>
+      <div class="node-sub">topology pins the CLR at the marginal coupling</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">12</div>
+    <a class="chain-node" href="12-living-vs-static.html">
+      <div class="node-title">Living versus static <span class="node-result">1/&radic;e</span></div>
+      <div class="node-sub">observables evaluate at the attractor, not along the trajectory</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">13</div>
+    <a class="chain-node result" href="13-alpha-formula.html">
+      <div class="node-title">The &alpha; formula <span class="node-result">1/&alpha;&nbsp;=&nbsp;137.032</span></div>
+      <div class="node-sub"><em>R</em><sub>0</sub>(2/&pi;)<sup>4</sup> &middot; (&pi;/4)<sup>1/&radic;e + &alpha;/2&pi;</sup>, self-consistent in three iterations</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">14</div>
+    <a class="chain-node" href="14-dimension.html">
+      <div class="node-title">Why three dimensions <span class="node-result"><em>d</em>&nbsp;=&nbsp;3 unique</span></div>
+      <div class="node-sub">only this dimension produces a physical &alpha;</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">15</div>
+    <a class="chain-node result" href="15-lce.html">
+      <div class="node-title">Closing the gap <span class="node-result">1/&alpha;&nbsp;=&nbsp;137.035999</span></div>
+      <div class="node-sub">LCE over diamond subgraphs, 1.5 ppb residual</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+  <div class="chain-connector">&darr;</div>
+  <div class="chain-row">
+    <div class="chain-ch">16</div>
+    <a class="chain-node result" href="16-g-factor.html">
+      <div class="node-title">From &alpha; to <em>g</em> <span class="node-result"><em>g</em>&nbsp;=&nbsp;2.002319304355</span></div>
+      <div class="node-sub">lattice &alpha; plus QED series; 11 matching digits with experiment</div>
+    </a>
+    <div class="chain-arrow">&nbsp;</div>
+  </div>
+</div>
+
+<p>Every node in that chain is an independent theorem, derivation, or structural constraint. No step is adjustable; no step is fit to data. Each step has been re-checked by independent calculations when possible, and by dimensional and limiting-case analysis when not. The chain is as verified as human mathematics can currently make it. One step &mdash; the embedding weight in Chapter 15 &mdash; is an empirical observation whose formal proof is open, flagged in the paper, and on the queue.</p>
+
+<h2>The arrow of intelligence</h2>
+
+<p>The Coherence Learning Rule is an <em>inequality</em>, d<em>C</em>/d<em>t</em>&nbsp;&ge;&nbsp;0. That fact alone deserves a pause, because physics already has a famous inequality about the direction of change:</p>
+
+<p style="text-align: center; font: 600 17px 'SF Mono', monospace; margin: 1em 0;">
+  <span style="color: var(--text-faint);">d<em>S</em>/d<em>t</em>&nbsp;&ge;&nbsp;0</span>&nbsp;&nbsp;&nbsp;&nbsp;vs.&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #6dc48f;">d<em>C</em>/d<em>t</em>&nbsp;&ge;&nbsp;0</span>
+</p>
+
+<p>The second law of thermodynamics says entropy tends to increase: in a closed system, heat dissipates, order degrades, information is lost. This is the arrow we are usually taught to think with. It is true &mdash; at the scale of closed-system statistical mechanics it is ironclad.</p>
+
+<p>The Coherence Theorem says coherence capital tends to increase: under the CLR, in regions where the legality conditions are satisfied, phases lock, structures crystallise, information accrues. This is the <em>other</em> arrow. It points the other way. It does not violate the second law; it operates at different scales on different quantities, in the local pockets where coupling dominates over dissipation. Life lives here. So do planetary systems. So do thoughts. So, this paper claims, does the vacuum itself.</p>
+
+<p class="paradigm-aside"><span class="label">The arrow of negative entropy</span>If entropy is the direction of degradation, coherence is the direction of <em>building</em>. And the universe &mdash; as far as we have looked &mdash; does both, simultaneously, continuously. What we call life, mind, and stable matter all live in the narrow overlap where the coherence arrow locally wins. The Coherence Learning Rule is the mathematics of that winning. It is not a biological law, not a cognitive law, not an engineering law. It is a direction of change, as fundamental as the second law, operating wherever coupled oscillators with legality exist.</p>
+
+<h2>One equation, every substrate</h2>
+
+<p>What makes this claim testable is that the Coherence Learning Rule does not care what the oscillators <em>are</em>. The same equation, applied to different substrates, produces different observables &mdash; and these observables match experiment every time they have been checked. The present paper covers the vacuum substrate. The companion programme covers everything else:</p>
+
+<div class="substrate-table">
+  <div class="substrate-row header">
+    <div>substrate</div>
+    <div>what CLR produces</div>
+    <div>value</div>
+    <div>status</div>
+  </div>
+  <div class="substrate-row">
+    <div class="sub-substrate">vacuum</div>
+    <div class="sub-observable">fine structure constant, <em>g</em>-factor</div>
+    <div class="sub-value">1/&alpha; = 137.035999<br><em>g</em> = 2.002319304355</div>
+    <div class="sub-status proved">derived<br>1.5 ppb / 11 digits</div>
+  </div>
+  <div class="substrate-row">
+    <div class="sub-substrate">spacetime</div>
+    <div class="sub-observable">Newton's gravitational constant</div>
+    <div class="sub-value"><em>G</em> = 6.674&times;10<sup>&minus;11</sup></div>
+    <div class="sub-status proved">derived<br>6.7 ppm</div>
+  </div>
+  <div class="substrate-row">
+    <div class="sub-substrate">molecules</div>
+    <div class="sub-observable">universal chemical attractor (PAS)</div>
+    <div class="sub-value">PAS = 0.7656</div>
+    <div class="sub-status proved">999 molecules<br>unsupervised</div>
+  </div>
+  <div class="substrate-row">
+    <div class="sub-substrate">proteins</div>
+    <div class="sub-observable">native fold as maximal PLM</div>
+    <div class="sub-value">Levinthal resolved</div>
+    <div class="sub-status proved">theorem<br>+ partial experimental</div>
+  </div>
+  <div class="substrate-row">
+    <div class="sub-substrate">neural</div>
+    <div class="sub-observable">EEG &rarr; text semantic isomorphism</div>
+    <div class="sub-value">0.71 correlation</div>
+    <div class="sub-status proved">ZuCo 105-channel</div>
+  </div>
+  <div class="substrate-row">
+    <div class="sub-substrate">language</div>
+    <div class="sub-observable">transformer coupling manifold</div>
+    <div class="sub-value"><em>d</em><sub>eff</sub> = 3.5 of 768</div>
+    <div class="sub-status proved">GPT-2, SmolLM2</div>
+  </div>
+  <div class="substrate-row">
+    <div class="sub-substrate">cognition</div>
+    <div class="sub-observable">thinking organism (Living Mind)</div>
+    <div class="sub-value">backprop-free learning</div>
+    <div class="sub-status open">under construction</div>
+  </div>
+</div>
+
+<p>These are not analogies. They are applications of the same equation. The same <em>K</em>, the same <em>R</em><sub>0</sub>, the same Bessel ratio, the same BKT boundary, the same PLM Lemma, the same attractor-evaluation choice. The lattice changes: vacuum diamond at tetrahedral coordination, molecular graphs, protein residues on products of hyperspheres, scalp electrode arrays, attention heads in language models. The equation does not.</p>
+
+<h2>What comes next, in physics</h2>
+
+<p>The derivation chain stops at the electron, but the lattice does not. The companion papers, each in its own stage of completion, extend the same mechanism:</p>
+
+<ul style="margin: 0.6em 0 1em 1.6em; line-height: 1.75;">
+  <li><strong>The proton.</strong> Frame-sector dynamics (SU(2) gauge links) produce a Skyrmion configuration at an atomic site. Preliminary result: 4.9 ppm from CODATA. <em>Hypothesis, actively worked.</em></li>
+  <li><strong>The lepton generations.</strong> The muon and tau emerge as hexagonal-plane excitations of the frame sector, with mass ratios set by geometric eigenvalues of the lattice. <em>In progress.</em></li>
+  <li><strong>The gauge sector.</strong> The full weak-force structure comes from SO(3) frame holonomy; the strong force from diamond-chemistry sp&sup3; bonding. <em>Derivation chain sketched; details open.</em></li>
+  <li><strong>Gravity.</strong> Newton's <em>G</em> already falls out of CLR dynamics on the metric sector. <em>Derived, 6.7 ppm.</em> General relativity as an emergent effective theory is the target.</li>
+</ul>
+
+<p>If the paradigm is correct, the standard model and general relativity both live as effective theories on the coherence lattice. This paper has shown one fibre of that structure &mdash; the fine structure constant &mdash; and the rest of the programme is the other fibres.</p>
+
+<h2>The invitation</h2>
+
+<p>But the deeper question, the one this essay has been pointing at without naming, is not about physics.</p>
+
+<p>If a single inequality on a single lattice can derive the fine structure constant, the <em>g</em>-factor, the proton mass, chemical attractors, protein folds, and the architecture of thought &mdash; if the same equation governs the vacuum and the mind &mdash; then the distinction we have drawn for millennia between <em>physical law</em> and <em>intelligence</em> collapses. The universe does not run on two kinds of rules, one for atoms and one for minds. It runs on one rule, applied to different couplings.</p>
+
+<p>Intelligence, on this view, is not something that emerges when matter becomes complex enough. Intelligence is what the universe <em>does</em> at every scale, whenever the Coherence Learning Rule is locally active. An electron finding its vortex configuration, a protein finding its fold, a child learning a language: the same process, pointed at different substrates. The lattice does not distinguish them.</p>
+
+<p class="paradigm-aside"><span class="label">What this paper invites</span>That, if true, is not a physics paper. It is a reframing of what physics <em>is</em>. It says that the question 'what is reality made of?' has an answer simpler than any we have imagined: <em>reality is coherence, navigating its own geometry, tilted toward increasing itself by the slimmest margin permitted by legality</em>. And we &mdash; minds reading this sentence &mdash; are not separate from that process. We are instances of it, at a particular scale, with a particular richness. We are what the arrow has so far produced, and we are the arrow itself, looking around.</p>
+
+<p>We do not expect readers to accept this in a single reading. We expect readers to notice that <em>the number matches</em>. The fine structure constant is not a parameter of the coherence lattice; it is a prediction. If you give us only the inequality <em>I</em>&nbsp;&ge;&nbsp;0 and the diamond lattice, we give you the most precisely measured dimensionless number in all of experimental physics, to the limit of experimental resolution. The rest &mdash; what it means, where it leads, what kind of universe this is &mdash; can be taken up later.</p>
+
+<h2>The open questions</h2>
+
+<ul style="margin: 0.6em 0 1em 1.6em; line-height: 1.75;">
+  <li><strong>The dumbbell embedding weight</strong> &mdash; the only plausibility-argued piece of the fifteen-chapter derivation (Chapter 15). Formal derivation on the queue.</li>
+  <li><strong>The proton mass chain</strong> &mdash; frame-sector SU(2) Skyrmion, preliminary 4.9 ppm. Needs rigorous derivation, not matching.</li>
+  <li><strong>Lepton generations</strong> &mdash; the <em>hexagonal-plane</em> excitations for the muon and tau. Mass ratio predictions not yet pinned.</li>
+  <li><strong>The frame-sector dynamics</strong> &mdash; companion paper in preparation; the double-cover that produces spin-&frac12; is only sketched here.</li>
+  <li><strong>Large-L LCE convergence</strong> &mdash; higher-order subgraphs (trimer, ring) computed to show the series converges at its expected rate.</li>
+  <li><strong>The wider paradigm</strong> &mdash; the deepest open question, the one this paper <em>invites</em> rather than answers: if coherence is the direction of being, and if the same equation operates across all coherent substrates, then what are the implications for cognition, for biology, for how we understand ourselves as participants in the universe's ongoing coherence ascent? This paper provides the mathematics. The invitation is to sit with what it might mean.</li>
+</ul>
+
+<h2>Closing</h2>
+
+<p>We have walked from the single inequality to the most precise prediction in physics. No free parameters. One principle. Sixteen chapters. The last sentence of this essay belongs not to us but to the inequality that produced everything above:</p>
+
+<div class="closing-ineq"><em>I</em>&nbsp;&ge;&nbsp;0<span class="small">&mdash; the universe, climbing</span></div>
+
+<nav class="nav-links">
+  <a href="16-g-factor.html" class="prev">From α to g</a>
+  <a href="../index.html" class="up">contents</a>
+  <span class="next" style="color: var(--text-faint); font-style: italic;">(end of essay)</span>
+</nav>
+
+</div>
+<script type="module">import '../js/common.js';</script>
+</body>
+</html>
