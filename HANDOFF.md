@@ -1,9 +1,9 @@
 # Handoff — Coherence Lattice Alpha Project
 
-**Last context save**: 2026-04-16 (late evening — §11 BKT wall shipped)
-**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **11 / 17** sections complete. §11 adds the three-figure BKT-wall chapter (F(R), vortex-pair K dial, hero wall figure) where α operationally lives.
+**Last context save**: 2026-04-17 (§12 Living vs Static shipped + dark mode default)
+**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **12 / 17** sections complete. §12 is a three-figure chapter that makes the 143-vs-137 distinction visible: side-by-side α calculator, PLM exponential convergence with Debye–Waller collapse, and a continuous window-width sweep that walks 1/α from 137.03 to 143.13. Dark mode is now the explorable's default; light mode is opt-in via the floating toggle.
 
-**Immediate next task**: build §12 "Living versus static" — the chapter where `1/α = 143` becomes `1/α = 137` purely through the exponent-evaluation choice. See **§ Next session** at the bottom.
+**Immediate next task**: build §13 "The α formula, piece by piece" — the chapter where the final BKT formula `α = R₀(2/π)⁴ × (π/4)^(1/√e + α/2π)` becomes a fully clickable equation, with each symbol opening its derivation trace. See **§ Next session** at the bottom.
 
 This file is intended to be read first by a fresh session along with the files in **§ Must-read files on pickup**.
 
@@ -98,7 +98,7 @@ Unchanged since last handoff:
 - `I ≥ 0` theorem boxed as Theorem 1.1 with Remark citing the forthcoming companion paper
 - CC BY-NC 4.0 for paper, AGPL-3.0 for scripts
 
-### Explorable — 11 / 17 sections done
+### Explorable — 12 / 17 sections done
 
 | # | Title | Status |
 |---|-------|--------|
@@ -112,8 +112,9 @@ Unchanged since last handoff:
 | 08 | Why the diamond lattice | ✅ |
 | 09 | The electron (identity & topology) | ✅ |
 | 10 | How the lattice makes it a fermion | ✅ |
-| **11** | **The BKT wall** | **✅ NEW** |
-| 12 | Living versus static | TODO |
+| 11 | The BKT wall | ✅ |
+| **12** | **Living versus static** | **✅ NEW** |
+| 13 | The α formula, piece by piece | TODO |
 | 13 | The α formula, piece by piece | TODO |
 | 14 | Why three dimensions | TODO |
 | 15 | Closing the gap with linked clusters | TODO |
@@ -295,41 +296,67 @@ node        scripts/test_clr_vortex_headless.mjs
 
 ---
 
-## § Next session: §12 "Living versus static"
+## § What's in §12 (shipped this cycle)
 
-This is the single-chapter explanation of how `1/α` goes from 143 (standard lattice field theory answer) to 137 (correct answer) without changing a single physical input — only by evaluating the Debye-Waller factor at the attractor rather than integrating along the RG trajectory. This is the deepest conceptual move in the entire paper.
+### §12 — Living versus static
+
+**Narrative arc:**
+1. Lead picks up §11's closing formula and flags the 1/√e exponent as the subject.
+2. "Two ways to sum coherence" — static integral vs living endpoint, with the bullet list stating the two numbers (0.787 vs 0.607) up front.
+3. **Figure 1: Side-by-side α calculator.** Left panel shades the area under exp(−σ²l); right panel shows a single tall bar at l=1. Big coloured 1/α = 143.13 / 137.03 readouts below each panel. Single σ² slider (physical = 1/2, "reset to physical" button). CODATA reference line printed below both panels.
+4. "Why the endpoint is right" — prose framing of PLM Lemma + equation block for K(t) → K* with convergence rate λ = −η V″(K*).
+5. **Figure 2: PLM trajectory.** Four bonds with K₀ ∈ {0.1, 0.6, 1.2, 2.4} converging to K* = 16/π² (upper plot). Lower plot shows exp(−σ²K(t)) along each trajectory, all collapsing onto a single endpoint line. Play/pause/reset.
+6. "Interpolating between them" — continuous window-width concept introduced with an equation block for n(w).
+7. **Figure 3: Window-width sweep.** Slider w from 0 to 1. Left: highlighted region under the decay curve (colour interpolates green → purple). Right: big 1/α readout + gradient bar with a triangle marker walking from 137.03 to 143.13. "Living (w=0)" and "Static (w=1)" snap buttons.
+8. "Why this is the deepest move" aside making the PLM/attractor framing explicit.
+9. Closing repeats the BKT α formula and passes the baton to §13.
+
+### Key design decisions this cycle
+
+- **Numbers verified before wiring.** Ran `node --input-type=module` against common.js + K_BKT + R0 to confirm n_static = 0.787, n_living = 0.607, 1/α_static = 143.134, 1/α_living = 137.032 before putting those values into prose and figures. Prevents a transcription error from leaking into the canonical numbers.
+- **Palette encodes the judgment call.** Green = living endpoint (correct). Purple = static integral (wrong-but-standard). The window-width slider's fill colour continuously lerps between the two so the user sees the physics being traded off in colour space as well as numerically.
+- **Figure 2 runs on exponential time not RG scale.** The paper's PLM Lemma is formally about RG flow, but "K(t)" as a CLR-time trajectory reads more viscerally. Prose is careful to bridge: "observables that depend on K are evaluated where K lives." Doesn't conflate the two variables in any equation.
+- **Snap-to-endpoints buttons on Figure 3.** With a 0–1 slider and step 0.005, nailing exactly w=0 or w=1 is finicky. Dedicated buttons make the two canonical cases a single click.
+- **Reset-to-physical button on Figure 1.** σ² = 1/2 is the only physically meaningful value (derived from BKT). The slider allows exploration, but the button snaps back.
+
+---
+
+## § Next session: §13 "The α formula, piece by piece"
+
+This is the explorable's capstone equation chapter. The full BKT formula `α = R₀(2/π)⁴ × (π/4)^(1/√e + α/2π)` has been assembled piece by piece over 12 chapters; §13 displays it as a clickable equation where each symbol opens a mini-chapter trace. By the end, every factor has its full derivation a click away, and the self-consistent iteration is made visible as an animation.
 
 ### Must-read files for the next session
 
 1. **`HANDOFF.md`** (this file) — current state.
-2. **`AGENTS.md`** — physics spine. §The Derivation Chain step 6 (Debye-Waller exponent n = exp(−σ²)) and the PLM-Lemma-as-freezer.
-3. **`paper.tex`** §5.8 "The BKT Formula", particularly the Remark (`rem:matching-exponent`) which spells out the integral-vs-endpoint distinction and gives the numerical values (n_static = 0.787 → 1/α_static = 143; n_living = 1/√e ≈ 0.607 → 1/α = 137.032).
-4. **`explorable/sections/11-bkt-wall.html`** — most recent template. The V(K) potential landscape pattern from Figure 3 there (marble + potential curve with landmark lines) may be reusable for a PLM-trajectory visualisation in §12.
-5. **`paper.tex`** Lemma 5.2 (PLM K-field freezing) — the reason evaluating at the endpoint is physically correct: the CLR converges to a fixed point exponentially; once there, K is frozen and observables evaluate at K*.
+2. **`AGENTS.md`** — §The Derivation Chain lists all seven ingredients of the formula with their derivation sources.
+3. **`paper.tex`** §5.8 "The BKT Formula" (full derivation, already distilled into §11–§12), Appendix A4 "Von Mises Distribution and Star Graph Vertex Factor", Appendix A8 "Self-Consistent BKT Iteration Convergence".
+4. **`explorable/sections/11-bkt-wall.html`** + **`12-living-vs-static.html`** — most recent templates, including the α-teaser equation block at the bottom of §11 (which is essentially a prototype of §13's main figure).
+5. **`scripts/alpha_137_verification.py`** — the reference Python script; §13's iteration animation should reproduce exactly what this script prints.
 
-### Proposed figure lineup for §12
+### Proposed figure lineup for §13
 
-1. **Two-panel α calculator**: left = static integration (shaded area under exp(−σ²l) from l=0 to l=1), right = living endpoint (single tall bar at l=1 with value exp(−σ²)). Same inputs (σ² = 1/2, z = 4), different n_eff, different α. Output: 1/α_static = 143 (left) vs 1/α_living = 137 (right). Toggling between them should be dramatic — the two numbers change by 6 units.
-2. **Interpolation slider**: a single slider that sweeps between "integrate over [0, ξ]" and "evaluate at ξ". Watch 1/α slide from 143 down to 137 as ξ collapses to 1. Make the physical meaning of ξ explicit — it's the fraction of the RG trajectory the calculation averages over.
-3. **PLM trajectory illustration**: a K-vs-time plot showing K(t) converging exponentially to K*. Shade the area under n(l) over the trajectory vs mark the endpoint value. The marble-on-potential idiom from §11's Figure 3 could be reused to show "the marble settles and sits" — observables use the sitting value, not the rolling average.
+1. **The formula, fully clickable.** Recreate §11's α-teaser at hero scale: every symbol (R₀, the 2/π, the ⁴, the π/4, the 1/√e, the α/(2π)) is its own clickable chip with a dedicated mini-panel showing: name, pronunciation, derivation chapter, 1–2-sentence description, and a thumbnail figure reused from that chapter. This is the chapter where readers go "oh, it's all here."
+2. **Self-consistent iteration animation.** An animated panel showing α = V, then α' = V·base^(1/√e + α/2π), then α″ = V·base^(1/√e + α'/2π), … for three steps. At each step display the running 1/α value and its distance to 137.032. Converges in 3 iterations to 137.032 (and then in 5–6 more to machine precision). Replay button.
+3. **Sensitivity panel.** Three small tunable-value knobs (R₀, base, 1/√e) each with a ±5% nudge; show how 1/α responds. This tells readers which factor matters most (answer: R₀ by orders of magnitude, because it is raised to z = 4). Useful for gut-checking the hierarchy of the derivation.
 
 ### Physics to get right
 
-- `σ² = 2η = 1/(π K_BKT) = 1/2` (exact at BKT).
-- `n_living = exp(−σ²) = 1/√e ≈ 0.6065 → 1/α = 137.032`.
-- `n_static = ∫₀¹ exp(−σ²l) dl = (1 − 1/√e)/σ² ≈ 0.7866 → 1/α ≈ 143` (recompute via `alpha_BKT(z, ...)` helper or inline).
-- The PLM Lemma is what makes the endpoint evaluation legitimate: because K freezes exponentially at K*, the Debye-Waller integral's "time" variable is frozen and the integrand collapses to its endpoint value. This is *not* a choice — it's a consequence of the CLR dynamics.
-- The paper's Remark also mentions the self-consistency correction `n_eff = 1/√e + α/(2π)` (Schwinger). §12 can preview this but the full self-consistent iteration belongs in §13.
+- R₀(2/π) ≈ 0.3032; V = R₀^4 ≈ 0.00845.
+- base = π/4 ≈ 0.7854 (the variance ratio from §11's equation block).
+- Exponent n = 1/√e + α/(2π) where α/(2π) is the Schwinger QED vertex correction.
+- Self-consistency converges in 3 iterations from α₀ = V to 137.032 within 0.001 ppm.
+- The factor 4 on R₀ is z, the diamond coordination number from §8. Make this clickable → §8 thumbnail.
 
 ### Stylistic continuity
 
-- Palette: blue for state/trajectory, orange for endpoint/attractor, green for correct answer, purple for incorrect answer or forbidden.
-- Keep equation blocks short — §12 is a comparison chapter, not a derivation chapter. Most real estate goes to the side-by-side figure.
-- Expected length: shorter than §9/§10/§11 — one big comparison figure + two smaller illustrations. Target 400–500 lines of HTML.
+- Every symbol of the equation gets its own colour-coded chip (state / param / struct / op classes from `style.css`).
+- The iteration animation should not be flashy — a clean "step N: α = x, 1/α = y" readout that advances every ~1 second, with colour fade on convergence.
+- Keep the chapter focused — it's a lookup chapter, not a derivation chapter. All derivations are a click away.
+- Expected length: medium. Target 600–800 lines of HTML.
 
-### After §12
+### After §13
 
-`§13 — The α formula, piece by piece` is where the full clickable equation lives. Every factor (R₀(2/π), ⁴, π/4, 1/√e, α/(2π)) has a clickable symbol that cites the chapter where it was derived. §12 is prerequisite to §13 because the `1/√e` exponent is the living-vs-static choice, and §13 will leverage §12's figure as one of its per-symbol explanations.
+`§14 — Why three dimensions` is the surprising "d dial" chapter: sliding the dimension in the α formula from d=2 to d=5 gives unphysical values at every point except d=3. This could be a single very dramatic slider figure + a few contextual numbers, and it is the kind of thing that stops a reader in their tracks once they realise what they are seeing. Target 400–500 lines.
 
 ---
 

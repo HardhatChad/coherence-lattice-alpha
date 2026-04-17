@@ -38,7 +38,7 @@ A three-act structure:
 | 09 | The electron (identity & topology) | ✅ DONE |
 | 10 | How the lattice makes it a fermion | ✅ DONE |
 | 11 | The BKT wall | ✅ DONE |
-| 12 | Living versus static | TODO |
+| 12 | Living versus static | ✅ DONE |
 | 13 | The α formula, piece by piece | TODO |
 | 14 | Why three dimensions | TODO |
 | 15 | Closing the gap with linked clusters | TODO |
@@ -156,19 +156,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ### 12 — Living versus static
 
-**Core idea:** The entire difference between 143 and 137 comes from *how* the exponent is evaluated. Static lattice integrates over the RG trajectory. Living lattice (with PLM Lemma) evaluates at the fixed point. This chapter is a pure side-by-side comparison.
-
-**Interactives:**
-- **Two-panel comparison:** left = static integration (area under curve), right = living fixed-point (endpoint value). Identical inputs (σ² = 1/2, z = 4, etc.). Different outputs (143 vs 137).
-- **Exponent sweep:** slide between "fully integrate" and "evaluate at endpoint," show how 1/α changes. The correct answer is *endpoint*.
-- **PLM Lemma illustration:** shows a bond K trajectory converging exponentially to K*. The endpoint is what determines the exponent, not the trajectory.
-
-**Prose:**
-- Static calculation: `n_static = ∫_0^1 exp(-σ²l) dl ≈ 0.787 → 1/α = 143`
-- Living calculation: `n_living = exp(-σ²) = 1/√e ≈ 0.607 → 1/α = 137`
-- PLM Lemma proves K freezes at attractor
-- Evaluate AT the attractor, not along the trajectory
-- This is the single most important distinction between this framework and standard lattice field theory.
+**Completed.** Three figures: (1) Side-by-side α calculator — left panel shows shaded area under exp(−σ²l) from l=0 to l=1 (static integration, n = 0.787, 1/α = 143.13); right panel shows a single green bar at l=1 (living endpoint, n = 1/√e = 0.607, 1/α = 137.032). Live σ² slider with "physical σ²=1/2" reset button. Both 1/α values computed via self-consistent BKT iteration, CODATA reference printed below. (2) PLM trajectory figure: four bonds released from different K₀ (0.1, 0.6, 1.2, 2.4) all converging exponentially to K* = 16/π² (upper plot); lower plot shows the Debye–Waller factor exp(−σ²K(t)) along each trajectory, all collapsing onto the single endpoint exp(−σ²K*). Play/pause controls, 40-unit runtime. (3) Window-width sweep: slider w ∈ [0, 1] highlights the averaged window under the decay curve (green line at w=0, collapsing to the full area at w=1); 1/α readout updates continuously from 137.03 (green) to 143.13 (purple), with a gradient bar and marker showing position. "Living" and "Static" snap buttons. Two equation blocks (PLM convergence rate λ = −η V″(K*); window-averaged n(w) integral). Closing restates the BKT α formula and teases §13's factor-by-factor walkthrough.
 
 ---
 
@@ -294,7 +282,7 @@ explorable/
     ├── 09-electron.html       ✅
     ├── 10-fermion.html        ✅
     ├── 11-bkt-wall.html       ✅
-    ├── 12-living-vs-static.html TODO
+    ├── 12-living-vs-static.html ✅
     ├── 13-alpha-formula.html  TODO
     ├── 14-dimension.html      TODO
     ├── 15-lce.html            TODO

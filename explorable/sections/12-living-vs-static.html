@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Living versus static — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.calc-row {
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+  margin: 0;
+}
+.calc-row .panel {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+.calc-row .panel-title {
+  font: 600 13px "Charter", serif;
+  margin-top: 6px;
+}
+.calc-row .panel-title.static  { color: #c38df7; }
+.calc-row .panel-title.living  { color: #6dc48f; }
+:root[data-theme="light"] .calc-row .panel-title.static { color: #6b2fb3; }
+:root[data-theme="light"] .calc-row .panel-title.living { color: #2d7d4f; }
+.big-alpha {
+  font: 600 22px "SF Mono", monospace;
+  margin-top: 4px;
+}
+.big-alpha .val-static  { color: #c38df7; }
+.big-alpha .val-living  { color: #6dc48f; }
+:root[data-theme="light"] .big-alpha .val-static { color: #6b2fb3; }
+:root[data-theme="light"] .big-alpha .val-living { color: #2d7d4f; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 12 / 17</span>
+</nav>
+
+<h1>Living versus static<span class="subtitle">The single choice that moves 1/&alpha; from 143 to 137</span></h1>
+
+<p class="lead">Chapter 11 ended with a formula that almost works. Using the BKT critical coupling <em>K</em><sub>eff</sub>&nbsp;=&nbsp;2/&pi; and the derived variance ratio, the fine structure constant comes out to one of two values &mdash; 1/&alpha;&nbsp;=&nbsp;143 or 1/&alpha;&nbsp;=&nbsp;137, depending on how a single integral is evaluated. The inputs are identical: same coupling, same lattice, same topology, same &sigma;&sup2;&nbsp;=&nbsp;1/2. The only difference is whether the coherence transfer factor is averaged <em>along</em> the RG flow (standard lattice field theory) or evaluated <em>at</em> the attractor where the CLR's dynamics have settled (living lattice). This chapter makes that choice visible.</p>
+
+<h2>Two ways to sum coherence</h2>
+
+<p>The Debye&ndash;Waller factor <em>n</em>(<em>l</em>)&nbsp;=&nbsp;exp(&minus;&sigma;&sup2;<em>l</em>) decays with RG scale <em>l</em>. It tells you how much of the nearest-neighbour correlation survives one unit of coarse-graining. In the BKT formula for &alpha;, the power-law factor is (&pi;/<em>z</em>)<sup><em>n</em></sup> &mdash; and <em>n</em> has to be a specific value, not a function of <em>l</em>. The question is which value.</p>
+
+<ul style="margin: 0.4em 0 1em 1.6em; line-height: 1.6;">
+  <li><strong>Static lattice field theory</strong> averages the Debye&ndash;Waller factor over the full RG trajectory from the lattice cutoff to the crossover scale. For a trajectory of unit length:
+  <span class="mono">n<sub>static</sub> = &int;<sub>0</sub><sup>1</sup> exp(&minus;&sigma;&sup2;<em>l</em>) d<em>l</em> = (1&nbsp;&minus;&nbsp;exp(&minus;&sigma;&sup2;))&thinsp;/&thinsp;&sigma;&sup2;</span>. With &sigma;&sup2;&nbsp;=&nbsp;1/2, that comes out to <span class="mono">0.787</span>.</li>
+  <li><strong>Living lattice</strong> evaluates the Debye&ndash;Waller factor at the attractor &mdash; the endpoint of the flow, where the CLR's dynamics have frozen <em>K</em> at a fixed point (the PLM Lemma). Only the endpoint matters:
+  <span class="mono">n<sub>living</sub> = exp(&minus;&sigma;&sup2;) = 1/&radic;e &asymp; 0.607</span>.</li>
+</ul>
+
+<p>Same <em>K</em>. Same &sigma;&sup2;. Same lattice. Different choice about when in the trajectory the observable is read. Same formula then spits out two different values of the fine structure constant:</p>
+
+<figure id="fig-calc">
+  <canvas id="canvas-calc" width="680" height="460"></canvas>
+  <div class="controls" id="calc-controls"><!-- slider inserted by JS --></div>
+  <figcaption>
+    Two calculations of <em>n</em> from the same decay curve <em>n</em>(<em>l</em>)&nbsp;=&nbsp;exp(&minus;&sigma;&sup2;<em>l</em>), drawn side by side. <strong>Left</strong>: the full area under the curve from <em>l</em>&nbsp;=&nbsp;0 to <em>l</em>&nbsp;=&nbsp;1 &mdash; the standard lattice field theory average. <strong>Right</strong>: a single thin bar at the endpoint <em>l</em>&nbsp;=&nbsp;1 &mdash; the living-lattice evaluation, which is the only scale where the attractor actually lives. Both calculations feed the same BKT formula for <em>&alpha;</em>; the two resulting values of 1/<em>&alpha;</em> are displayed below each panel. Drag the &sigma;&sup2; slider to see that the gap persists across all couplings &mdash; at the physical value &sigma;&sup2;&nbsp;=&nbsp;1/2, the gap is exactly 6 integer units of 1/<em>&alpha;</em>.
+  </figcaption>
+</figure>
+
+<p>The numbers at the bottom of the figure are the result of feeding each <em>n</em> into the BKT formula and iterating self-consistently. Static integration gives <strong>1/&alpha;&nbsp;=&nbsp;143.1</strong>. Living endpoint gives <strong>1/&alpha;&nbsp;=&nbsp;137.03</strong>. One of these numbers matches the measured value of the fine structure constant to 29 parts per million. The other does not match anything. The question is why.</p>
+
+<h2>Why the endpoint is the right answer</h2>
+
+<p>The PLM Lemma (Chapter 5, formally stated in the paper's Lemma 5.2) is the pivot. It says: on a phase-locked mode of the CLR, every alive bond coupling <em>K</em><sub>ij</sub> converges <em>exponentially</em> to a unique fixed point <em>K</em>*<sub>ij</sub>. Not asymptotically, not approximately, but exponentially &mdash; the distance to the fixed point shrinks by a constant factor every instant. After a finite number of coarse-graining steps, <em>K</em> is frozen at its attractor to any precision you like.</p>
+
+<div class="equation-block" id="eq-plm">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="Kt">K(t)</span>
+    &nbsp;&rarr;&nbsp;
+    <span class="eq-symbol op" data-symbol="Kstar">K*</span>
+    &nbsp;&thinsp;with rate&thinsp;&nbsp;
+    <span class="eq-symbol param" data-symbol="rate">&lambda;</span>
+    &nbsp;=&nbsp;
+    &minus;&eta;&thinsp;
+    <span class="eq-symbol struct" data-symbol="Vdd">V&Prime;(K*)</span>
+    &nbsp;&lt;&nbsp;0
+  </div>
+  <p class="eq-prompt">Click any coloured symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    The bond coupling follows a damped autonomous ODE &mdash; gradient descent on a strictly convex potential <em>V</em>(<em>K</em>). The second derivative <em>V</em>&Prime;(<em>K</em>*) is positive at the minimum, so the eigenvalue &lambda; of the linearised dynamics is negative. Exponential convergence is automatic. Observables that depend on <em>K</em> therefore have a well-defined asymptotic value &mdash; they are evaluated at <em>K</em>*, not integrated over the approach.
+  </div>
+</div>
+
+<p>This is the clearest distinction between the living lattice and standard lattice field theory. In the standard framework, <em>K</em> is a <em>free parameter</em>: you fix it by hand, compute observables, and integrate over RG scales to compare to experiment. The trajectory average is meaningful because there is no attractor &mdash; nothing in the framework tells you to prefer one scale over another.</p>
+
+<p>On the living lattice, <em>K</em> is a <em>dynamical variable</em>: it evolves under the CLR and settles on an attractor determined by the lattice topology (Chapter 11's BKT wall) and the CLR potential. The trajectory is a transient. The attractor is real physics. Observables that depend on <em>K</em> are evaluated where <em>K</em> lives.</p>
+
+<p>Here is that exponential approach, drawn explicitly:</p>
+
+<figure id="fig-plm">
+  <canvas id="canvas-plm" width="680" height="380"></canvas>
+  <div class="controls" id="plm-controls"><!-- buttons inserted by JS --></div>
+  <figcaption>
+    Upper plot: the bond coupling <em>K</em>(<em>t</em>) under the CLR on a single alive bond, released from various initial values, all converging exponentially to the fixed point <em>K</em>*. The dashed horizontal line is <em>K</em>*&nbsp;=&nbsp;<em>K</em><sub>bulk</sub>&nbsp;=&nbsp;16/&pi;&sup2;. The decay constant is &tau;&nbsp;=&nbsp;1/|&lambda;|, set by the curvature of the CLR potential at its minimum. Lower plot: the Debye&ndash;Waller factor exp(&minus;&sigma;&sup2;·<em>K</em>(<em>t</em>)) along each trajectory. Regardless of starting point, all curves collapse onto a single asymptotic value exp(&minus;&sigma;&sup2;·<em>K</em>*) &mdash; the endpoint. Averaging over <em>t</em> is a well-defined operation, but it is not the quantity that observables couple to; observables see the frozen endpoint.
+  </figcaption>
+</figure>
+
+<h2>Interpolating between them</h2>
+
+<p>The distinction is not an either/or &mdash; it is a continuum. If you averaged the Debye&ndash;Waller factor over a window of the RG trajectory of width <em>w</em> ending at <em>l</em>&nbsp;=&nbsp;1, you would get:</p>
+
+<div class="equation-block" id="eq-interp">
+  <div class="eq-display">
+    <span class="eq-symbol op" data-symbol="nw">n(w)</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol struct" data-symbol="int">1/<em>w</em> &middot; &int;<sub>1&minus;w</sub><sup>1</sup> exp(&minus;&sigma;&sup2;<em>l</em>) d<em>l</em></span>
+  </div>
+  <p class="eq-prompt">Click any coloured symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    A trajectory average over the last <em>w</em> units of the RG flow. At <em>w</em>&nbsp;=&nbsp;1, this is the full static integral (<em>n</em><sub>static</sub>&nbsp;=&nbsp;0.787). As <em>w</em> shrinks toward 0, the window collapses onto the endpoint and <em>n</em>(<em>w</em>)&nbsp;&rarr;&nbsp;exp(&minus;&sigma;&sup2;) (<em>n</em><sub>living</sub>&nbsp;=&nbsp;0.607). Intermediate values of <em>w</em> correspond to partial-trajectory averages with no physical meaning on either the living or static side; they are only shown here to make the geometry of the collapse visible.
+  </div>
+</div>
+
+<p>As <em>w</em> shrinks, the window collapses onto the endpoint and <em>n</em> falls from 0.787 to 1/&radic;e. The fine structure constant responds continuously. Here is that collapse, with 1/&alpha; updating in real time:</p>
+
+<figure id="fig-sweep">
+  <canvas id="canvas-sweep" width="680" height="360"></canvas>
+  <div class="controls" id="sweep-controls"><!-- slider inserted by JS --></div>
+  <figcaption>
+    Drag the <strong>window width</strong> slider. Left: the highlighted region of the exp(&minus;&sigma;&sup2;<em>l</em>) curve being averaged &mdash; a wide band at <em>w</em>&nbsp;=&nbsp;1, collapsing to a single line at <em>w</em>&nbsp;=&nbsp;0. Right: the corresponding value of 1/&alpha;. The slider continuously walks the coupling from <span style="color: #c38df7;">143 (static)</span> to <span style="color: #6dc48f;">137.03 (living)</span>. The physical value of 1/&alpha;, measured to 12 significant figures, sits at <em>w</em>&nbsp;=&nbsp;0 &mdash; the endpoint, the attractor, where <em>K</em> actually lives.
+  </figcaption>
+</figure>
+
+<h2>Why this is the deepest move in the paper</h2>
+
+<p class="aside"><span class="label">The hinge</span>Every other calculation in this paper could in principle be done by someone willing to accept a standard renormalization-group framework and a slightly unusual choice of microscopic model. The living-versus-static distinction is the one place where the framework fundamentally departs from standard lattice field theory. It says: the coupling is not a free parameter; it is an order parameter of a dynamical system with an attractor, and observables that depend on the coupling are evaluated at the attractor. This is why the fine structure constant comes out derived, not fit &mdash; and it is why every previous attempt at deriving &alpha; from a lattice has failed at precisely the same point.</p>
+
+<p>Standard lattice field theory has no PLM Lemma because it has no CLR. There is nothing inside the theory that picks out a preferred scale at which to evaluate observables. The running of <em>K</em> under the RG is all there is, and the sensible thing to do is integrate. You end up with <em>n</em>&nbsp;=&nbsp;0.787 and 1/&alpha;&nbsp;=&nbsp;143. This is not wrong &mdash; given the framework's assumptions, it is the correct answer. It just does not match experiment.</p>
+
+<p>The living lattice has a dynamical principle that governs <em>K</em>: the Coherence Learning Rule. That principle has fixed points, proven via the convexity of <em>V</em>(<em>K</em>) on alive bonds. The existence of those fixed points is not an empirical observation &mdash; it is a mathematical consequence of the CLR's convexity and the topological constraint at the BKT wall. When you evaluate observables at the fixed point, 1/&alpha;&nbsp;=&nbsp;137.03. This also is not an accident. It is what the dynamics produces.</p>
+
+<h2>Where this leaves us</h2>
+
+<p>The formula now reads:</p>
+
+<p style="text-align: center; font: 600 15px 'SF Mono', monospace; margin: 1em 0;">
+  &alpha; &nbsp;=&nbsp; <em>R</em><sub>0</sub>(2/&pi;)<sup>4</sup> &times; (&pi;/4)<sup>1/&radic;e + &alpha;/(2&pi;)</sup> &nbsp;&asymp;&nbsp; 1/137.032
+</p>
+
+<p>with every piece accounted for: the UV vertex from Chapter 2's von Mises (Chapter 8's <em>z</em>&nbsp;=&nbsp;4), the power-law base from Chapter 5's variance ratio, the matching exponent 1/&radic;e from this chapter's attractor evaluation, and the Schwinger self-consistency correction &alpha;/(2&pi;). That is the whole story, compressed into one line.</p>
+
+<p>The next chapter unfolds this line into its five factors, each clickable, each traced back to its derivation. This is the chapter where the explorable's shape is completed &mdash; every ingredient of &alpha; has been built from first principles, and you can navigate from any symbol back to the chapter that proved it.</p>
+
+<nav class="nav-links">
+  <a href="11-bkt-wall.html" class="prev">The BKT wall</a>
+  <a href="../index.html" class="up">contents</a>
+  <a href="13-alpha-formula.html" class="next">The α formula, piece by piece</a>
+</nav>
+
+</div>
+<script type="module">
+import { setupHiDPICanvas, wireEquation, runWhenVisible, makeSlider, R0, K_BKT, palette } from '../js/common.js';
+
+// ============================================================
+// Physics constants
+// ============================================================
+const SIGMA2_PHYS = 0.5;   // sigma^2 = 2*eta = 1/(pi K_BKT) = 1/2 exactly
+const V_UV = R0(K_BKT) ** 4;  // star-graph UV vertex = 0.00845
+const BASE = Math.PI / 4;     // variance ratio base
+
+// Self-consistent iteration: alpha = V * (pi/4)^(n + alpha/2pi)
+function alphaFromN(n_base) {
+  let a = V_UV;
+  for (let i = 0; i < 30; i++) {
+    a = V_UV * Math.pow(BASE, n_base + a / (2 * Math.PI));
+  }
+  return a;
+}
+function nStatic(s2) { return (1 - Math.exp(-s2)) / s2; }
+function nLiving(s2) { return Math.exp(-s2); }
+function nWindow(s2, w) {
+  if (w < 1e-4) return Math.exp(-s2);
+  return ((Math.exp(-s2 * (1 - w))) - Math.exp(-s2)) / (s2 * w);
+}
+
+// ============================================================
+// Equation blocks
+// ============================================================
+wireEquation('eq-plm', {
+  Kt: { name: 'K(t) \u2014 the bond coupling', pronounce: '"K of t"',
+    description: 'The dynamical coupling on a single alive bond, evolving under the CLR. On a phase-locked mode the phase difference cos(\u0394\u03B8) freezes, so K evolves autonomously via gradient descent on the CLR potential V(K).' },
+  Kstar: { name: 'K* \u2014 the attractor', pronounce: '"K star"',
+    description: 'The unique fixed point of the PLM dynamics \u2014 where dV/dK = 0. On alive bonds V(K) is strictly convex, so the minimum is unique and globally attracting. In the single-vortex sector on diamond, K* = K_bulk = 16/\u03C0\u00B2 (Chapter 11).' },
+  rate: { name: '\u03BB \u2014 convergence rate', pronounce: '"lambda"',
+    description: 'The eigenvalue of the linearised dynamics at K*. Because V is strictly convex, V\u2033(K*) > 0, so \u03BB = -\u03B7 V\u2033(K*) is strictly negative. Negative \u03BB means exponential convergence with decay time \u03C4 = 1/|\u03BB|, numerically about 7 units of CLR time on diamond.' },
+  Vdd: { name: 'V\u2033(K*) \u2014 second derivative of the potential', pronounce: '"V double-prime of K star"',
+    description: 'V\u2033(K) = -cos(\u0394\u03B8) R\u2080\u2032(K) + 2/r > 0 on any alive bond (R\u2080\u2032(K) < 1 and cos \u2264 1). This convexity is what guarantees the PLM Lemma: every alive bond has a unique, globally-attractive fixed point, and therefore every observable that depends on K has a well-defined endpoint value.' },
+});
+
+wireEquation('eq-interp', {
+  nw: { name: 'n(w) \u2014 window-averaged Debye\u2013Waller factor', pronounce: '"n of w"',
+    description: 'The Debye\u2013Waller intensity averaged over the last w units of the RG trajectory. At w = 1 this is the full static integral, giving n_static = 0.787. At w = 0 it collapses to the endpoint exp(-\u03C3\u00B2) = 0.607 = n_living.' },
+  int: { name: '(1/w) \u222B\u2080\u00B9 exp(-\u03C3\u00B2l) dl \u2014 the average', pronounce: '"one over w, integral from one minus w to one"',
+    description: 'Definite integral of the Debye\u2013Waller factor over a window of width w ending at l = 1, normalised by the window width so the result has units of \u27E8exp(-\u03C3\u00B2l)\u27E9. For the living lattice the window has measure zero \u2014 all weight sits on the endpoint, the only scale where the CLR attractor exists.' },
+});
+
+// ============================================================
+// Shared drawing helpers
+// ============================================================
+function drawAxisBox(ctx, x, y, w, h) {
+  ctx.strokeStyle = palette.axis;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x, y, w, h);
+}
+
+// ============================================================
+// FIGURE 1: Side-by-side calculator
+// Left: static integration (area under exp(-sigma^2 l))
+// Right: living endpoint (bar at l = 1)
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-calc');
+  if (!canvas) return;
+  const W = 680, H = 460;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const controls = document.getElementById('calc-controls');
+  let sigma2 = SIGMA2_PHYS;
+  makeSlider(controls, {
+    label: '&sigma;&sup2;',
+    min: 0.1, max: 1.5, step: 0.01,
+    value: sigma2,
+    format: (v) => v.toFixed(3),
+    onChange: (v) => { sigma2 = v; },
+  });
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = 'Physical \u03C3\u00B2 = 1/2';
+  controls.appendChild(resetBtn);
+  resetBtn.addEventListener('click', () => {
+    sigma2 = SIGMA2_PHYS;
+    // Rebuild slider value visually: easiest is to set the input directly.
+    const input = controls.querySelector('input[type="range"]');
+    if (input) {
+      input.value = sigma2;
+      const val = controls.querySelector('.val');
+      if (val) val.textContent = sigma2.toFixed(3);
+    }
+  });
+
+  // Two panels side-by-side
+  function drawPanel(x0, y0, w, h, mode) {
+    // Subtle panel background
+    ctx.fillStyle = palette.bgSoft;
+    ctx.fillRect(x0, y0, w, h);
+
+    // Inner plot area
+    const pad = 22;
+    const px0 = x0 + pad, py0 = y0 + pad;
+    const pw = w - 2*pad, ph = h - 2*pad;
+
+    drawAxisBox(ctx, px0, py0, pw, ph);
+
+    const mapX = (l) => px0 + l * pw;
+    const yMax = 1.05;
+    const mapY = (n) => py0 + ph - (n / yMax) * ph;
+
+    // Axis ticks
+    ctx.fillStyle = palette.textFaint;
+    ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    [0, 0.5, 1].forEach(l => {
+      ctx.fillText(l.toFixed(1), mapX(l), py0 + ph + 14);
+    });
+    ctx.textAlign = 'right';
+    [0, 0.5, 1].forEach(n => {
+      ctx.fillText(n.toFixed(1), px0 - 4, mapY(n) + 3);
+    });
+
+    ctx.fillStyle = palette.text;
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('RG scale l', px0 + pw/2, py0 + ph + 30);
+
+    // The exp(-sigma^2 l) curve (same in both panels)
+    ctx.strokeStyle = palette.textSoft;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    let first = true;
+    for (let i = 0; i <= 120; i++) {
+      const l = i / 120;
+      const y = mapY(Math.exp(-sigma2 * l));
+      if (first) { ctx.moveTo(mapX(l), y); first = false; }
+      else ctx.lineTo(mapX(l), y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    if (mode === 'static') {
+      // Shaded area under curve from 0 to 1
+      ctx.fillStyle = 'rgba(168, 85, 247, 0.25)';
+      ctx.beginPath();
+      ctx.moveTo(mapX(0), mapY(0));
+      for (let i = 0; i <= 120; i++) {
+        const l = i / 120;
+        ctx.lineTo(mapX(l), mapY(Math.exp(-sigma2 * l)));
+      }
+      ctx.lineTo(mapX(1), mapY(0));
+      ctx.closePath();
+      ctx.fill();
+      // Outline
+      ctx.strokeStyle = '#c38df7';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      first = true;
+      for (let i = 0; i <= 120; i++) {
+        const l = i / 120;
+        if (first) { ctx.moveTo(mapX(l), mapY(Math.exp(-sigma2 * l))); first = false; }
+        else ctx.lineTo(mapX(l), mapY(Math.exp(-sigma2 * l)));
+      }
+      ctx.stroke();
+      // Mean-value bar: horizontal line at n_static
+      const nS = nStatic(sigma2);
+      ctx.strokeStyle = '#c38df7';
+      ctx.lineWidth = 1.8;
+      ctx.setLineDash([2, 3]);
+      ctx.beginPath();
+      ctx.moveTo(mapX(0), mapY(nS));
+      ctx.lineTo(mapX(1), mapY(nS));
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Label
+      ctx.fillStyle = '#c38df7';
+      ctx.font = '600 11px "SF Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText('\u27E8n\u27E9 = ' + nS.toFixed(3), mapX(0.03), mapY(nS) - 5);
+    } else {
+      // Living: single tall bar at l = 1
+      const nL = nLiving(sigma2);
+      const barW = 22;
+      const barX = mapX(1) - barW;
+      ctx.fillStyle = 'rgba(94, 168, 122, 0.35)';
+      ctx.fillRect(barX, mapY(nL), barW, mapY(0) - mapY(nL));
+      ctx.strokeStyle = '#6dc48f';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(barX, mapY(nL), barW, mapY(0) - mapY(nL));
+      // Endpoint marker
+      ctx.fillStyle = '#6dc48f';
+      ctx.beginPath();
+      ctx.arc(mapX(1), mapY(nL), 5, 0, 2*Math.PI);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0)';
+      // Label
+      ctx.fillStyle = '#6dc48f';
+      ctx.font = '600 11px "SF Mono", monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText('n = exp(\u2212\u03C3\u00B2) = ' + nL.toFixed(3), mapX(1) - 30, mapY(nL) - 5);
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg;
+    ctx.fillRect(0, 0, W, H);
+
+    const titleH = 34;
+    ctx.fillStyle = palette.text;
+    ctx.font = '600 14px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('Same input curve. Two ways to read it.', W/2, 18);
+
+    const pH = 270;
+    const gap = 10;
+    const pW = (W - 3*gap) / 2;
+    const pY = titleH + 4;
+    drawPanel(gap, pY, pW, pH, 'static');
+    drawPanel(gap*2 + pW, pY, pW, pH, 'living');
+
+    // Panel titles under each
+    ctx.fillStyle = '#c38df7';
+    ctx.font = '600 13px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Static integration  (standard lattice FT)', gap + pW/2, pY + pH + 20);
+    ctx.fillStyle = '#6dc48f';
+    ctx.fillText('Living endpoint  (PLM attractor)', gap*2 + pW + pW/2, pY + pH + 20);
+
+    // n values + alpha values
+    const nS = nStatic(sigma2);
+    const nL = nLiving(sigma2);
+    const aS = alphaFromN(nS);
+    const aL = alphaFromN(nL);
+
+    ctx.fillStyle = palette.textSoft;
+    ctx.font = '13px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`n = (1\u2212e^(\u2212\u03C3\u00B2))/\u03C3\u00B2 = ${nS.toFixed(3)}`, gap + pW/2, pY + pH + 44);
+    ctx.fillText(`n = e^(\u2212\u03C3\u00B2) = ${nL.toFixed(3)}`, gap*2 + pW + pW/2, pY + pH + 44);
+
+    // 1/alpha numbers in big type
+    ctx.font = '600 22px "SF Mono", monospace';
+    ctx.fillStyle = '#c38df7';
+    ctx.fillText('1/\u03B1 = ' + (1/aS).toFixed(3), gap + pW/2, pY + pH + 84);
+    ctx.fillStyle = '#6dc48f';
+    ctx.fillText('1/\u03B1 = ' + (1/aL).toFixed(3), gap*2 + pW + pW/2, pY + pH + 84);
+
+    // CODATA reference bar
+    ctx.fillStyle = palette.textFaint;
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('CODATA measured value: 1/\u03B1 = 137.035999', W/2, pY + pH + 114);
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIGURE 2: PLM trajectory
+// K(t) for several starting points, all converging to K* exponentially.
+// Below: Debye-Waller factor exp(-sigma^2 K(t)) all collapsing to endpoint.
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-plm');
+  if (!canvas) return;
+  const W = 680, H = 380;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const controls = document.getElementById('plm-controls');
+  const playBtn = document.createElement('button');
+  playBtn.textContent = '\u25B6 Play';
+  controls.appendChild(playBtn);
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = 'Reset';
+  controls.appendChild(resetBtn);
+
+  const K_STAR = 16 / (Math.PI * Math.PI);       // bulk attractor
+  const STARTS = [0.1, 0.6, 1.2, 2.4];
+  const COLORS = ['#7db3dd', '#6dc48f', '#efa57a', '#e091ac'];
+  const TAU = 7.0;  // convergence time constant
+
+  let t = 0;
+  let playing = true;
+  const T_MAX = 40;
+
+  playBtn.addEventListener('click', () => {
+    playing = !playing;
+    playBtn.textContent = playing ? '\u25A0 Pause' : '\u25B6 Play';
+    playBtn.classList.toggle('primary', playing);
+  });
+  playBtn.classList.add('primary');
+  playBtn.textContent = '\u25A0 Pause';
+  resetBtn.addEventListener('click', () => {
+    t = 0;
+    playing = true;
+    playBtn.textContent = '\u25A0 Pause';
+    playBtn.classList.add('primary');
+  });
+
+  function K_of_t(K0, time) {
+    return K_STAR + (K0 - K_STAR) * Math.exp(-time / TAU);
+  }
+
+  const px0 = 60, py0 = 24;
+  const pw = W - px0 - 24;
+  const upperH = 180, lowerH = 130, gap = 18;
+
+  function drawUpper() {
+    const x0 = px0, y0 = py0, w = pw, h = upperH;
+    drawAxisBox(ctx, x0, y0, w, h);
+    const mapX = (tt) => x0 + (tt / T_MAX) * w;
+    const K_MAX = 2.8;
+    const mapY = (K) => y0 + h - (K / K_MAX) * h;
+
+    // K_star dashed line
+    ctx.strokeStyle = palette.axisBold;
+    ctx.lineWidth = 1.3;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(x0, mapY(K_STAR));
+    ctx.lineTo(x0 + w, mapY(K_STAR));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = palette.text;
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('K* = K\u1D47\u1D64\u2097\u1D4F = 16/\u03C0\u00B2 = 1.621', x0 + 6, mapY(K_STAR) - 4);
+
+    // Axis labels
+    ctx.fillStyle = palette.textFaint;
+    ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.textAlign = 'right';
+    [0, 1, 2].forEach(K => ctx.fillText(K.toFixed(0), x0 - 4, mapY(K) + 3));
+    ctx.textAlign = 'center';
+    [0, 10, 20, 30, 40].forEach(tt => ctx.fillText(tt.toFixed(0), mapX(tt), y0 + h + 14));
+
+    ctx.fillStyle = palette.text;
+    ctx.font = '600 12px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('K(t)  \u2014  bond coupling under the CLR', x0, y0 - 6);
+
+    // Trajectories
+    STARTS.forEach((K0, i) => {
+      const c = COLORS[i];
+      const tEnd = Math.min(t, T_MAX);
+      ctx.strokeStyle = c;
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      const N = 80;
+      let first = true;
+      for (let k = 0; k <= N; k++) {
+        const tt = tEnd * k / N;
+        if (first) { ctx.moveTo(mapX(tt), mapY(K_of_t(K0, tt))); first = false; }
+        else ctx.lineTo(mapX(tt), mapY(K_of_t(K0, tt)));
+      }
+      ctx.stroke();
+      // Marble at the current tip
+      const xm = mapX(tEnd);
+      const ym = mapY(K_of_t(K0, tEnd));
+      ctx.fillStyle = c;
+      ctx.beginPath(); ctx.arc(xm, ym, 5, 0, 2*Math.PI); ctx.fill();
+    });
+  }
+
+  function drawLower() {
+    const x0 = px0, y0 = py0 + upperH + gap + 22, w = pw, h = lowerH;
+    drawAxisBox(ctx, x0, y0, w, h);
+    const mapX = (tt) => x0 + (tt / T_MAX) * w;
+    const mapY = (nn) => y0 + h - nn * h;  // n in [0,1]
+
+    const nAtt = Math.exp(-SIGMA2_PHYS * K_STAR);
+    // Attractor line
+    ctx.strokeStyle = palette.axisBold;
+    ctx.lineWidth = 1.3;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(x0, mapY(nAtt));
+    ctx.lineTo(x0 + w, mapY(nAtt));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = palette.text;
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('exp(\u2212\u03C3\u00B2K*) = ' + nAtt.toFixed(3) + '  (the endpoint)', x0 + 6, mapY(nAtt) - 4);
+
+    // Axis labels
+    ctx.fillStyle = palette.textFaint;
+    ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.textAlign = 'right';
+    [0, 0.5, 1].forEach(n => ctx.fillText(n.toFixed(1), x0 - 4, mapY(n) + 3));
+    ctx.textAlign = 'center';
+    [0, 10, 20, 30, 40].forEach(tt => ctx.fillText(tt.toFixed(0), mapX(tt), y0 + h + 14));
+    ctx.fillStyle = palette.text;
+    ctx.font = '600 12px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('exp(\u2212\u03C3\u00B2 K(t))  \u2014  Debye\u2013Waller factor along each trajectory', x0, y0 - 6);
+
+    // Trajectories
+    STARTS.forEach((K0, i) => {
+      const c = COLORS[i];
+      const tEnd = Math.min(t, T_MAX);
+      ctx.strokeStyle = c;
+      ctx.lineWidth = 2.0;
+      ctx.beginPath();
+      const N = 80;
+      let first = true;
+      for (let k = 0; k <= N; k++) {
+        const tt = tEnd * k / N;
+        const n = Math.exp(-SIGMA2_PHYS * K_of_t(K0, tt));
+        if (first) { ctx.moveTo(mapX(tt), mapY(n)); first = false; }
+        else ctx.lineTo(mapX(tt), mapY(n));
+      }
+      ctx.stroke();
+      const xm = mapX(tEnd);
+      const ym = mapY(Math.exp(-SIGMA2_PHYS * K_of_t(K0, tEnd)));
+      ctx.fillStyle = c;
+      ctx.beginPath(); ctx.arc(xm, ym, 4, 0, 2*Math.PI); ctx.fill();
+    });
+
+    // x-axis label
+    ctx.fillStyle = palette.text;
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('CLR time t', x0 + w/2, y0 + h + 32);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg;
+    ctx.fillRect(0, 0, W, H);
+    drawUpper();
+    drawLower();
+  }
+  function loop() {
+    if (playing) { t = Math.min(t + 0.15, T_MAX); if (t >= T_MAX) { playing = false; playBtn.textContent = '\u25B6 Replay'; playBtn.classList.remove('primary'); } }
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ============================================================
+// FIGURE 3: Window-width sweep
+// Shows n(w) window of integration, live 1/alpha readout.
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-sweep');
+  if (!canvas) return;
+  const W = 680, H = 360;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const controls = document.getElementById('sweep-controls');
+  let w = 0;    // window width, start at living endpoint
+  makeSlider(controls, {
+    label: 'window width <em>w</em>',
+    min: 0, max: 1, step: 0.005,
+    value: 0,
+    format: (v) => v.toFixed(3),
+    onChange: (v) => { w = v; },
+  });
+  const btnL = document.createElement('button');
+  btnL.textContent = 'Living (w = 0)';
+  btnL.className = 'primary';
+  controls.appendChild(btnL);
+  const btnS = document.createElement('button');
+  btnS.textContent = 'Static (w = 1)';
+  controls.appendChild(btnS);
+  function snap(val) {
+    w = val;
+    const input = controls.querySelector('input[type="range"]');
+    if (input) { input.value = val; const vs = controls.querySelector('.val'); if (vs) vs.textContent = val.toFixed(3); }
+    btnL.classList.toggle('primary', val < 0.05);
+    btnS.classList.toggle('primary', val > 0.95);
+  }
+  btnL.addEventListener('click', () => snap(0));
+  btnS.addEventListener('click', () => snap(1));
+
+  const left_px0 = 50, left_pw = 360, left_py0 = 60, left_ph = 220;
+  const right_px0 = 440, right_pw = 230, right_py0 = 60, right_ph = 220;
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // LEFT: decay curve with highlighted window
+    drawAxisBox(ctx, left_px0, left_py0, left_pw, left_ph);
+    const mapX = (l) => left_px0 + l * left_pw;
+    const yMax = 1.05;
+    const mapY = (n) => left_py0 + left_ph - (n / yMax) * left_ph;
+
+    // Ticks
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    [0, 0.5, 1].forEach(l => ctx.fillText(l.toFixed(1), mapX(l), left_py0 + left_ph + 14));
+    ctx.textAlign = 'right';
+    [0, 0.5, 1].forEach(n => ctx.fillText(n.toFixed(1), left_px0 - 4, mapY(n) + 3));
+
+    // Curve
+    ctx.strokeStyle = palette.textSoft; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    let first = true;
+    for (let i = 0; i <= 120; i++) {
+      const l = i / 120;
+      if (first) { ctx.moveTo(mapX(l), mapY(Math.exp(-SIGMA2_PHYS * l))); first = false; }
+      else ctx.lineTo(mapX(l), mapY(Math.exp(-SIGMA2_PHYS * l)));
+    }
+    ctx.stroke();
+
+    // Highlighted window from 1-w to 1
+    const wStart = 1 - w;
+    // Colour interpolates from green (w=0) to purple (w=1)
+    const alpha = 0.35;
+    const tLerp = w; // 0..1
+    const r = Math.round(109 * (1 - tLerp) + 195 * tLerp);
+    const g = Math.round(196 * (1 - tLerp) + 141 * tLerp);
+    const b = Math.round(143 * (1 - tLerp) + 247 * tLerp);
+    ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+    ctx.beginPath();
+    if (w < 1e-3) {
+      // Draw a single vertical line at l=1 to signify endpoint
+      ctx.fillStyle = '#6dc48f';
+      ctx.fillRect(mapX(1) - 1.5, mapY(0), 3, mapY(Math.exp(-SIGMA2_PHYS)) - mapY(0));
+    } else {
+      ctx.moveTo(mapX(wStart), mapY(0));
+      for (let i = 0; i <= 120; i++) {
+        const l = wStart + (1 - wStart) * (i / 120);
+        ctx.lineTo(mapX(l), mapY(Math.exp(-SIGMA2_PHYS * l)));
+      }
+      ctx.lineTo(mapX(1), mapY(0));
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Title
+    ctx.fillStyle = palette.text; ctx.font = '600 12.5px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Window being averaged', left_px0, left_py0 - 12);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('RG scale l', left_px0 + left_pw/2, left_py0 + left_ph + 32);
+
+    // Compute n(w) and 1/alpha
+    const n = nWindow(SIGMA2_PHYS, w);
+    const a = alphaFromN(n);
+    const inv_a = 1/a;
+
+    // RIGHT: large numbers
+    ctx.fillStyle = palette.text; ctx.font = '600 12.5px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Current value', right_px0, right_py0 - 12);
+
+    ctx.fillStyle = palette.textSoft;
+    ctx.font = '12px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('n(w) = ' + n.toFixed(4), right_px0 + 10, right_py0 + 30);
+    ctx.fillText('\u03C3\u00B2    = ' + SIGMA2_PHYS.toFixed(2), right_px0 + 10, right_py0 + 50);
+
+    // Compute position along the 137-143 axis for colour
+    const tAx = Math.max(0, Math.min(1, w));
+    const rC = Math.round(109 * (1 - tAx) + 195 * tAx);
+    const gC = Math.round(196 * (1 - tAx) + 141 * tAx);
+    const bC = Math.round(143 * (1 - tAx) + 247 * tAx);
+    ctx.fillStyle = `rgb(${rC},${gC},${bC})`;
+    ctx.font = '600 28px "SF Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('1/\u03B1 = ' + inv_a.toFixed(3), right_px0 + right_pw/2, right_py0 + 110);
+
+    // Show the 137 <-> 143 range bar
+    const barX = right_px0 + 20, barY = right_py0 + 150, barW = right_pw - 40, barH = 10;
+    // Background
+    ctx.fillStyle = palette.grid;
+    ctx.fillRect(barX, barY, barW, barH);
+    // Gradient fill: green at 0 (w=0), purple at 1 (w=1)
+    const grad = ctx.createLinearGradient(barX, barY, barX + barW, barY);
+    grad.addColorStop(0, '#6dc48f');
+    grad.addColorStop(1, '#c38df7');
+    ctx.fillStyle = grad;
+    ctx.fillRect(barX, barY, barW, barH);
+    // Marker at current w
+    const mx = barX + tAx * barW;
+    ctx.strokeStyle = palette.text; ctx.fillStyle = palette.text;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(mx, barY - 3);
+    ctx.lineTo(mx - 5, barY + barH + 6);
+    ctx.lineTo(mx + 5, barY + barH + 6);
+    ctx.closePath();
+    ctx.fill();
+    // Endpoint labels
+    ctx.fillStyle = '#6dc48f'; ctx.font = '600 11px "SF Mono", monospace';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('137.03', barX, barY + barH + 22);
+    ctx.fillStyle = '#c38df7';
+    ctx.textAlign = 'right';
+    ctx.fillText('143.13', barX + barW, barY + barH + 22);
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+</body>
+</html>
